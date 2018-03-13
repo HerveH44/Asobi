@@ -1,4 +1,8 @@
 target/
+.config
+.mvn
+mvnw
+mvnw.cmd
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
@@ -22,3 +26,9 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+### Node ###
+node
+node_modules
+/nbproject/
+.npm/**
