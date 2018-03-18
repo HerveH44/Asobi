@@ -1,0 +1,37 @@
+target/
+built/
+**/static/built
+**/static/ext-react
+**/static/index.html
+**/static/*.png
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+### Node ###
+node
+node_modules
+/nbproject/
+.npm/**
+
+.vscode
