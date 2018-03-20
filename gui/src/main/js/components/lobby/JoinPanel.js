@@ -48,8 +48,8 @@ JoinPanel.propTypes = {
   joinRoom: func.isRequired
 };
 
-const mapStateToProps = (state) => ({
-  ...state
+const mapStateToProps = ({def}) => ({
+  ...def
 });
 
 export default connect(mapStateToProps, null)(JoinPanel);

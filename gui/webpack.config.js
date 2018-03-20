@@ -5,8 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   devtool: 'sourcemaps',
   entry: {
-    app: './src/main/js/index.js',
-    react: ['react', 'react-dom']
+    app: './src/main/js/index.js'
   },
   output: {
     path: path.join(__dirname, './built/static'),

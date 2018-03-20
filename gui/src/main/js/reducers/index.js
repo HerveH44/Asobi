@@ -1,12 +1,10 @@
 import { combineReducers } from 'redux'
-import todos from './todos'
-import visibilityFilter from './visibilityFilter'
 import websocket from "./websocket";
+import def from "./default";
 
-const todoApp = combineReducers({
-  todos,
-  visibilityFilter,
+const reducers = combineReducers({
+  def,
   websocket
 });
 
-export default todoApp
+export default reducers

@@ -16,7 +16,7 @@ NewsPanel.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  motd: state.motd
+  motd: state.def.motd
 });
 
 export default connect(mapStateToProps)(NewsPanel);

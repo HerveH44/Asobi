@@ -58,8 +58,8 @@ ServerInfo.propTypes = {
   numActiveGames: number
 };
 
-const mapStateToProps = (state) => ({
-  ...state
+const mapStateToProps = ({def}) => ({
+  ...def
 });
 
 export default connect(
