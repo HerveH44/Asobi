@@ -2,7 +2,7 @@ import React from "react";
 import {func, string, number, arrayOf, shape} from "prop-types";
 import { connect } from 'react-redux';
 
-const JoinPanel = ({roomsInfo, joinRoom}) => {
+const JoinPanel = ({roomsInfo}) => {
     return (
         <fieldset className='fieldset'>
             <legend className='legend'>Join a room</legend>
@@ -44,12 +44,7 @@ JoinPanel.propTypes = {
     packsInfo: string,
     usedSeats: number.isRequired,
     totalSeats: number.isRequired
-  }).isRequired).isRequired,
-  joinRoom: func.isRequired
+  }).isRequired).isRequired
 };
 
-const mapStateToProps = ({def}) => ({
-  ...def
-});
-
-export default connect(mapStateToProps, null)(JoinPanel);
+export default JoinPanel;

@@ -15,8 +15,4 @@ NewsPanel.propTypes = {
     motd: PropTypes.array
 };
 
-const mapStateToProps = (state) => ({
-  motd: state.def.motd
-});
-
-export default connect(mapStateToProps)(NewsPanel);
+export default NewsPanel;

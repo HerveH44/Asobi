@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import Lobby from "./lobby/Lobby";
+import Lobby from "../containers/Lobby";
 import CssBaseline from 'material-ui/CssBaseline';
 
 const App = () => {

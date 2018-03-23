@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux'
 import websocket from "./websocket";
-import def from "./default";
+import site from "./site";
+import game from "./game";
 
 const reducers = combineReducers({
-  def,
+  site,
+  game,
   websocket
 });
 

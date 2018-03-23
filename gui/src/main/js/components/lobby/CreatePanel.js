@@ -1,7 +1,5 @@
 import React from "react";
-import {connect} from "react-redux";
-import { sendData } from "../../reducers/websocket";
-import { editDefault } from "../../reducers/default";
+import { array, string, number, object, bool, func } from "prop-types";
 import _ from "lodash";
 
 import { withStyles } from 'material-ui/styles';
@@ -12,12 +10,15 @@ import Select from 'material-ui/Select';
 import Checkbox from 'material-ui/Checkbox';
 import Radio, { RadioGroup } from 'material-ui/Radio';
 
-// import GameOptions from "./GameOptions";
+import GameSettings from "./GameSettings";
 
 const styles = theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
+    margin: 'auto',
+    width: '900px',
+    padding: '10px'
   },
   formControl: {
     margin: theme.spacing.unit,
@@ -32,44 +33,32 @@ const styles = theme => ({
 });
 
 class CreatePanel extends React.Component  {
-  state = {
-    name: "Create Game",
-    seat: 2,
-    age: "",
-    isPrivate: false,
-    gameType: "draft"
-  }
-
-    handleRadio = (event, gameType) => {
-      this.setState({ gameType });
+    onChangeGameType = (event, gameType) => {
+      this.props.editGame({ gameType });
     }
 
     handleCheck = name => event => {
-      this.setState({ [name]: event.target.checked });
+      this.props.editGame({
+        [name]: event.target.checked
+      });
     }
 
     onCreateGame() {
-      console.log(this);
-      sendData();
     }
 
-    onChangeTitle({currentTarget: { value: gameTitle }}) {
-      editDefault({
-        gameTitle
-      })
+    onChangeTitle = ({currentTarget: { value: title }}) => {
+      this.props.editGame({ title });
     }
 
-    onChangeSeats({currentTarget: { value: seats }}) {
-      editDefault({
-        seats
-      })
+    onChangeSeats = ({currentTarget: { value: seats }}) => {
+      this.props.editGame({ seats });
     }
 
     render() {
-      const { title, seats, classes} = this.props;
+      const { editGame, title, seats, isPrivate, gameTypes, gameType, gameModes, gameMode, classes } = this.props;
 
       return(
-        <FormControl component='fieldset'>
+        <FormControl className={classes.container} component='fieldset'>
           <FormLabel component='legend'>Create a game</FormLabel>
           <FormGroup row>
             <FormControl className={classes.formControl}>
@@ -78,60 +67,60 @@ class CreatePanel extends React.Component  {
             </FormControl>
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="age-simple">Players</InputLabel>
-              <Select value={10} onChange={this.onChangeSeats}  inputProps={{
+              <Select value={seats} onChange={this.onChangeSeats}  inputProps={{
                 name: 'age',
                 id: 'age-simple',
               }}>
-                {_.range(2, 100).map(x =>
+                {_.range(2, 10).map(x =>
                   <MenuItem key={_.uniqueId()} value={x}>{x}</MenuItem>)}
               </Select>
             </FormControl>
-            <FormControlLabel
-              control={
+            <FormControl className={classes.formControl}>
+              <FormLabel>Private Game</FormLabel>
                 <Checkbox
-                  checked={this.state.isPrivate}
+                  checked={isPrivate}
                   onChange={this.handleCheck('isPrivate')}
-                  // value={this.state.isPrivate}
-                />}
-              label="Private Game"
-            />
-          </FormGroup>
-          <FormGroup>
-            <FormControl component="fieldset" required className={classes.formControl}>
-              <FormLabel component="legend">Game Type</FormLabel>
+                />
+            </FormControl>
+            <FormControl className={classes.formControl}>
+              <FormLabel >Game Type</FormLabel>
               <RadioGroup
                 aria-label="gender"
                 name="gender1"
                 className={classes.group}
-                value={this.state.gameType}
-                onChange={this.handleRadio}
+                value={gameType}
+                onChange={this.onChangeGameType}
                 row
               >
                 {/* TODO: Mettre les variables dans une config */}
-                {["draft", "sealed", "cube draft", "cube sealed", "chaos"].map(val =>
+                {gameTypes.map(val =>
                   <FormControlLabel key={_.uniqueId()} value={val} control={<Radio />} label={val} />
                 )}
               </RadioGroup>
             </FormControl>
           </FormGroup>
-          {/*<GameOptions/>*/}
-          <p>
-              <button onClick={this.onCreateGame}>
-                  Create game
-              </button>
-          </p>
+          <GameSettings
+            gameMode={gameMode}
+            gameModes={gameModes}
+            editGame={editGame}/>
+            <button onClick={this.onCreateGame}>
+                Create game
+            </button>
         </FormControl>
     )
   }
 }
 
-const mapStateToProps= ({def}) => ({
-  ...def
-});
+CreatePanel.propTypes = {
+  title: string.isRequired,
+  seats: number.isRequired,
+  isPrivate: bool.isRequired,
+  gameTypes: array.isRequired,
+  gameType: string.isRequired,
+  classes: object.isRequired,
+  editGame: func.isRequired,
+  gameModes: array.isRequired,
+  gameMode: string.isRequired
+}
 
-const mapDispatchToProps = {
-  sendData,
-  editDefault
-};
-
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(CreatePanel));
+export default withStyles(styles)(CreatePanel);

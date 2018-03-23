@@ -46,9 +46,4 @@ Footer.propTypes = {
   version: string.isRequired
 };
 
-const mapStateToProps = ({def}) => ({
-  repo: def.repo,
-  version: def.version
-});
-
-export default connect(mapStateToProps)(withStyles(styles)(Footer));
+export default withStyles(styles)(Footer);

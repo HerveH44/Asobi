@@ -57,12 +57,4 @@ ServerInfo.propTypes = {
   numPlayers: number,
   numActiveGames: number
 };
-
-const mapStateToProps = ({def}) => ({
-  ...def
-});
-
-export default connect(
-  mapStateToProps,
-  null
-)(Header);
+export default Header;
