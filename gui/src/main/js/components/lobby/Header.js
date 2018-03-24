@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from 'react-redux';
 import { string, number } from "prop-types";
 import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";

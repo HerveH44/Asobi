@@ -1,5 +1,4 @@
 import React from "react";
-import {connect} from "react-redux";
 import {string, object} from "prop-types";
 
 import { withStyles } from 'material-ui/styles';

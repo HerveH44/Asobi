@@ -1,6 +1,5 @@
 import React from "react";
-import {func, string, number, arrayOf, shape} from "prop-types";
-import { connect } from 'react-redux';
+import {string, number, arrayOf, shape} from "prop-types";
 
 const JoinPanel = ({roomsInfo}) => {
     return (
