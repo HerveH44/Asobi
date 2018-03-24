@@ -92,7 +92,6 @@ class CreatePanel extends React.Component  {
                 onChange={this.onChangeGameType}
                 row
               >
-                {/* TODO: Mettre les variables dans une config */}
                 {gameTypes.map(val =>
                   <FormControlLabel key={_.uniqueId()} value={val} control={<Radio />} label={val} />
                 )}
