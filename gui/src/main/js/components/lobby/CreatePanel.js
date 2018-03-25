@@ -55,7 +55,7 @@ class CreatePanel extends React.Component  {
     }
 
     render() {
-      const { editGame, title, seats, isPrivate, gameTypes, gameType, gameModes, gameMode, classes } = this.props;
+      const { availableSets, sets, editGame, title, seats, isPrivate, gameTypes, gameType, gameModes, gameMode, classes } = this.props;
 
       return(
         <FormControl className={classes.container} component='fieldset'>
@@ -101,7 +101,9 @@ class CreatePanel extends React.Component  {
           <GameSettings
             gameMode={gameMode}
             gameModes={gameModes}
-            editGame={editGame}/>
+            editGame={editGame}
+            sets={sets[gameType]}
+            availableSets={availableSets}/>
             <button onClick={this.onCreateGame}>
                 Create game
             </button>
@@ -119,7 +121,9 @@ CreatePanel.propTypes = {
   classes: object.isRequired,
   editGame: func.isRequired,
   gameModes: array.isRequired,
-  gameMode: string.isRequired
+  gameMode: string.isRequired,
+  sets: object.isRequired,
+  availableSets: object.isRequired
 }
 
 export default withStyles(styles)(CreatePanel);

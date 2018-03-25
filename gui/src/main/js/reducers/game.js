@@ -1,4 +1,5 @@
 import { createAction, handleActions } from 'redux-actions';
+import {WEBSOCKET_MESSAGE} from "redux-middleware-websocket";
 
 export const editGame = createAction("EDIT_GAME");
 
@@ -11,6 +12,11 @@ const CUBE = "cube";
 const CHAOS = "chaos";
 const gameModes = [ NORMAL, CUBE, CHAOS ];
 
+const XLN = {
+  code: "XLN",
+  title: "Ixalan"
+};
+
 const initialState = {
   title: "",
   seats: 2,
@@ -18,7 +24,17 @@ const initialState = {
   gameType: DRAFT,
   gameTypes,
   gameMode: NORMAL,
-  gameModes
+  gameModes,
+  sets: {
+    [DRAFT]: [XLN, XLN, XLN],
+    [SEALED]: [XLN, XLN, XLN, XLN, XLN, XLN]
+  },
+  availableSets: {
+    expansion: [{
+      code: "XLN",
+      name: "Ixalan"
+    }]
+  }
 };
 
 export default handleActions({
@@ -27,5 +43,11 @@ export default handleActions({
       ...state,
       ...payload
     };
+  },
+  [WEBSOCKET_MESSAGE](state, {payload}) {
+    return {
+      ...state,
+      availableSets: JSON.parse(payload.data)
+    }
   }
 }, initialState);

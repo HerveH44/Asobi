@@ -1,8 +1,4 @@
 target/
-**/static/built
-**/static/ext-react
-**/static/index.html
-**/static/*.png
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
@@ -12,6 +8,7 @@ target/
 .project
 .settings
 .springBeans
+.sts4-cache
 
 ### IntelliJ IDEA ###
 .idea

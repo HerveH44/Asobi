@@ -31,7 +31,7 @@ class CenteredTabs extends React.Component {
   };
 
   render() {
-    const { classes, gameMode, gameModes } = this.props;
+    const { availableSets, classes, gameMode, gameModes, sets } = this.props;
 
     return (
       <Paper className={classes.root}>
@@ -46,7 +46,7 @@ class CenteredTabs extends React.Component {
             <Tab key={_.uniqueId()} value={mode} label={mode} />
           ))}
         </Tabs>
-        {gameMode == "normal" && <NormalGameSettings classes={classes}/>}
+        {gameMode == "normal" && <NormalGameSettings availableSets={availableSets} sets={sets} classes={classes}/>}
       </Paper>
     );
   }
@@ -56,54 +56,63 @@ CenteredTabs.propTypes = {
   classes: object.isRequired,
   gameModes: array.isRequired,
   gameMode: string.isRequired,
-  editGame: func.isRequired
+  editGame: func.isRequired,
+  sets: array.isRequired,
+  availableSets: object.isRequired
 };
 
-const NormalGameSettings = ({ classes }) => (
+const NormalGameSettings = ({ availableSets, sets, classes }) => (
   <Grid item sm>
     <Paper className={classes.list}>
-      <Set classes={classes} />
+      {sets.map( set => (
+        <Set key={_.uniqueId()} set={set} classes={classes} availableSets={availableSets} />
+      ))}
+      <Button
+        mini
+        variant="fab"
+        color="primary"
+        aria-label="add"
+        className={classes.button}>
+        <AddIcon />
+      </Button>
     </Paper>
   </Grid>
 )
 
 NormalGameSettings.propTypes = {
-  classes: object.isRequired
+  classes: object.isRequired,
+  sets: array.isRequired,
+  availableSets: object.isRequired
 };
 
-const Set = ({ classes }) => (
-  <Fragment>
-    <TextField
-      id="select-currency-native"
-      select
-      label="Set"
-      value={1}
-      SelectProps={{
-        native: true
-      }}
-      helperText="Please select a set"
-      margin="normal"
-    >
-      <optgroup label="group">
-        <option>toto</option>
-        <option>toto2</option>
-        <option>toto3</option>
-        <option>toto4</option>
+const Set = ({ availableSets, set, classes }) => (
+  <TextField
+    id="select-currency-native"
+    select
+    label="Set"
+    value={1}
+    SelectProps={{
+      native: true
+    }}
+    helperText="Please select a set"
+    margin="normal"
+  >
+  {Object.entries(availableSets).map(([label, sets]) => {
+    return (
+      <optgroup key={_.uniqueId()} label={label}>
+        {sets.map(({name}) => {
+          return <option key={_.uniqueId()}>{name}</option>
+        })}
       </optgroup>
-    </TextField>
-    <Button
-      mini
-      variant="fab"
-      color="primary"
-      aria-label="add"
-      className={classes.button}>
-      <AddIcon />
-    </Button>
-  </Fragment>
+      )
+  })}
+  </TextField>
 )
 
 Set.propTypes = {
-  classes: object.isRequired
+  classes: object.isRequired,
+  set: object.isRequired,
+  availableSets: object.isRequired
 };
 
 export default withStyles(styles)(CenteredTabs);
