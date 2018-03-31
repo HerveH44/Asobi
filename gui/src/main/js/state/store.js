@@ -1,8 +1,8 @@
-import { createStore as reduxCreateStore, applyMiddleware } from "redux";
-import websocket from "redux-middleware-websocket";
+import { createStore as reduxCreateStore } from "redux";
 import reducers from "../reducers";
+import middlewares from "../middlewares"
 
 const createStore = () =>
-  reduxCreateStore(reducers, applyMiddleware(websocket));
+  reduxCreateStore(reducers, middlewares);
 
 export default createStore;

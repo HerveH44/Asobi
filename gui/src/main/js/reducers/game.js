@@ -1,7 +1,8 @@
 import { createAction, handleActions } from 'redux-actions';
-import {WEBSOCKET_MESSAGE} from "redux-middleware-websocket";
 
 export const editGame = createAction("EDIT_GAME");
+export const CREATE_GAME = createAction("CREATE_GAME");
+const IMPORT_SETS = createAction("IMPORT_SETS");
 
 const DRAFT = "draft";
 const SEALED = "sealed";
@@ -44,10 +45,10 @@ export default handleActions({
       ...payload
     };
   },
-  [WEBSOCKET_MESSAGE](state, {payload}) {
+  [IMPORT_SETS](state, {payload: availableSets}) {
     return {
       ...state,
-      availableSets: JSON.parse(payload.data)
+      availableSets
     }
   }
 }, initialState);

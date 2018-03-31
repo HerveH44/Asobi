@@ -36,11 +36,9 @@ public class MTGJsonDownloader {
         final CloseableHttpClient httpclient = HttpClients.createDefault();
         final HttpGet httpGet = new HttpGet(URI);
         try (CloseableHttpResponse response1 = httpclient.execute(httpGet)) {
-            HttpEntity entity1 = response1.getEntity();
+            final HttpEntity entity1 = response1.getEntity();
             final InputStream inputStream = entity1.getContent();
-
             final File file = saveToJsonFile(inputStream);
-
             final Map<String, MTGSet> sets = mapper.readValue(file, new TypeReference<Map<String, MTGSet>>() {
             });
             sets.forEach((setName, mtgSet) -> {

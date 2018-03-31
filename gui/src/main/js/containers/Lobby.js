@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
-import {editGame} from "../reducers/game"
+import { editGame, CREATE_GAME } from "../reducers/game"
 import Lobby from "../components/lobby"
 
 const mapStateToProps = (state) => (state);
-const mapDispatchToProps = { editGame };
+const mapDispatchToProps = { editGame, CREATE_GAME };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Lobby);

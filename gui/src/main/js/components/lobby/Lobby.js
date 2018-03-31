@@ -7,10 +7,10 @@ import NewsPanel from "./NewsPanel";
 import Footer from "./Footer";
 import CreatePanel from "./CreatePanel";
 
-const Lobby = ({site, game, editGame}) => (
+const Lobby = ({site, game, editGame, CREATE_GAME: createGame}) => (
   <Fragment>
       <Header {...site}/>
-      <CreatePanel {...game} editGame={editGame} />
+      <CreatePanel {...game} editGame={editGame} createGame={createGame} />
       <JoinPanel {...site}/>
       <NewsPanel {...site}/>
       <Footer {...site}/>
@@ -20,7 +20,8 @@ const Lobby = ({site, game, editGame}) => (
 Lobby.propTypes = {
   site: object.isRequired,
   game: object.isRequired,
-  editGame: func.isRequired
+  editGame: func.isRequired,
+  CREATE_GAME: func.isRequired
 }
 
 export default Lobby;

@@ -43,9 +43,6 @@ class CreatePanel extends React.Component  {
       });
     }
 
-    onCreateGame() {
-    }
-
     onChangeTitle = ({currentTarget: { value: title }}) => {
       this.props.editGame({ title });
     }
@@ -55,7 +52,7 @@ class CreatePanel extends React.Component  {
     }
 
     render() {
-      const { availableSets, sets, editGame, title, seats, isPrivate, gameTypes, gameType, gameModes, gameMode, classes } = this.props;
+      const { availableSets, createGame, sets, editGame, title, seats, isPrivate, gameTypes, gameType, gameModes, gameMode, classes } = this.props;
 
       return(
         <FormControl className={classes.container} component='fieldset'>
@@ -104,7 +101,7 @@ class CreatePanel extends React.Component  {
             editGame={editGame}
             sets={sets[gameType]}
             availableSets={availableSets}/>
-            <button onClick={this.onCreateGame}>
+            <button onClick={createGame}>
                 Create game
             </button>
         </FormControl>
@@ -123,7 +120,8 @@ CreatePanel.propTypes = {
   gameModes: array.isRequired,
   gameMode: string.isRequired,
   sets: object.isRequired,
-  availableSets: object.isRequired
+  availableSets: object.isRequired,
+  createGame: func.isRequired
 }
 
 export default withStyles(styles)(CreatePanel);

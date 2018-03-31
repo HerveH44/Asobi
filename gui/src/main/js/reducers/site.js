@@ -1,5 +1,4 @@
 import { createAction, handleActions } from 'redux-actions';
-import { sendData } from "./websocket";
 
 export const editDefault = createAction("EDIT_DEFAULT");
 
@@ -22,9 +21,5 @@ export default handleActions({
       ...state,
       ...payload
     };
-  },
-  [sendData](state, payload) {
-    console.log("Hehe from default", state);
-    return state;
   }
 }, initialState);

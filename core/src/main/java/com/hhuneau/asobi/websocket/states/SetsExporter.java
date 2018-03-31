@@ -1,56 +1,50 @@
-package com.hhuneau.asobi;
+package com.hhuneau.asobi.websocket.states;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hhuneau.asobi.messages.SetsExportMessage;
 import com.hhuneau.asobi.sets.MTGSet;
 import com.hhuneau.asobi.sets.MTGSetsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
 @Component
-public class WebSocketHandler extends TextWebSocketHandler {
+public class SetsExporter implements OnConnectionEstablished {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(WebSocketHandler.class);
-    private final MTGSetsService setsService;
-    private final ObjectMapper mapper;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SetsExporter.class);
+    private MTGSetsService setsService;
+    private ObjectMapper mapper;
 
-
-    public WebSocketHandler(MTGSetsService setsService, ObjectMapper mapper) {
+    public SetsExporter(MTGSetsService setsService, ObjectMapper mapper) {
         this.setsService = setsService;
         this.mapper = mapper;
     }
 
-
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        final Map<String, List<SetDTO>> sets = setsService.getSets().stream()
+    public void accept(WebSocketSession session) {
+        try {
+            final Map<String, List<SetDTO>> sets = setsService.getSets().stream()
                 .map(SetDTO::of)
                 .collect(Collectors.groupingBy(SetDTO::getType));
-        TextMessage message = new TextMessage(mapper.writeValueAsBytes(sets));
-        session.sendMessage(message);
-        LOGGER.info("Websocket connected " + session.toString());
+            final TextMessage message = new TextMessage(mapper.writeValueAsString(SetsExportMessage.of(sets)));
+            session.sendMessage(message);
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Error while JSONing sets", e);
+        } catch (IOException e) {
+            LOGGER.error("Error while handling exportation of sets", e);
+        }
     }
 
-    @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        LOGGER.info("Websocket " + session.toString() + " emitted message " + message);
-        super.handleTextMessage(session, message);
-    }
-
-    @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        LOGGER.info("Websocket disconnected " + session.toString());
-    }
-
-    private static class SetDTO {
+    public static class SetDTO {
         public String code;
         public String name;
 
