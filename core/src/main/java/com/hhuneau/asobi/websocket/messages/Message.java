@@ -1,4 +1,4 @@
-package com.hhuneau.asobi.messages;
+package com.hhuneau.asobi.websocket.messages;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

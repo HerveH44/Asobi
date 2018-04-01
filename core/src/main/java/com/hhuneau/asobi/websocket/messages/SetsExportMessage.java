@@ -1,4 +1,4 @@
-package com.hhuneau.asobi.messages;
+package com.hhuneau.asobi.websocket.messages;
 
 public class SetsExportMessage extends Message {
 

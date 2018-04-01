@@ -3,6 +3,7 @@ package com.hhuneau.asobi.websocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hhuneau.asobi.websocket.events.Event;
 import com.hhuneau.asobi.sets.MTGSetsService;
+import com.hhuneau.asobi.websocket.messages.GameIdMessage;
 import com.hhuneau.asobi.websocket.states.OnConnectionEstablished;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         switch (evt.type) {
             case CREATE_GAME:
                 LOGGER.info("we got a creationg game!" + evt);
+                session.sendMessage(new TextMessage(mapper.writeValueAsString(GameIdMessage.of("123456"))));
                 break;
             default:
                 throw new UnsupportedOperationException(String.format("unknown event type %s", evt.type));
