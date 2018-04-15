@@ -1,5 +1,7 @@
-package com.hhuneau.asobi.sets;
+package com.hhuneau.asobi.game.sets;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -10,6 +12,7 @@ import java.util.List;
 public class MTGSetsService {
     private final MTGCardRepository cardRepository;
     private final MTGSetRepository setRepository;
+    private final static Logger LOGGER = LoggerFactory.getLogger(MTGSetsService.class);
 
     public MTGSetsService(MTGCardRepository cardRepository, MTGSetRepository setRepository) {
         this.cardRepository = cardRepository;
@@ -17,11 +20,11 @@ public class MTGSetsService {
     }
 
     public void saveSet(MTGSet set) {
-        setRepository.save(set);
-    }
-
-    public void saveCard(MTGCard mtgCard) {
-        cardRepository.save(mtgCard);
+        try {
+            setRepository.save(set);
+        } catch (final Exception e) {
+            LOGGER.info("can't save set {} because {}", set.getCode(), e.getMessage());
+        }
     }
 
     public List<MTGSet> getSets() {

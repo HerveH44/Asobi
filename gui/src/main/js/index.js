@@ -15,8 +15,9 @@ theStore.dispatch({
 
 render(
     <Provider store={theStore}>
-    <App/>
-</Provider>, document.getElementById('root'));
+        <App/>
+    </Provider>,
+    document.getElementById('root'));
 
 if (module.hot) {
     module

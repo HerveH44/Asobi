@@ -2,8 +2,8 @@ package com.hhuneau.asobi;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hhuneau.asobi.sets.MTGSet;
-import com.hhuneau.asobi.sets.MTGSetsService;
+import com.hhuneau.asobi.game.sets.MTGSet;
+import com.hhuneau.asobi.game.sets.MTGSetsService;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -11,7 +11,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -30,7 +29,6 @@ public class MTGJsonDownloader {
         this.setsService = setsService;
     }
 
-    @Async
     public void download() throws IOException {
 
         final CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -39,19 +37,21 @@ public class MTGJsonDownloader {
             final HttpEntity entity1 = response1.getEntity();
             final InputStream inputStream = entity1.getContent();
             final File file = saveToJsonFile(inputStream);
+            LOGGER.info("Parsing json sets");
             final Map<String, MTGSet> sets = mapper.readValue(file, new TypeReference<Map<String, MTGSet>>() {
             });
             sets.forEach((setName, mtgSet) -> {
+                if (!"expansion".equals(mtgSet.getType())) {
+                    return;
+                }
                 try {
-                    mtgSet.getCards().forEach(mtgCard -> {
-                        mtgCard.setSet(mtgSet);
-                        setsService.saveCard(mtgCard);
-                    });
+                    LOGGER.info("saving set {}", mtgSet.getCode());
                     setsService.saveSet(mtgSet);
                 } catch (Exception e) {
                     LOGGER.error("can't save " + setName + " " + e.getMessage());
                 }
             });
+            LOGGER.info("Finished importing MTGJson sets");
 
         }
 

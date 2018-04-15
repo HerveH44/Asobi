@@ -1,9 +1,8 @@
-package com.hhuneau.asobi.sets;
-
+package com.hhuneau.asobi.game.pool;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MTGCardRepository extends JpaRepository<MTGCard, String> {
+public interface PoolRepository extends JpaRepository<Pool, Long> {
 }

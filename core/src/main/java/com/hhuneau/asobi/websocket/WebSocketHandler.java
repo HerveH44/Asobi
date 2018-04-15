@@ -1,8 +1,11 @@
 package com.hhuneau.asobi.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hhuneau.asobi.game.GameManager;
+import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import com.hhuneau.asobi.websocket.events.Event;
-import com.hhuneau.asobi.sets.MTGSetsService;
+import com.hhuneau.asobi.websocket.events.JoinGameEvent;
+import com.hhuneau.asobi.websocket.events.StartGameEvent;
 import com.hhuneau.asobi.websocket.messages.GameIdMessage;
 import com.hhuneau.asobi.websocket.states.OnConnectionEstablished;
 import org.slf4j.Logger;
@@ -21,11 +24,13 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private static Logger LOGGER = LoggerFactory.getLogger(WebSocketHandler.class);
     private final ObjectMapper mapper;
     private final List<OnConnectionEstablished> onConnectionEstablishedHandlers;
+    private final GameManager gameManager;
 
 
-    public WebSocketHandler(ObjectMapper mapper, List<OnConnectionEstablished> onConnectionEstablishedHandlers) {
+    public WebSocketHandler(ObjectMapper mapper, List<OnConnectionEstablished> onConnectionEstablishedHandlers, GameManager gameManager) {
         this.mapper = mapper;
         this.onConnectionEstablishedHandlers = onConnectionEstablishedHandlers;
+        this.gameManager = gameManager;
     }
 
 
@@ -38,18 +43,33 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         final Event evt = mapper.readValue(message.getPayload(), Event.class);
+
         switch (evt.type) {
             case CREATE_GAME:
-                LOGGER.info("we got a creationg game!" + evt);
-                session.sendMessage(new TextMessage(mapper.writeValueAsString(GameIdMessage.of("123456"))));
+                final long gameId = gameManager.createGame((CreateGameEvent) evt);
+                LOGGER.info("we got a creation game! " + gameId);
+                session.sendMessage(new TextMessage(mapper.writeValueAsString(GameIdMessage.of(gameId))));
+                break;
+            case JOIN_GAME:
+                LOGGER.info("We got a join game!");
+                gameManager.joinGame(session, (JoinGameEvent) evt);
+                break;
+            case LEAVE_GAME:
+                LOGGER.info("We got a leave game!");
+                break;
+            case START_GAME:
+                LOGGER.info("We got a game start!");
+                gameManager.startGame((StartGameEvent) evt);
                 break;
             default:
                 throw new UnsupportedOperationException(String.format("unknown event type %s", evt.type));
+
         }
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        // TODO: Gérer les déconnections en controlant si la socket est rattachée à une partie
         LOGGER.info("Websocket disconnected " + session.toString());
     }
 }
