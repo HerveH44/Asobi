@@ -1,8 +1,4 @@
-package com.hhuneau.asobi.game.pool;
-
-import com.hhuneau.asobi.game.sets.MTGCard;
-import com.hhuneau.asobi.game.sets.MTGSet;
-import com.hhuneau.asobi.game.sets.Rarity;
+package com.hhuneau.asobi.game.sets;
 
 import java.util.Collections;
 import java.util.List;

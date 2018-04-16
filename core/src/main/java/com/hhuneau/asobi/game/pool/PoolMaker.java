@@ -1,6 +1,7 @@
 package com.hhuneau.asobi.game.pool;
 
 import com.hhuneau.asobi.game.Player;
+import com.hhuneau.asobi.game.sets.CardsGroupedByRarity;
 import com.hhuneau.asobi.game.sets.MTGCard;
 import com.hhuneau.asobi.game.sets.MTGSet;
 import com.hhuneau.asobi.game.sets.Rarity;
