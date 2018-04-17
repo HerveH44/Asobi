@@ -45,7 +45,7 @@ class CenteredTabs extends React.Component {
                     centered>
                     {gameModes.map(mode => (<Tab key={_.uniqueId()} value={mode} label={mode}/>))}
                 </Tabs>
-                {gameMode == "normal" && <NormalGameSettings
+                {gameMode == "NORMAL" && <NormalGameSettings
                     availableSets={availableSets}
                     sets={sets}
                     classes={classes}/>}
