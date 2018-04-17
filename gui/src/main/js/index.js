@@ -2,11 +2,12 @@ import React from 'react'
 import {render} from 'react-dom'
 import {Provider} from 'react-redux'
 import App from './components/App'
-import store from "./state/store"
+import createStore from "./state/store"
 import {WEBSOCKET_CONNECT} from "redux-middleware-websocket";
+import {PersistGate} from 'redux-persist/integration/react';
 
-const theStore = store();
-theStore.dispatch({
+const {store, persistor} = createStore();
+store.dispatch({
     type: WEBSOCKET_CONNECT,
     payload: {
         url: 'ws://localhost:8080/ws'
@@ -14,10 +15,11 @@ theStore.dispatch({
 });
 
 render(
-    <Provider store={theStore}>
-        <App/>
-    </Provider>,
-    document.getElementById('root'));
+    <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+            <App/>
+        </PersistGate>
+</Provider>, document.getElementById('root'));
 
 if (module.hot) {
     module
