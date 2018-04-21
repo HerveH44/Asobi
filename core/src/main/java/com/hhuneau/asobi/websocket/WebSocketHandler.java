@@ -61,6 +61,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 LOGGER.info("We got a game start!");
                 gameManager.startGame((StartGameEvent) evt);
                 break;
+            case ID:
+                LOGGER.info("We got an ID");
+                break;
             default:
                 throw new UnsupportedOperationException(String.format("unknown event type %s", evt.type));
 

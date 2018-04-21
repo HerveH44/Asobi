@@ -2,6 +2,8 @@ import {handleActions} from 'redux-actions';
 import {joinGame, editGameSettings} from "../actions/server"
 
 const InitialState = {
+    id: "1",
+    name: "dr4ft",
     gameId: null,
     type: "draft",
     packsInfo: "some packs infos",
@@ -20,9 +22,19 @@ export default handleActions({
         };
     },
     [joinGame] (state, {payload}) {
+        console.log("join game " + payload)
         return {
             ...state,
             gameId: payload
         }
+    },
+    // "JOIN_GAME" (state, {payload}) {
+    //     return {
+    //         ...state,
+    //         gameId: payload
+    //     }
+    // },
+    "POOL"(state, {payload}) {
+        console.log(payload);
     }
 }, InitialState);

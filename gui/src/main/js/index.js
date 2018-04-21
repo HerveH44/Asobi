@@ -10,7 +10,7 @@ const {store, persistor} = createStore();
 store.dispatch({
     type: WEBSOCKET_CONNECT,
     payload: {
-        url: 'ws://localhost:8080/ws'
+        url: 'ws://login:password@localhost:8080/ws'
     }
 });
 

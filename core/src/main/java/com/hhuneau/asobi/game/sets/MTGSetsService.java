@@ -30,4 +30,8 @@ public class MTGSetsService {
     public List<MTGSet> getSets() {
         return setRepository.findAll();
     }
+
+    public MTGSet getSet(String setCode) {
+        return setRepository.findOne(setCode);
+    }
 }

@@ -19,14 +19,17 @@ public class PoolMaker {
     private static final int RARE_CARD = 1;
     private static final int COMMON_CARDS = 10;
 
-    public List<Pool> createPools(Set<Player> players, List<MTGSet> sets) {
-        final List<Pool> pools = new ArrayList<>();
-        players.forEach(player -> pools.addAll(
-            sets.stream()
+    public List<Booster> createPools(Set<Player> players, List<MTGSet> sets) {
+        final List<Booster> boosters = new ArrayList<>();
+        players.forEach(player -> {
+            final List<Booster> playerBoosters = sets.stream()
                 .map(set ->
-                    Pool.of(player, set, makeCardPool(set)))
-                .collect(Collectors.toList())));
-        return pools;
+                    Booster.of(player, set, makeCardPool(set)))
+                .collect(Collectors.toList());
+            boosters.addAll(playerBoosters);
+            player.setPool(playerBoosters);
+        });
+        return boosters;
     }
 
     private List<MTGCard> makeCardPool(MTGSet set) {

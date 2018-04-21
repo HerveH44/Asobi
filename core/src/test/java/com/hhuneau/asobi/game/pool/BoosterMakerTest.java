@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 import static com.hhuneau.asobi.game.sets.Rarity.*;
 
-public class PoolMakerTest {
+public class BoosterMakerTest {
 
     private PoolMaker poolMaker;
     private Set<Player> players;
@@ -24,15 +24,15 @@ public class PoolMakerTest {
     @Before
     public void setUp() {
         poolMaker = new PoolMaker();
-        players = new HashSet<Player>(Arrays.asList(new Player("test", null)));
+        players = new HashSet<>(Arrays.asList(Player.of("userId", "name", null)));
         sets = createTestsSets();
     }
 
 
     @Test
     public void createPools() {
-        final List<Pool> pools = poolMaker.createPools(players, sets);
-        Assert.assertTrue(!pools.isEmpty());
+        final List<Booster> boosters = poolMaker.createPools(players, sets);
+        Assert.assertTrue(!boosters.isEmpty());
     }
 
     private List<MTGSet> createTestsSets() {

@@ -23,8 +23,8 @@ public class PoolService {
     @Transactional
     public void createPools(Set<Player> players, Game game) {
         if (game.getGameMode().equals(GameMode.NORMAL)) {
-            final List<Pool> pools = poolMaker.createPools(players, game.getSets());
-            repository.save(pools);
+            final List<Booster> boosters = poolMaker.createPools(players, game.getSets());
+            repository.save(boosters);
         }
     }
 

@@ -29,39 +29,49 @@ public class MTGJsonDownloader {
         this.setsService = setsService;
     }
 
-    public void download() throws IOException {
-
+    void download() throws IOException {
         final CloseableHttpClient httpclient = HttpClients.createDefault();
         final HttpGet httpGet = new HttpGet(URI);
         try (CloseableHttpResponse response1 = httpclient.execute(httpGet)) {
             final HttpEntity entity1 = response1.getEntity();
             final InputStream inputStream = entity1.getContent();
             final File file = saveToJsonFile(inputStream);
-            LOGGER.info("Parsing json sets");
-            final Map<String, MTGSet> sets = mapper.readValue(file, new TypeReference<Map<String, MTGSet>>() {
-            });
-            sets.forEach((setName, mtgSet) -> {
-                if (!"expansion".equals(mtgSet.getType())) {
-                    return;
-                }
-                try {
-                    LOGGER.info("saving set {}", mtgSet.getCode());
-                    setsService.saveSet(mtgSet);
-                } catch (Exception e) {
-                    LOGGER.error("can't save " + setName + " " + e.getMessage());
-                }
-            });
-            LOGGER.info("Finished importing MTGJson sets");
-
+            importSetsFromFile(file);
         }
+    }
 
+    void download(String path) {
+        final File file = new File(path);
+        try {
+            importSetsFromFile(file);
+        } catch (IOException e) {
+            LOGGER.error(String.format("cannot import file with path %s : %s", path, e.getMessage()));
+        }
+    }
+
+    private void importSetsFromFile(File file) throws IOException {
+        LOGGER.info("Parsing json sets from file " + file.getAbsolutePath());
+        final Map<String, MTGSet> sets = mapper.readValue(file, new TypeReference<Map<String, MTGSet>>() {
+        });
+        sets.forEach((setName, mtgSet) -> {
+            if (!"expansion".equals(mtgSet.getType())) {
+                return;
+            }
+            try {
+                LOGGER.info("saving set {}", mtgSet.getCode());
+                setsService.saveSet(mtgSet);
+            } catch (Exception e) {
+                LOGGER.error("can't save " + setName + " " + e.getMessage());
+            }
+        });
+        LOGGER.info("Finished importing MTGJson sets");
     }
 
     private File saveToJsonFile(InputStream inputStream) throws IOException {
         final File file = File.createTempFile("temp-sets", ".json");
         final OutputStream outputStream = new FileOutputStream(file);
 
-        int read = 0;
+        int read;
         byte[] bytes = new byte[1024];
 
         while ((read = inputStream.read(bytes)) != -1) {
@@ -71,6 +81,5 @@ public class MTGJsonDownloader {
         outputStream.close();
         return file;
     }
-
 
 }

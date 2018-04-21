@@ -1,5 +1,5 @@
 import {CREATE_GAME} from "../reducers/game";
-import {WEBSOCKET_SEND} from "redux-middleware-websocket";
+import {WEBSOCKET_SEND, WEBSOCKET_OPEN} from "redux-middleware-websocket";
 import {push} from "react-router-redux";
 import {GAME_ID, joinGame} from "../actions/server";
 
@@ -10,14 +10,21 @@ const createGame = ({getState, dispatch}) => next => action => {
             title,
             seats,
             gameType,
-            gameMode
+            gameMode,
+            sets
         },
         gameSettings: {
+            id,
+            name,
             gameId
         }
     } = getState();
 
     switch (action.type) {
+        case "POOL":
+            console.log("catched POOL");
+            console.log(action.payload);
+            return next(action);
         case "GAME_ID":
             next(action);
             return dispatch(push("games/" + action.payload));
@@ -30,7 +37,8 @@ const createGame = ({getState, dispatch}) => next => action => {
                     title,
                     seats,
                     gameType,
-                    gameMode
+                    gameMode,
+                    sets : ["XLN", "XLN", "XLN"] //TODO: fixme!
                 }
             });
         case "JOIN_GAME":
@@ -38,10 +46,13 @@ const createGame = ({getState, dispatch}) => next => action => {
                 type: WEBSOCKET_SEND,
                 payload: {
                     type: "JOIN_GAME",
-                    gameId: action.payload
+                    gameId: action.payload,
+                    id,
+                    name
                 }
             });
         case "START_GAME":
+            console.log("gameId" + gameId);
             return dispatch({
                 type: WEBSOCKET_SEND,
                 payload: {
@@ -49,6 +60,15 @@ const createGame = ({getState, dispatch}) => next => action => {
                     gameId: gameId
                 }
             })
+        // case WEBSOCKET_OPEN:
+        //     return dispatch({
+        //         type: WEBSOCKET_SEND,
+        //         payload: {
+        //             type: "ID",
+        //             id,
+        //             name
+        //         }
+        //     })
         default:
             return next(action);
     }

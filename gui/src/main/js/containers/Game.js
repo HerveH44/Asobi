@@ -6,7 +6,8 @@ import StartPanel from "../components/StartPanel"
 
 class Game extends Component {
     componentDidMount() {
-        const {joinGame, gameId} = this.props;
+        const {joinGame, editGameSettings, gameId} = this.props;
+        editGameSettings({gameId})
         joinGame(gameId);
     }
 
@@ -39,7 +40,8 @@ class Game extends Component {
 Game.propTypes = {
     gameId: string.isRequired,
     joinGame: func.isRequired,
-    leaveGame: func.isRequired
+    leaveGame: func.isRequired,
+    editGameSettings: func.isRequired
 };
 
 const mapStateToProps = ({
