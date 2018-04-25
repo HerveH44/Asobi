@@ -5,7 +5,6 @@ import com.hhuneau.asobi.game.sets.MTGSetsService;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import com.hhuneau.asobi.websocket.events.JoinGameEvent;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.WebSocketSession;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -37,7 +36,7 @@ public class GameService {
         return gameRepository.save(game);
     }
 
-    public void joinGame(WebSocketSession session, JoinGameEvent evt) {
+    public long joinGame(JoinGameEvent evt) {
         final Game game = gameRepository.findOne(evt.gameId);
         //TODO: Gérer les exceptions (game introuvable ou commencée/finie)
         if (game == null) {
@@ -53,8 +52,7 @@ public class GameService {
             .findFirst()
             .orElseGet(() -> playerRepository.save(Player.of(evt.id, evt.name, game)));
 
-        //Connect player with session
-        playerSessionService.add(player, session);
+        return player.getPlayerId();
     }
 
     public Game getGame(long gameId) {

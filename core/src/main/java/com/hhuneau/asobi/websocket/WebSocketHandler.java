@@ -2,58 +2,52 @@ package com.hhuneau.asobi.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hhuneau.asobi.game.GameManager;
-import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import com.hhuneau.asobi.websocket.events.Event;
-import com.hhuneau.asobi.websocket.events.JoinGameEvent;
 import com.hhuneau.asobi.websocket.events.StartGameEvent;
-import com.hhuneau.asobi.websocket.messages.GameIdMessage;
-import com.hhuneau.asobi.websocket.states.OnConnectionEstablished;
+import com.hhuneau.asobi.websocket.events.server.SessionConnectedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.util.List;
-
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
 
     private static Logger LOGGER = LoggerFactory.getLogger(WebSocketHandler.class);
     private final ObjectMapper mapper;
-    private final List<OnConnectionEstablished> onConnectionEstablishedHandlers;
     private final GameManager gameManager;
+    private final ApplicationEventPublisher publisher;
+    private final SessionsRegistry sessionsRegistry;
 
 
-    public WebSocketHandler(ObjectMapper mapper, List<OnConnectionEstablished> onConnectionEstablishedHandlers, GameManager gameManager) {
+    public WebSocketHandler(ObjectMapper mapper, GameManager gameManager, ApplicationEventPublisher publisher, SessionsRegistry sessionsRegistry) {
         this.mapper = mapper;
-        this.onConnectionEstablishedHandlers = onConnectionEstablishedHandlers;
         this.gameManager = gameManager;
+        this.publisher = publisher;
+        this.sessionsRegistry = sessionsRegistry;
     }
 
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         LOGGER.info("Websocket connected " + session.toString());
-        onConnectionEstablishedHandlers.forEach(handler -> handler.accept(session));
+        sessionsRegistry.add(new SessionWrapper(session, mapper));
+        SessionConnectedEvent sessionConnectedEvent = new SessionConnectedEvent();
+        sessionConnectedEvent.sessionId = session.getId();
+        publisher.publishEvent(sessionConnectedEvent);
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         final Event evt = mapper.readValue(message.getPayload(), Event.class);
+        evt.sessionId = session.getId();
+        publisher.publishEvent(evt);
 
         switch (evt.type) {
-            case CREATE_GAME:
-                final long gameId = gameManager.createGame((CreateGameEvent) evt);
-                LOGGER.info("we got a creation game! " + gameId);
-                session.sendMessage(new TextMessage(mapper.writeValueAsString(GameIdMessage.of(gameId))));
-                break;
-            case JOIN_GAME:
-                LOGGER.info("We got a join game!");
-                gameManager.joinGame(session, (JoinGameEvent) evt);
-                break;
             case LEAVE_GAME:
                 LOGGER.info("We got a leave game!");
                 break;
@@ -65,7 +59,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 LOGGER.info("We got an ID");
                 break;
             default:
-                throw new UnsupportedOperationException(String.format("unknown event type %s", evt.type));
+//                throw new UnsupportedOperationException(String.format("unknown event type %s", evt.type));
 
         }
     }
@@ -74,5 +68,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         // TODO: Gérer les déconnections en controlant si la socket est rattachée à une partie
         LOGGER.info("Websocket disconnected " + session.toString());
+        sessionsRegistry.remove(session.getId());
     }
 }

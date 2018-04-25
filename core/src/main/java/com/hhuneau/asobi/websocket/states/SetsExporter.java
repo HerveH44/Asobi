@@ -1,47 +1,42 @@
 package com.hhuneau.asobi.websocket.states;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hhuneau.asobi.websocket.messages.SetsExportMessage;
 import com.hhuneau.asobi.game.sets.MTGSet;
 import com.hhuneau.asobi.game.sets.MTGSetsService;
+import com.hhuneau.asobi.websocket.events.server.SessionConnectedEvent;
+import com.hhuneau.asobi.websocket.events.server.SessionMessageEvent;
+import com.hhuneau.asobi.websocket.messages.SetsExportMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 
 @Component
-public class SetsExporter implements OnConnectionEstablished {
+public class SetsExporter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SetsExporter.class);
-    private MTGSetsService setsService;
-    private ObjectMapper mapper;
+    private final MTGSetsService setsService;
+    private final ObjectMapper mapper;
 
     public SetsExporter(MTGSetsService setsService, ObjectMapper mapper) {
         this.setsService = setsService;
         this.mapper = mapper;
     }
 
-    @Override
-    public void accept(WebSocketSession session) {
-        try {
-            final Map<String, List<SetDTO>> sets = setsService.getSets().stream()
-                .map(SetDTO::of)
-                .collect(Collectors.groupingBy(SetDTO::getType));
-            final TextMessage message = new TextMessage(mapper.writeValueAsString(SetsExportMessage.of(sets)));
-            session.sendMessage(message);
-        } catch (JsonProcessingException e) {
-            LOGGER.error("Error while JSONing sets", e);
-        } catch (IOException e) {
-            LOGGER.error("Error while handling exportation of sets", e);
-        }
+    @EventListener
+    public SessionMessageEvent onSessionConnected(SessionConnectedEvent event) {
+        final Map<String, List<SetDTO>> sets = setsService.getSets().stream()
+            .map(SetDTO::of)
+            .collect(Collectors.groupingBy(SetDTO::getType));
+        final SessionMessageEvent setsExporterEvent = new SessionMessageEvent();
+        setsExporterEvent.sessionId = event.sessionId;
+        setsExporterEvent.message = SetsExportMessage.of(sets);
+        return setsExporterEvent;
     }
 
     public static class SetDTO {

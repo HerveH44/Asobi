@@ -13,4 +13,5 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public abstract class Event {
     public EventType type;
+    public String sessionId;
 }
