@@ -17,25 +17,25 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(WebSocketHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketHandler.class);
     private final ObjectMapper mapper;
     private final GameManager gameManager;
     private final ApplicationEventPublisher publisher;
-    private final SessionsRegistry sessionsRegistry;
+    private final WSCustomerService WSCustomerService;
 
 
-    public WebSocketHandler(ObjectMapper mapper, GameManager gameManager, ApplicationEventPublisher publisher, SessionsRegistry sessionsRegistry) {
+    public WebSocketHandler(ObjectMapper mapper, GameManager gameManager, ApplicationEventPublisher publisher, WSCustomerService WSCustomerService) {
         this.mapper = mapper;
         this.gameManager = gameManager;
         this.publisher = publisher;
-        this.sessionsRegistry = sessionsRegistry;
+        this.WSCustomerService = WSCustomerService;
     }
 
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         LOGGER.info("Websocket connected " + session.toString());
-        sessionsRegistry.add(new SessionWrapper(session, mapper));
+        WSCustomerService.add(new WSCustomer(session, mapper));
         SessionConnectedEvent sessionConnectedEvent = new SessionConnectedEvent();
         sessionConnectedEvent.sessionId = session.getId();
         publisher.publishEvent(sessionConnectedEvent);
@@ -68,6 +68,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         // TODO: Gérer les déconnections en controlant si la socket est rattachée à une partie
         LOGGER.info("Websocket disconnected " + session.toString());
-        sessionsRegistry.remove(session.getId());
+        WSCustomerService.remove(session.getId());
     }
 }

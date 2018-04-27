@@ -8,8 +8,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class MTGJsonDownloaderTest {

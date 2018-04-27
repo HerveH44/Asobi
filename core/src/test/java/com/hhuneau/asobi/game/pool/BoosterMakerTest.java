@@ -1,6 +1,6 @@
 package com.hhuneau.asobi.game.pool;
 
-import com.hhuneau.asobi.game.Player;
+import com.hhuneau.asobi.game.player.Player;
 import com.hhuneau.asobi.game.sets.MTGCard;
 import com.hhuneau.asobi.game.sets.MTGSet;
 import com.hhuneau.asobi.game.sets.Rarity;
@@ -24,7 +24,7 @@ public class BoosterMakerTest {
     @Before
     public void setUp() {
         poolMaker = new PoolMaker();
-        players = new HashSet<>(Arrays.asList(Player.of("userId", "name", null)));
+        players = new HashSet<>(Collections.singletonList(Player.of("userId", "name", null)));
         sets = createTestsSets();
     }
 
@@ -43,22 +43,21 @@ public class BoosterMakerTest {
         final MTGSet set = new MTGSet();
         set.setCode("testSet");
         set.setName("testSet");
-        final List<MTGCard> cards = new ArrayList<>();
         set.setCards(
             Stream.of(
-                makeTestCards(15, COMMON),
-                makeTestCards(15, UNCOMMON),
-                makeTestCards(15, RARE),
-                makeTestCards(15, MYTHIC_RARE),
-                makeTestCards(15, SPECIAL)
+                makeTestCards(COMMON),
+                makeTestCards(UNCOMMON),
+                makeTestCards(RARE),
+                makeTestCards(MYTHIC_RARE),
+                makeTestCards(SPECIAL)
             ).flatMap(Collection::stream).collect(Collectors.toSet())
         );
         return set;
     }
 
-    private List<MTGCard> makeTestCards(int number, Rarity rarity) {
+    private List<MTGCard> makeTestCards(Rarity rarity) {
         final List<MTGCard> list = new ArrayList<>();
-        for (int i = 0; i < number; i++) {
+        for (int i = 0; i < 15; i++) {
             final MTGCard card = new MTGCard();
             card.setRarity(rarity);
             card.setName(rarity.toString() + " " + i);

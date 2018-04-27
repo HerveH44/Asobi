@@ -10,12 +10,10 @@ import java.util.List;
 @Service
 @Transactional
 public class MTGSetsService {
-    private final MTGCardRepository cardRepository;
     private final MTGSetRepository setRepository;
     private final static Logger LOGGER = LoggerFactory.getLogger(MTGSetsService.class);
 
-    public MTGSetsService(MTGCardRepository cardRepository, MTGSetRepository setRepository) {
-        this.cardRepository = cardRepository;
+    public MTGSetsService(MTGSetRepository setRepository) {
         this.setRepository = setRepository;
     }
 

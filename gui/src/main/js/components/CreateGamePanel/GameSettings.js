@@ -95,9 +95,7 @@ const Set = ({availableSets, set, classes}) => (
         select
         label="Set"
         value={1}
-        SelectProps={{
-        native: true
-    }}
+        SelectProps={{ native: true }}
         helperText="Please select a set"
         margin="normal">
         {Object

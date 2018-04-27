@@ -4,14 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class Message {
-    public String type;
-    public Object payload;
+    private String type;
+    private Object payload;
 
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
+    void setType(String type) {
         this.type = type;
     }
 
@@ -19,7 +19,7 @@ public abstract class Message {
         return payload;
     }
 
-    public void setPayload(Object payload) {
+    void setPayload(Object payload) {
         this.payload = payload;
     }
 

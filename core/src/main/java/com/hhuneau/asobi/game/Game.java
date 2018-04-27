@@ -1,5 +1,6 @@
 package com.hhuneau.asobi.game;
 
+import com.hhuneau.asobi.game.player.Player;
 import com.hhuneau.asobi.game.sets.MTGSet;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import lombok.Data;

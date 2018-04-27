@@ -1,6 +1,6 @@
 package com.hhuneau.asobi.game.pool;
 
-import com.hhuneau.asobi.game.Player;
+import com.hhuneau.asobi.game.player.Player;
 import com.hhuneau.asobi.game.sets.MTGCard;
 import com.hhuneau.asobi.game.sets.MTGSet;
 import lombok.AllArgsConstructor;

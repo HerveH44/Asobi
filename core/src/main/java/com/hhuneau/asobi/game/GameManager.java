@@ -1,8 +1,6 @@
 package com.hhuneau.asobi.game;
 
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
-import com.hhuneau.asobi.websocket.events.JoinGameEvent;
-import com.hhuneau.asobi.websocket.events.PlayerIdEvent;
 import com.hhuneau.asobi.websocket.events.StartGameEvent;
 import com.hhuneau.asobi.websocket.events.server.SessionMessageEvent;
 import com.hhuneau.asobi.websocket.messages.GameIdMessage;
@@ -15,10 +13,10 @@ import org.springframework.stereotype.Service;
 public class GameManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameManager.class);
-    private final GameService gameService;
+    private final DefaultGameService gameService;
     private final GameEngineFactory gameEngineFactory;
 
-    public GameManager(GameService gameService, GameEngineFactory gameEngineFactory) {
+    public GameManager(DefaultGameService gameService, GameEngineFactory gameEngineFactory) {
         this.gameService = gameService;
         this.gameEngineFactory = gameEngineFactory;
     }
@@ -37,14 +35,5 @@ public class GameManager {
         sessionMessageEvent.message = GameIdMessage.of(gameId);
         sessionMessageEvent.sessionId = event.sessionId;
         return sessionMessageEvent;
-    }
-
-    @EventListener
-    public PlayerIdEvent onJoinGameRequest(JoinGameEvent event) {
-        final long playerId = gameService.joinGame(event);
-        PlayerIdEvent playerIdEvent = new PlayerIdEvent();
-        playerIdEvent.playerId = playerId;
-        playerIdEvent.sessionId = event.sessionId;
-        return playerIdEvent;
     }
 }

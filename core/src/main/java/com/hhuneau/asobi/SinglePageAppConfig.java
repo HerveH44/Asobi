@@ -26,9 +26,9 @@ public class SinglePageAppConfig extends WebMvcConfigurerAdapter {
     }
 
     private class PushStateResourceResolver implements ResourceResolver {
-        private Resource index = new ClassPathResource("/static/index.html");
-        private List<String> handledExtensions = Arrays.asList("json", "html", "js", "json", "csv", "css", "png", "svg", "eot", "ttf", "woff", "appcache", "jpg", "jpeg", "gif", "ico");
-        private List<String> ignoredPaths = Arrays.asList("api", "auth");
+        private final Resource index = new ClassPathResource("/static/index.html");
+        private final List<String> handledExtensions = Arrays.asList("json", "html", "js", "json", "csv", "css", "png", "svg", "eot", "ttf", "woff", "appcache", "jpg", "jpeg", "gif", "ico");
+        private final List<String> ignoredPaths = Arrays.asList("api", "auth");
 
         @Override
         public Resource resolveResource(HttpServletRequest request, String requestPath, List<? extends Resource> locations, ResourceResolverChain chain) {

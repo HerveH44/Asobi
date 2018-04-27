@@ -14,5 +14,5 @@ public enum Rarity {
     @JsonProperty("Basic Land")
     BASIC_LAND,
     @JsonProperty("Special")
-    SPECIAL;
+    SPECIAL
 }

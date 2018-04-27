@@ -2,7 +2,7 @@ package com.hhuneau.asobi.game.pool;
 
 import com.hhuneau.asobi.game.Game;
 import com.hhuneau.asobi.game.GameMode;
-import com.hhuneau.asobi.game.Player;
+import com.hhuneau.asobi.game.player.Player;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

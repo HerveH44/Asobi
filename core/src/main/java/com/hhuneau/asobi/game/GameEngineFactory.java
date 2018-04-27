@@ -7,7 +7,7 @@ import java.util.List;
 @Component
 public class GameEngineFactory {
 
-    private List<GameEngine> gameEngines;
+    private final List<GameEngine> gameEngines;
 
     public GameEngineFactory(List<GameEngine> gameEngines) {
         this.gameEngines = gameEngines;

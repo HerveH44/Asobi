@@ -1,5 +1,6 @@
-package com.hhuneau.asobi.game;
+package com.hhuneau.asobi.game.player;
 
+import com.hhuneau.asobi.game.Game;
 import com.hhuneau.asobi.game.pool.Booster;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
