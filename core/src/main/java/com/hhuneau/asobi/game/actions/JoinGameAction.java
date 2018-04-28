@@ -39,7 +39,6 @@ public class JoinGameAction implements Action<JoinGameEvent> {
             return;
         }
         final Optional<Game> game = gameService.getGame(evt.gameId);
-        //TODO: Gérer les exceptions (game introuvable ou commencée/finie)
         if (!game.isPresent()) {
             final ErrorMessage errorMessage = ErrorMessage.of(String.format("Game %s not found", evt.gameId));
             customer.get().send(errorMessage);

@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 import static com.hhuneau.asobi.game.sets.Rarity.*;
 
 @Component
+// TODO: Merge with PoolService
 public class PoolMaker {
     private static final int UNCOMMON_CARDS = 3;
     private static final int RARE_CARD = 1;

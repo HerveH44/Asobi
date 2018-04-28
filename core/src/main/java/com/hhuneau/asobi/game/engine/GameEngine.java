@@ -1,4 +1,6 @@
-package com.hhuneau.asobi.game;
+package com.hhuneau.asobi.game.engine;
+
+import com.hhuneau.asobi.game.GameType;
 
 public interface GameEngine {
 

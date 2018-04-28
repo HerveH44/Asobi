@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.hhuneau.asobi.game.Status.STARTED;
 
@@ -24,18 +23,17 @@ public class DefaultGameService implements GameService {
     }
 
     public Game createGame(CreateGameEvent event) {
-        final List<MTGSet> sets = event.sets.stream().map(this::apply).collect(Collectors.toList());
+        final List<MTGSet> sets = setService.getSets(event.sets);
         final Game game = Game.of(event, sets);
         return gameRepository.save(game);
     }
 
-    // TODO: upgrade to SpringBoot 2 and use JPA native methods
     @Override
     public Optional<Game> getGame(long gameId) {
-        final Game game = gameRepository.findOne(gameId);
-        return game != null ? Optional.of(game) : Optional.empty();
+        return gameRepository.findById(gameId);
     }
 
+    @Override
     public void startGame(Game game) {
         game.setStatus(STARTED);
         gameRepository.save(game);
@@ -43,9 +41,5 @@ public class DefaultGameService implements GameService {
 
     public GameType getGameType(long gameId) {
         return gameRepository.getOne(gameId).getGameType();
-    }
-
-    private MTGSet apply(String s) {
-        return setService.getSet(s);
     }
 }

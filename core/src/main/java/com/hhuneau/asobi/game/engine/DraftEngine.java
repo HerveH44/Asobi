@@ -1,5 +1,6 @@
-package com.hhuneau.asobi.game;
+package com.hhuneau.asobi.game.engine;
 
+import com.hhuneau.asobi.game.GameType;
 import org.springframework.stereotype.Component;
 
 import static com.hhuneau.asobi.game.GameType.DRAFT;
