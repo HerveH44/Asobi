@@ -1,6 +1,7 @@
 package com.hhuneau.asobi.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hhuneau.asobi.customer.Customer;
 import com.hhuneau.asobi.websocket.messages.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

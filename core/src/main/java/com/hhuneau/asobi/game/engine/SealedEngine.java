@@ -6,7 +6,7 @@ import com.hhuneau.asobi.game.GameType;
 import com.hhuneau.asobi.game.player.Player;
 import com.hhuneau.asobi.game.pool.Booster;
 import com.hhuneau.asobi.game.pool.PoolService;
-import com.hhuneau.asobi.websocket.CustomerService;
+import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.websocket.messages.PoolMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

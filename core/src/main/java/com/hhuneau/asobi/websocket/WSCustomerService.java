@@ -1,5 +1,7 @@
 package com.hhuneau.asobi.websocket;
 
+import com.hhuneau.asobi.customer.Customer;
+import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.websocket.events.server.SessionMessageEvent;
 import com.hhuneau.asobi.websocket.messages.Message;
 import org.springframework.context.event.EventListener;
