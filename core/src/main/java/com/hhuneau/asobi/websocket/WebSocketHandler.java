@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hhuneau.asobi.game.GameManager;
 import com.hhuneau.asobi.websocket.events.Event;
 import com.hhuneau.asobi.websocket.events.StartGameEvent;
-import com.hhuneau.asobi.websocket.events.server.SessionConnectedEvent;
+import com.hhuneau.asobi.websocket.events.SessionConnectedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;

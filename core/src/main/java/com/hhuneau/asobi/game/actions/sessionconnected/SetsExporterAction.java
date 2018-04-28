@@ -4,7 +4,7 @@ import com.hhuneau.asobi.game.actions.Action;
 import com.hhuneau.asobi.game.sets.MTGSetsService;
 import com.hhuneau.asobi.game.sets.SetDTO;
 import com.hhuneau.asobi.customer.CustomerService;
-import com.hhuneau.asobi.websocket.events.server.SessionConnectedEvent;
+import com.hhuneau.asobi.websocket.events.SessionConnectedEvent;
 import com.hhuneau.asobi.websocket.messages.SetsExportMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

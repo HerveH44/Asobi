@@ -2,9 +2,7 @@ package com.hhuneau.asobi.websocket;
 
 import com.hhuneau.asobi.customer.Customer;
 import com.hhuneau.asobi.customer.CustomerService;
-import com.hhuneau.asobi.websocket.events.server.SessionMessageEvent;
 import com.hhuneau.asobi.websocket.messages.Message;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -34,12 +32,5 @@ public class WSCustomerService implements CustomerService {
     @Override
     public void send(String customerId, Message message) {
         find(customerId).ifPresent(customer -> customer.send(message));
-    }
-
-    @EventListener
-    @Deprecated
-    //TODO: delete method and Event
-    public void onSessionMessageEvent(SessionMessageEvent event) {
-        find(event.sessionId).ifPresent(customer -> customer.send(event.message));
     }
 }

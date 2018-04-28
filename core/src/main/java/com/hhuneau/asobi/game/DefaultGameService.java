@@ -15,7 +15,7 @@ import static com.hhuneau.asobi.game.Status.STARTED;
 @Transactional
 public class DefaultGameService implements GameService {
     private final GameRepository gameRepository;
-    private MTGSetsService setService;
+    private final MTGSetsService setService;
 
     public DefaultGameService(GameRepository gameRepository, MTGSetsService setService) {
         this.gameRepository = gameRepository;
