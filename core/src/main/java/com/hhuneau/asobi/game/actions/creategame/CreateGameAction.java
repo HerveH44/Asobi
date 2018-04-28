@@ -1,10 +1,9 @@
 package com.hhuneau.asobi.game.actions.creategame;
 
-import com.hhuneau.asobi.game.GameService;
-import com.hhuneau.asobi.game.actions.Action;
-import com.hhuneau.asobi.game.sets.MTGSetsService;
 import com.hhuneau.asobi.customer.Customer;
 import com.hhuneau.asobi.customer.CustomerService;
+import com.hhuneau.asobi.game.GameService;
+import com.hhuneau.asobi.game.actions.Action;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import com.hhuneau.asobi.websocket.messages.GameIdMessage;
 import org.slf4j.Logger;
@@ -20,12 +19,10 @@ public class CreateGameAction implements Action<CreateGameEvent> {
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateGameAction.class);
     private final GameService gameService;
     private final CustomerService customerService;
-    private final MTGSetsService setService;
 
-    public CreateGameAction(GameService gameService, CustomerService customerService, MTGSetsService setService) {
+    public CreateGameAction(GameService gameService, CustomerService customerService) {
         this.gameService = gameService;
         this.customerService = customerService;
-        this.setService = setService;
     }
 
     @Override
