@@ -1,5 +1,6 @@
 package com.hhuneau.asobi.game.engine;
 
+import com.hhuneau.asobi.game.Game;
 import com.hhuneau.asobi.game.GameType;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +10,7 @@ import static com.hhuneau.asobi.game.GameType.DRAFT;
 public class DraftEngine implements GameEngine {
 
     @Override
-    public void start(Long gameId) {
+    public void start(Game game) {
 
     }
 

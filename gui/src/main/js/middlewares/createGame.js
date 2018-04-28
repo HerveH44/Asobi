@@ -16,7 +16,8 @@ const createGame = ({getState, dispatch}) => next => action => {
         gameSettings: {
             id,
             name,
-            gameId
+            gameId,
+            authToken
         }
     } = getState();
 
@@ -27,7 +28,7 @@ const createGame = ({getState, dispatch}) => next => action => {
             return next(action);
         case "GAME_ID":
             next(action);
-            return dispatch(push("games/" + action.payload));
+            return dispatch(push("games/" + action.payload.gameId));
         case "CREATE_GAME":
             return dispatch({
                 type: WEBSOCKET_SEND,
@@ -57,7 +58,8 @@ const createGame = ({getState, dispatch}) => next => action => {
                 type: WEBSOCKET_SEND,
                 payload: {
                     type: "START_GAME",
-                    gameId: gameId
+                    gameId,
+                    authToken
                 }
             })
         // case WEBSOCKET_OPEN:

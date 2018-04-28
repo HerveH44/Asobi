@@ -1,9 +1,7 @@
 package com.hhuneau.asobi.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hhuneau.asobi.game.GameManager;
 import com.hhuneau.asobi.websocket.events.Event;
-import com.hhuneau.asobi.websocket.events.StartGameEvent;
 import com.hhuneau.asobi.websocket.events.SessionConnectedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +17,12 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketHandler.class);
     private final ObjectMapper mapper;
-    private final GameManager gameManager;
     private final ApplicationEventPublisher publisher;
     private final WSCustomerService WSCustomerService;
 
 
-    public WebSocketHandler(ObjectMapper mapper, GameManager gameManager, ApplicationEventPublisher publisher, WSCustomerService WSCustomerService) {
+    public WebSocketHandler(ObjectMapper mapper, ApplicationEventPublisher publisher, WSCustomerService WSCustomerService) {
         this.mapper = mapper;
-        this.gameManager = gameManager;
         this.publisher = publisher;
         this.WSCustomerService = WSCustomerService;
     }
@@ -47,21 +43,17 @@ public class WebSocketHandler extends TextWebSocketHandler {
         evt.sessionId = session.getId();
         publisher.publishEvent(evt);
 
-        switch (evt.type) {
-            case LEAVE_GAME:
-                LOGGER.info("We got a leave game!");
-                break;
-            case START_GAME:
-                LOGGER.info("We got a game start!");
-                gameManager.startGame((StartGameEvent) evt);
-                break;
-            case ID:
-                LOGGER.info("We got an ID");
-                break;
-            default:
+//        switch (evt.type) {
+//            case LEAVE_GAME:
+//                LOGGER.info("We got a leave game!");
+//                break;
+//            case ID:
+//                LOGGER.info("We got an ID");
+//                break;
+//            default:
 //                throw new UnsupportedOperationException(String.format("unknown event type %s", evt.type));
-
-        }
+//
+//        }
     }
 
     @Override

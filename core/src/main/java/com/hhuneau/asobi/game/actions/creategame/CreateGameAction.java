@@ -5,7 +5,7 @@ import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.game.GameService;
 import com.hhuneau.asobi.game.actions.Action;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
-import com.hhuneau.asobi.websocket.messages.GameIdMessage;
+import com.hhuneau.asobi.websocket.messages.CreatedGameMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
@@ -33,7 +33,7 @@ public class CreateGameAction implements Action<CreateGameEvent> {
             LOGGER.error("cannot find session with id {}", evt.sessionId);
             return;
         }
-        final long gameId = gameService.createGame(evt);
-        customerService.send(evt.sessionId, GameIdMessage.of(gameId));
+        final CreateGameDTO createGameDTO = gameService.createGame(evt);
+        customerService.send(evt.sessionId, CreatedGameMessage.of(createGameDTO));
     }
 }

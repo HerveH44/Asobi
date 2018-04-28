@@ -22,6 +22,7 @@ public class Game {
     private GameType gameType;
     private Status status = Status.CREATED;
     private Date createdDate = new Date();
+    private String authToken;
 
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     private Set<Player> players;
@@ -34,7 +35,8 @@ public class Game {
                           boolean isPrivate,
                           GameMode gameMode,
                           GameType gameType,
-                          List<MTGSet> sets) {
+                          List<MTGSet> sets,
+                          String authToken) {
         final Game game = new Game();
         game.setTitle(title);
         game.setSeats(seats);
@@ -42,6 +44,7 @@ public class Game {
         game.setGameMode(gameMode);
         game.setGameType(gameType);
         game.setSets(sets);
+        game.setAuthToken(authToken);
         return game;
     }
 }
