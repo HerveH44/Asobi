@@ -2,7 +2,6 @@ package com.hhuneau.asobi.game;
 
 import com.hhuneau.asobi.game.player.Player;
 import com.hhuneau.asobi.game.sets.MTGSet;
-import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -30,13 +29,18 @@ public class Game {
     @JoinColumn(name = "sets_list")
     private List<MTGSet> sets;
 
-    public static Game of(CreateGameEvent event, List<MTGSet> sets) {
+    public static Game of(String title,
+                          long seats,
+                          boolean isPrivate,
+                          GameMode gameMode,
+                          GameType gameType,
+                          List<MTGSet> sets) {
         final Game game = new Game();
-        game.setTitle(event.title);
-        game.setSeats(event.seats);
-        game.setPrivate(event.isPrivate);
-        game.setGameMode(event.gameMode);
-        game.setGameType(event.gameType);
+        game.setTitle(title);
+        game.setSeats(seats);
+        game.setPrivate(isPrivate);
+        game.setGameMode(gameMode);
+        game.setGameType(gameType);
         game.setSets(sets);
         return game;
     }

@@ -4,5 +4,5 @@ import com.hhuneau.asobi.websocket.events.Event;
 
 import java.util.function.Consumer;
 
-interface Action<T extends Event> extends Consumer<T> {
+public interface Action<T extends Event> extends Consumer<T> {
 }

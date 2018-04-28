@@ -15,20 +15,15 @@ import static com.hhuneau.asobi.game.Status.STARTED;
 @Transactional
 public class DefaultGameService implements GameService {
     private final GameRepository gameRepository;
-    private final MTGSetsService setService;
+    private MTGSetsService setService;
 
     public DefaultGameService(GameRepository gameRepository, MTGSetsService setService) {
         this.gameRepository = gameRepository;
         this.setService = setService;
     }
 
-    public Game createGame(CreateGameEvent event) {
-        final List<MTGSet> sets = setService.getSets(event.sets);
-        final Game game = Game.of(event, sets);
-        return gameRepository.save(game);
-    }
-
     @Override
+    @Transactional(readOnly = true)
     public Optional<Game> getGame(long gameId) {
         return gameRepository.findById(gameId);
     }
@@ -39,7 +34,15 @@ public class DefaultGameService implements GameService {
         gameRepository.save(game);
     }
 
-    public GameType getGameType(long gameId) {
+    @Override
+    public long createGame(CreateGameEvent evt) {
+        final List<MTGSet> sets = setService.getSets(evt.sets);
+        final Game game = Game.of(evt.title, evt.seats, evt.isPrivate, evt.gameMode, evt.gameType, sets);
+        return gameRepository.save(game).getGameId();
+    }
+
+
+    GameType getGameType(long gameId) {
         return gameRepository.getOne(gameId).getGameType();
     }
 }

@@ -1,7 +1,8 @@
-package com.hhuneau.asobi.game.actions;
+package com.hhuneau.asobi.game.actions.joingame;
 
 import com.hhuneau.asobi.game.Game;
 import com.hhuneau.asobi.game.GameService;
+import com.hhuneau.asobi.game.actions.Action;
 import com.hhuneau.asobi.game.player.Player;
 import com.hhuneau.asobi.game.player.PlayerService;
 import com.hhuneau.asobi.websocket.Customer;
