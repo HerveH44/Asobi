@@ -23,8 +23,19 @@ public class DefaultPlayerService implements PlayerService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Player> getPlayerWithId(long gameId, long playerId) {
-        return playerRepository.findAll().stream()
-            .filter(player -> (player.getPlayerId() == playerId) && (player.getGame().getGameId() == gameId))
-            .findFirst();
+        return playerRepository.findByPlayerIdAndGameId(playerId, gameId);
+    }
+
+    @Override
+    @Transactional
+    public void remove(long gameId, long playerId, String sessionId) {
+        playerRepository.findByPlayerIdAndGameIdAndUserId(playerId, gameId, sessionId)
+            .ifPresent(playerRepository::delete);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Player> getPlayerWithUserId(long gameId, String sessionId) {
+        return playerRepository.findByGameIdAndUserId(gameId, sessionId);
     }
 }

@@ -17,6 +17,7 @@ const createGame = ({getState, dispatch}) => next => action => {
             id,
             name,
             gameId,
+            playerId,
             authToken
         }
     } = getState();
@@ -50,6 +51,16 @@ const createGame = ({getState, dispatch}) => next => action => {
                     gameId: action.payload,
                     id,
                     name
+                }
+            });
+        case "LEAVE_GAME":
+            return dispatch({
+                type: WEBSOCKET_SEND,
+                payload: {
+                    type: "LEAVE_GAME",
+                    gameId: action.payload,
+                    id,
+                    playerId
                 }
             });
         case "START_GAME":

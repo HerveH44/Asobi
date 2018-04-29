@@ -2,6 +2,9 @@ package com.hhuneau.asobi.websocket.events;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.hhuneau.asobi.websocket.events.game.player.JoinGameEvent;
+import com.hhuneau.asobi.websocket.events.game.player.LeaveGameEvent;
+import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
 
 @JsonTypeInfo(visible = true, use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes(value = {

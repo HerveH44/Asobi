@@ -24,7 +24,7 @@ public class Game {
     private Date createdDate = new Date();
     private String authToken;
 
-    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<Player> players;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "sets_list")

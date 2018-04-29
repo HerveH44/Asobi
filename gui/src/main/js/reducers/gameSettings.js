@@ -1,10 +1,11 @@
 import {handleActions} from 'redux-actions';
-import {joinGame, editGameSettings, GAME_ID} from "../actions/server"
+import {joinGame, editGameSettings, GAME_ID, PLAYER_ID} from "../actions/server"
 
 const InitialState = {
     id: "1",
     name: "dr4ft",
     gameId: null,
+    playerId: null,
     authToken: null,
     type: "draft",
     packsInfo: "some packs infos",
@@ -31,6 +32,13 @@ export default handleActions({
         return {
             ...state,
             ...payload
+        }
+    },
+    [PLAYER_ID](state, {payload: playerId}) {
+        console.log("player id !")
+        return {
+            ...state,
+            playerId
         }
     },
     // "JOIN_GAME" (state, {payload}) {

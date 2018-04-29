@@ -9,8 +9,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.List;
 
-/*TODO: See if Player should be an abstract class and HumanPlayer,
- *    Bot would be implementations or just Player and Bot as an subclass
+/*TODO: See if PlayerEvent should be an abstract class and HumanPlayer,
+ *    Bot would be implementations or just PlayerEvent and Bot as an subclass
  */
 @Entity
 @Getter
@@ -27,12 +27,11 @@ public class Player {
     @JoinColumn(name = "game_id")
     private Game game;
 
-    @OneToMany(mappedBy = "player")
+    @OneToMany(mappedBy = "player", orphanRemoval = true)
     private List<Booster> pool;
 
-    static public Player of(String userId, String name, Game game) {
+    static public Player of(String userId, String name) {
         final Player player = new Player();
-        player.setGame(game);
         player.setUserId(userId);
         player.setName(name);
         return player;

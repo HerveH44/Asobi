@@ -24,7 +24,7 @@ public class BoosterMakerTest {
     @Before
     public void setUp() {
         poolMaker = new PoolMaker();
-        players = new HashSet<>(Collections.singletonList(Player.of("userId", "name", null)));
+        players = new HashSet<>(Collections.singletonList(Player.of("userId", "name")));
         sets = createTestsSets();
     }
 

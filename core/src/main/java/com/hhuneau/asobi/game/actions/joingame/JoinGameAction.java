@@ -1,13 +1,12 @@
 package com.hhuneau.asobi.game.actions.joingame;
 
-import com.hhuneau.asobi.game.Game;
+import com.hhuneau.asobi.customer.Customer;
+import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.game.GameService;
 import com.hhuneau.asobi.game.actions.Action;
 import com.hhuneau.asobi.game.player.Player;
 import com.hhuneau.asobi.game.player.PlayerService;
-import com.hhuneau.asobi.customer.Customer;
-import com.hhuneau.asobi.customer.CustomerService;
-import com.hhuneau.asobi.websocket.events.JoinGameEvent;
+import com.hhuneau.asobi.websocket.events.game.player.JoinGameEvent;
 import com.hhuneau.asobi.websocket.messages.ErrorMessage;
 import com.hhuneau.asobi.websocket.messages.PlayerIdMessage;
 import org.slf4j.Logger;
@@ -39,14 +38,14 @@ public class JoinGameAction implements Action<JoinGameEvent> {
             LOGGER.error("cannot find session with id {}", evt.sessionId);
             return;
         }
-        final Optional<Game> game = gameService.getGame(evt.gameId);
-        if (!game.isPresent()) {
+        final boolean gameIsPresent = gameService.isPresent(evt.gameId);
+        if (!gameIsPresent) {
             final ErrorMessage errorMessage = ErrorMessage.of(String.format("Game %s not found", evt.gameId));
             customer.get().send(errorMessage);
             return;
         }
 
-        //Get registeredPlayer from userId if exists. If not create a new registeredPlayer
+        //Get registeredPlayer from userId if exists. If not, create a new registeredPlayer
         final Optional<Player> registeredPlayer = playerService.getPlayerWithId(evt.gameId, evt.playerId);
         registeredPlayer.ifPresent(player -> {
             player.setUserId(evt.sessionId);
@@ -56,15 +55,19 @@ public class JoinGameAction implements Action<JoinGameEvent> {
         });
 
         if (!registeredPlayer.isPresent()) {
-            if (game.get().getStatus().hasStarted()) {
+            final boolean gameStarted = gameService.hasStarted(evt.gameId);
+            if (gameStarted) {
                 final ErrorMessage errorMessage = ErrorMessage.of(String.format("Game %s already started", evt.gameId));
                 customer.get().send(errorMessage);
                 return;
             }
-
-            final Player player = playerService.save(Player.of(evt.sessionId, evt.name, game.get()));
-            final PlayerIdMessage message = PlayerIdMessage.of(player.getPlayerId());
-            customer.get().send(message);
+            final Player player = Player.of(evt.sessionId, evt.name);
+            if (gameService.accept(evt.gameId, player)) {
+                playerService.getPlayerWithUserId(evt.gameId, evt.sessionId).ifPresent(p -> {
+                    final PlayerIdMessage message = PlayerIdMessage.of(p.getPlayerId());
+                    customer.get().send(message);
+                });
+            }
         }
     }
 }
