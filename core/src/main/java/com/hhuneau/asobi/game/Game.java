@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import static javax.persistence.EnumType.STRING;
+
 @Entity
 @Data
 public class Game {
@@ -18,15 +20,18 @@ public class Game {
     private String title;
     private long seats;
     private boolean isPrivate;
+    @Enumerated(STRING)
     private GameMode gameMode;
+    @Enumerated(STRING)
     private GameType gameType;
+    @Enumerated(STRING)
     private Status status = Status.CREATED;
     private Date createdDate = new Date();
     private String authToken;
 
-    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "game", orphanRemoval = true)
     private Set<Player> players;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinColumn(name = "sets_list")
     private List<MTGSet> sets;
 

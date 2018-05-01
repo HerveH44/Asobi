@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
-@RestController("/api")
+@RestController
 public class WebController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebController.class);
@@ -18,13 +18,13 @@ public class WebController {
         this.downloader = downloader;
     }
 
-    @GetMapping("/download")
+    @GetMapping("/api/download")
     public void triggerDownload() throws IOException {
-        LOGGER.info("downloading");
+        LOGGER.info("downloading AllSets.json");
         downloader.download();
     }
 
-    @GetMapping("/download/{path}")
+    @GetMapping("/api/download/{path}")
     public void downloadFileFromPath(@PathVariable final String path) {
         downloader.download("/" + path + "/AllSets.json");
     }

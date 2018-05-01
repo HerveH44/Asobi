@@ -62,7 +62,7 @@ public class JoinGameAction implements Action<JoinGameEvent> {
                 return;
             }
             final Player player = Player.of(evt.sessionId, evt.name);
-            if (gameService.accept(evt.gameId, player)) {
+            if (gameService.addPlayer(evt.gameId, player)) {
                 playerService.getPlayerWithUserId(evt.gameId, evt.sessionId).ifPresent(p -> {
                     final PlayerIdMessage message = PlayerIdMessage.of(p.getPlayerId());
                     customer.get().send(message);

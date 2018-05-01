@@ -12,11 +12,15 @@ public interface GameService {
 
     CreateGameDTO createGame(CreateGameEvent evt);
 
-    void startGame(long gameId, String authToken);
-
     boolean isPresent(long gameId);
 
     boolean hasStarted(long gameId);
 
-    boolean accept(long gameId, Player player);
+    boolean addPlayer(long gameId, Player player);
+
+    void startGame(long gameId);
+
+    void finishGame(long gameId);
+
+    boolean canStart(Game game, String authToken);
 }

@@ -1,32 +1,31 @@
 package com.hhuneau.asobi.game.pool;
 
 import com.hhuneau.asobi.game.Game;
-import com.hhuneau.asobi.game.GameMode;
-import com.hhuneau.asobi.game.player.Player;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class DefaultPoolService implements PoolService {
 
     private final PoolRepository repository;
-    private final PoolMaker poolMaker;
+    private final List<PoolMaker> poolMakers;
 
-    public DefaultPoolService(PoolRepository repository, PoolMaker poolMaker) {
+    public DefaultPoolService(PoolRepository repository, List<PoolMaker> poolMakers) {
         this.repository = repository;
-        this.poolMaker = poolMaker;
+        this.poolMakers = poolMakers;
     }
 
     @Override
     @Transactional
-    public void createPools(Set<Player> players, Game game) {
-        if (game.getGameMode().equals(GameMode.NORMAL)) {
-            final List<Booster> boosters = poolMaker.createPools(players, game.getSets());
-            repository.saveAll(boosters);
-        }
+    public void createPools(Game game) {
+        final List<Booster> boosters = poolMakers.stream()
+            .filter(poolMaker -> poolMaker.isInterested(game.getGameMode()))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException(String.format("gameMode %s is not supported", game.getGameMode())))
+            .createPools(game);
+        repository.saveAll(boosters);
     }
 
 }

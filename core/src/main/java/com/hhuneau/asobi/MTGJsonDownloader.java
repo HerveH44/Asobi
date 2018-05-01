@@ -60,6 +60,7 @@ public class MTGJsonDownloader {
             try {
                 LOGGER.info("saving set {}", mtgSet.getCode());
                 setsService.saveSet(mtgSet);
+                LOGGER.info("set {} successfully saved", mtgSet.getCode());
             } catch (Exception e) {
                 LOGGER.error("can't save " + setName + " " + e.getMessage());
             }

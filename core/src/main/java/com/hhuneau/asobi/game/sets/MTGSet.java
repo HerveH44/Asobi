@@ -1,13 +1,17 @@
 package com.hhuneau.asobi.game.sets;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
+import static javax.persistence.CascadeType.ALL;
+
 @Entity
-@Data
+@Getter
+@Setter
 public class MTGSet {
     @Id
     private String code;
@@ -17,7 +21,8 @@ public class MTGSet {
     private String border;
     private String type;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = ALL)
+    @JoinColumn(name = "set_id")
     private Set<MTGCard> cards;
 
 }

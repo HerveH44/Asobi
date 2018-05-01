@@ -3,17 +3,14 @@ package com.hhuneau.asobi.game.engine;
 import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.game.Game;
 import com.hhuneau.asobi.game.GameType;
-import com.hhuneau.asobi.game.player.Player;
 import com.hhuneau.asobi.game.pool.Booster;
-import com.hhuneau.asobi.game.pool.PoolService;
 import com.hhuneau.asobi.websocket.messages.PoolMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Set;
 
 import static com.hhuneau.asobi.game.GameType.SEALED;
 
@@ -21,11 +18,9 @@ import static com.hhuneau.asobi.game.GameType.SEALED;
 public class SealedEngine implements GameEngine {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SealedEngine.class);
-    private final PoolService poolService;
     private final CustomerService customerService;
 
-    public SealedEngine(PoolService poolService, CustomerService customerService) {
-        this.poolService = poolService;
+    public SealedEngine(CustomerService customerService) {
         this.customerService = customerService;
     }
 
@@ -33,9 +28,6 @@ public class SealedEngine implements GameEngine {
     @Transactional
     //TODO: Refactor as part of Facade or action
     public void start(Game game) {
-        final Set<Player> players = game.getPlayers();
-        //TODO: Responsability of playerService?
-        poolService.createPools(players, game);
         //TODO: Responsability of playerService?
         game.getPlayers().forEach(player -> {
             final List<Booster> pool = player.getPool();
@@ -45,6 +37,6 @@ public class SealedEngine implements GameEngine {
 
     @Override
     public boolean isInterested(GameType gameType) {
-        return gameType == SEALED;
+        return gameType.equals(SEALED);
     }
 }
