@@ -1,17 +1,21 @@
 package com.hhuneau.asobi.game;
 
+import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.game.actions.creategame.CreateGameDTO;
 import com.hhuneau.asobi.game.player.Player;
 import com.hhuneau.asobi.game.player.PlayerService;
 import com.hhuneau.asobi.game.sets.MTGSet;
 import com.hhuneau.asobi.game.sets.MTGSetsService;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
+import com.hhuneau.asobi.websocket.messages.GameStateMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.hhuneau.asobi.game.Status.FINISHED;
 import static com.hhuneau.asobi.game.Status.STARTED;
@@ -22,11 +26,13 @@ public class DefaultGameService implements GameService {
     private final GameRepository gameRepository;
     private final MTGSetsService setService;
     private final PlayerService playerService;
+    private final CustomerService customerService;
 
-    public DefaultGameService(GameRepository gameRepository, MTGSetsService setService, PlayerService playerService) {
+    public DefaultGameService(GameRepository gameRepository, MTGSetsService setService, PlayerService playerService, CustomerService customerService) {
         this.gameRepository = gameRepository;
         this.setService = setService;
         this.playerService = playerService;
+        this.customerService = customerService;
     }
 
     @Override
@@ -65,6 +71,16 @@ public class DefaultGameService implements GameService {
     @Override
     public boolean canStart(Game game, String authToken) {
         return game.getAuthToken().equals(authToken) && !game.getStatus().hasStarted();
+    }
+
+    @Override
+    public void broadcastState(Game game) {
+        final Map<String, Integer> gameState = game.getPlayers()
+            .stream()
+            .collect(Collectors.toMap(Player::getName, player -> player.getRemainingPacks().size()));
+        game.getPlayers().forEach(player -> {
+            customerService.send(player.getUserId(), GameStateMessage.of(gameState));
+        });
     }
 
     @Override

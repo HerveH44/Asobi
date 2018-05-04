@@ -23,4 +23,6 @@ public interface GameService {
     void finishGame(long gameId);
 
     boolean canStart(Game game, String authToken);
+
+    void broadcastState(Game game);
 }

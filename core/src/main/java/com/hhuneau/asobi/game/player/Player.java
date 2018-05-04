@@ -30,6 +30,9 @@ public class Player {
     @OneToMany(mappedBy = "player", orphanRemoval = true)
     private List<Booster> pool;
 
+    @OneToMany
+    private List<Booster> remainingPacks;
+
     static public Player of(String userId, String name) {
         final Player player = new Player();
         player.setUserId(userId);

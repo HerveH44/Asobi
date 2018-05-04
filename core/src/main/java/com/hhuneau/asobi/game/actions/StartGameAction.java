@@ -23,7 +23,7 @@ public class StartGameAction implements Action<StartGameEvent> {
     private final CustomerService customerService;
     private final GameService gameService;
     private final GameEngineFactory gameEngineFactory;
-    private PoolService poolService;
+    private final PoolService poolService;
 
     public StartGameAction(CustomerService customerService, GameService gameService, GameEngineFactory gameEngineFactory, PoolService poolService) {
         this.customerService = customerService;
@@ -49,6 +49,7 @@ public class StartGameAction implements Action<StartGameEvent> {
                 final GameEngine engine = gameEngineFactory.getEngine(gameType);
                 gameService.startGame(evt.gameId);
                 engine.start(game);
+                gameService.broadcastState(game);
             });
     }
 }

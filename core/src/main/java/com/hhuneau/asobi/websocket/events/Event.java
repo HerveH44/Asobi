@@ -6,7 +6,7 @@ import com.hhuneau.asobi.websocket.events.game.player.JoinGameEvent;
 import com.hhuneau.asobi.websocket.events.game.player.LeaveGameEvent;
 import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
 
-@JsonTypeInfo(visible = true, use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(visible = true, use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes(value = {
     @JsonSubTypes.Type(value = CreateGameEvent.class, name = "CREATE_GAME"),
     @JsonSubTypes.Type(value = JoinGameEvent.class, name = "JOIN_GAME"),

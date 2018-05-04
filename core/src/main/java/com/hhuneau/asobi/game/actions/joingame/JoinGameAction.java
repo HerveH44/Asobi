@@ -45,29 +45,30 @@ public class JoinGameAction implements Action<JoinGameEvent> {
             return;
         }
 
-        //Get registeredPlayer from userId if exists. If not, create a new registeredPlayer
+        //Handle client reconnection
         final Optional<Player> registeredPlayer = playerService.getPlayerWithId(evt.gameId, evt.playerId);
-        registeredPlayer.ifPresent(player -> {
-            player.setUserId(evt.sessionId);
-            playerService.save(player);
-            final PlayerIdMessage message = PlayerIdMessage.of(player.getPlayerId());
-            customer.get().send(message);
-        });
-
-        if (!registeredPlayer.isPresent()) {
-            final boolean gameStarted = gameService.hasStarted(evt.gameId);
-            if (gameStarted) {
-                final ErrorMessage errorMessage = ErrorMessage.of(String.format("Game %s already started", evt.gameId));
-                customer.get().send(errorMessage);
-                return;
+        registeredPlayer.ifPresentOrElse(
+            player -> {
+                player.setUserId(evt.sessionId);
+                playerService.save(player);
+                final PlayerIdMessage message = PlayerIdMessage.of(player.getPlayerId());
+                customer.get().send(message);
+            },
+            () -> {
+                final boolean gameStarted = gameService.hasStarted(evt.gameId);
+                if (gameStarted) {
+                    final ErrorMessage errorMessage = ErrorMessage.of(String.format("Game %s already started", evt.gameId));
+                    customer.get().send(errorMessage);
+                    return;
+                }
+                final Player player = Player.of(evt.sessionId, evt.name);
+                if (gameService.addPlayer(evt.gameId, player)) {
+                    playerService.getPlayerWithUserId(evt.gameId, evt.sessionId).ifPresent(p -> {
+                        final PlayerIdMessage message = PlayerIdMessage.of(p.getPlayerId());
+                        customer.get().send(message);
+                    });
+                }
             }
-            final Player player = Player.of(evt.sessionId, evt.name);
-            if (gameService.addPlayer(evt.gameId, player)) {
-                playerService.getPlayerWithUserId(evt.gameId, evt.sessionId).ifPresent(p -> {
-                    final PlayerIdMessage message = PlayerIdMessage.of(p.getPlayerId());
-                    customer.get().send(message);
-                });
-            }
-        }
+        );
     }
 }
