@@ -1,11 +1,8 @@
 import {handleActions} from 'redux-actions';
-import {joinGame, editGameSettings, GAME_ID, PLAYER_ID} from "../actions/server"
+import {joinGame, editGameSettings, GAME_ID} from "../actions/server"
 
 const InitialState = {
-    id: "1",
-    name: "dr4ft",
     gameId: null,
-    playerId: null,
     authToken: null,
     type: "draft",
     packsInfo: "some packs infos",
@@ -22,7 +19,6 @@ export default handleActions({
         };
     },
     [joinGame](state, {payload}) {
-        console.log("join game " + payload);
         return {
             ...state,
             gameId: payload
@@ -34,19 +30,6 @@ export default handleActions({
             ...payload
         }
     },
-    [PLAYER_ID](state, {payload: playerId}) {
-        console.log("player id !")
-        return {
-            ...state,
-            playerId
-        }
-    },
-    // "JOIN_GAME" (state, {payload}) {
-    //     return {
-    //         ...state,
-    //         gameId: payload
-    //     }
-    // },
     "POOL"(state, {payload}) {
         console.log(payload);
     }

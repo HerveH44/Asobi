@@ -14,19 +14,16 @@ const createGame = ({getState, dispatch}) => next => action => {
             sets
         },
         gameSettings: {
-            id,
-            name,
             gameId,
-            playerId,
             authToken
+        },
+        player: {
+            playerId,
+            name
         }
     } = getState();
 
     switch (action.type) {
-        case "POOL":
-            console.log("catched POOL");
-            console.log(action.payload);
-            return next(action);
         case "GAME_ID":
             next(action);
             return dispatch(push("games/" + action.payload.gameId));
@@ -49,7 +46,6 @@ const createGame = ({getState, dispatch}) => next => action => {
                 payload: {
                     type: "JOIN_GAME",
                     gameId: action.payload,
-                    id,
                     name
                 }
             });
@@ -59,12 +55,10 @@ const createGame = ({getState, dispatch}) => next => action => {
                 payload: {
                     type: "LEAVE_GAME",
                     gameId: action.payload,
-                    id,
                     playerId
                 }
             });
         case "START_GAME":
-            console.log("gameId" + gameId);
             return dispatch({
                 type: WEBSOCKET_SEND,
                 payload: {
