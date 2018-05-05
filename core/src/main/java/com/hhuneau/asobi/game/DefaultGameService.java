@@ -1,7 +1,6 @@
 package com.hhuneau.asobi.game;
 
 import com.hhuneau.asobi.customer.CustomerService;
-import com.hhuneau.asobi.game.actions.creategame.CreateGameDTO;
 import com.hhuneau.asobi.game.player.Player;
 import com.hhuneau.asobi.game.player.PlayerService;
 import com.hhuneau.asobi.game.sets.MTGSet;
@@ -84,6 +83,11 @@ public class DefaultGameService implements GameService {
     }
 
     @Override
+    public void save(Game game) {
+        gameRepository.save(game);
+    }
+
+    @Override
     public boolean isPresent(long gameId) {
         return getGame(gameId).isPresent();
     }
@@ -98,21 +102,10 @@ public class DefaultGameService implements GameService {
     }
 
     @Override
-    public boolean addPlayer(long gameId, Player player) {
-        final Optional<Game> optionalGame = getGame(gameId);
-        if (!optionalGame.isPresent()) {
-            throw new IllegalArgumentException(String.format("%s does not exist", gameId));
-        }
-
-        final Game game = optionalGame.get();
-        if (game.getSeats() > game.getPlayers().size()) {
-            player.setGame(game);
-            final Player savedPlayer = playerService.save(player);
-            game.getPlayers().add(savedPlayer);
-            gameRepository.save(game);
-            return true;
-        } else {
-            return false;
-        }
+    public Player addPlayer(Game game, Player player) {
+        final Player savedPlayer = playerService.save(player);
+        game.getPlayers().add(savedPlayer);
+        gameRepository.save(game);
+        return savedPlayer;
     }
 }

@@ -1,6 +1,5 @@
 package com.hhuneau.asobi.game;
 
-import com.hhuneau.asobi.game.actions.creategame.CreateGameDTO;
 import com.hhuneau.asobi.game.player.Player;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 
@@ -16,7 +15,7 @@ public interface GameService {
 
     boolean hasStarted(long gameId);
 
-    boolean addPlayer(long gameId, Player player);
+    Player addPlayer(Game game, Player player);
 
     void startGame(long gameId);
 
@@ -25,4 +24,6 @@ public interface GameService {
     boolean canStart(Game game, String authToken);
 
     void broadcastState(Game game);
+
+    void save(Game game);
 }

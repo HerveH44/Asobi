@@ -2,17 +2,21 @@ package com.hhuneau.asobi.game;
 
 import com.hhuneau.asobi.game.player.Player;
 import com.hhuneau.asobi.game.sets.MTGSet;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import static com.hhuneau.asobi.game.Status.CREATED;
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Game {
     @Id
     @GeneratedValue
@@ -25,11 +29,12 @@ public class Game {
     @Enumerated(STRING)
     private GameType gameType;
     @Enumerated(STRING)
-    private Status status = Status.CREATED;
+    private Status status = CREATED;
     private Date createdDate = new Date();
     private String authToken;
 
-    @OneToMany(mappedBy = "game", orphanRemoval = true)
+    @OneToMany(orphanRemoval = true, cascade = ALL)
+    @JoinColumn(name = "game_id")
     private Set<Player> players;
     @ManyToMany
     @JoinColumn(name = "sets_list")
@@ -51,5 +56,9 @@ public class Game {
         game.setSets(sets);
         game.setAuthToken(authToken);
         return game;
+    }
+
+    public boolean isFull() {
+        return seats <= players.size();
     }
 }

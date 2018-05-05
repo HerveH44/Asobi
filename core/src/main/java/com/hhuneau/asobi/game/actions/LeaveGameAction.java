@@ -2,6 +2,7 @@ package com.hhuneau.asobi.game.actions;
 
 import com.hhuneau.asobi.customer.Customer;
 import com.hhuneau.asobi.customer.CustomerService;
+import com.hhuneau.asobi.game.Game;
 import com.hhuneau.asobi.game.GameService;
 import com.hhuneau.asobi.game.player.PlayerService;
 import com.hhuneau.asobi.websocket.events.game.player.LeaveGameEvent;
@@ -35,7 +36,12 @@ public class LeaveGameAction implements Action<LeaveGameEvent> {
             return;
         }
         if (!gameService.hasStarted(evt.gameId)) {
-            playerService.remove(evt.gameId, evt.playerId, evt.sessionId);
+            final Optional<Game> game = gameService.getGame(evt.gameId);
+            game.ifPresent(game1 -> {
+                    if (game1.getPlayers().removeIf(player -> player.getPlayerId() == evt.playerId))
+                        gameService.save(game1);
+                }
+            );
         }
     }
 }

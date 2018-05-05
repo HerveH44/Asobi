@@ -1,6 +1,5 @@
 package com.hhuneau.asobi.game.actions;
 
-import com.hhuneau.asobi.customer.Customer;
 import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.game.Game;
 import com.hhuneau.asobi.game.GameRepository;
@@ -10,6 +9,7 @@ import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import com.hhuneau.asobi.websocket.events.game.player.JoinGameEvent;
 import com.hhuneau.asobi.websocket.events.game.player.LeaveGameEvent;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,13 +45,15 @@ public class ITActionTest {
 
     @Autowired
     private PlayerRepository playerRepository;
+    private FakeCustomer customer;
 
     @Before
     public void setUp() {
-        final Customer customer = new FakeCustomer(custId);
+        customer = new FakeCustomer(custId);
         customerService.add(customer);
     }
 
+    @Ignore
     @Test
     public void canDeleteOnePlayer() {
 
@@ -73,7 +75,7 @@ public class ITActionTest {
         final LeaveGameEvent leaveGameEvent = new LeaveGameEvent();
         leaveGameEvent.sessionId = custId;
         leaveGameEvent.gameId = game.getGameId();
-        leaveGameEvent.playerId = playerRepository.findByGameIdAndUserId(game.getGameId(), custId).get().getPlayerId();
+        leaveGameEvent.playerId =  customer.getPlayerId();
         return leaveGameEvent;
     }
 

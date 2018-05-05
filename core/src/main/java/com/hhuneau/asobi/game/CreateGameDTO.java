@@ -1,4 +1,4 @@
-package com.hhuneau.asobi.game.actions.creategame;
+package com.hhuneau.asobi.game;
 
 public class CreateGameDTO {
     public long gameId;

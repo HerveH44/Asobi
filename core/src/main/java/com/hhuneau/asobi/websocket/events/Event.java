@@ -2,9 +2,9 @@ package com.hhuneau.asobi.websocket.events;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
 import com.hhuneau.asobi.websocket.events.game.player.JoinGameEvent;
 import com.hhuneau.asobi.websocket.events.game.player.LeaveGameEvent;
-import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
 
 @JsonTypeInfo(visible = true, use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes(value = {
@@ -12,7 +12,6 @@ import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
     @JsonSubTypes.Type(value = JoinGameEvent.class, name = "JOIN_GAME"),
     @JsonSubTypes.Type(value = LeaveGameEvent.class, name = "LEAVE_GAME"),
     @JsonSubTypes.Type(value = StartGameEvent.class, name = "START_GAME"),
-    @JsonSubTypes.Type(value = IDEvent.class, name = "ID")
 })
 public abstract class Event {
     public EventType type;
