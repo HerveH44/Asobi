@@ -3,6 +3,7 @@ import {func, string} from "prop-types";
 import {connect} from 'react-redux';
 import {joinGame, leaveGame, startGame, editGameSettings} from "../actions/server"
 import StartPanel from "../components/StartPanel"
+import PlayersPanel from "../components/PlayersPanel"
 
 class Game extends Component {
     componentDidMount() {
@@ -26,7 +27,7 @@ class Game extends Component {
                 </header>
                 <div className='game-controls'>
                 <div className='game-status'>
-                    {/* <PlayersPanel/> */}
+                    <PlayersPanel/>
                     <StartPanel {...rest}/>
                 </div>
                 {/* <DeckSettings /> */}
