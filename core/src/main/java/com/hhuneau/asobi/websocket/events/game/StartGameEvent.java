@@ -1,7 +1,7 @@
 package com.hhuneau.asobi.websocket.events.game;
 
-import com.hhuneau.asobi.game.Game;
-import com.hhuneau.asobi.game.eventhandler.EventHandler;
+import com.hhuneau.asobi.mtg.game.Game;
+import com.hhuneau.asobi.mtg.eventhandler.EventHandler;
 
 public class StartGameEvent extends GameEvent {
     public String authToken;

@@ -1,7 +1,7 @@
 package com.hhuneau.asobi.websocket.events;
 
-import com.hhuneau.asobi.game.GameMode;
-import com.hhuneau.asobi.game.GameType;
+import com.hhuneau.asobi.mtg.game.GameMode;
+import com.hhuneau.asobi.mtg.game.GameType;
 
 import java.util.List;
 

@@ -2,8 +2,8 @@ package com.hhuneau.asobi;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hhuneau.asobi.game.sets.MTGSet;
-import com.hhuneau.asobi.game.sets.MTGSetsService;
+import com.hhuneau.asobi.mtg.sets.MTGSet;
+import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;

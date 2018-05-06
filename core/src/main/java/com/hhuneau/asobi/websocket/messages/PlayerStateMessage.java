@@ -1,12 +1,10 @@
 package com.hhuneau.asobi.websocket.messages;
 
-import com.hhuneau.asobi.game.pool.Booster;
-
 public class PlayerStateMessage extends Message {
-    public static PlayerStateMessage of(Booster booster) {
+    public static PlayerStateMessage of(Object state) {
         final PlayerStateMessage message = new PlayerStateMessage();
         message.setType("PLAYER_STATE");
-        message.setPayload(booster);
+        message.setPayload(state);
         return message;
     }
 }

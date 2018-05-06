@@ -1,7 +1,7 @@
 package com.hhuneau.asobi.websocket.events.game.player;
 
-import com.hhuneau.asobi.game.Game;
-import com.hhuneau.asobi.game.eventhandler.EventHandler;
+import com.hhuneau.asobi.mtg.game.Game;
+import com.hhuneau.asobi.mtg.eventhandler.EventHandler;
 
 public class LeaveGameEvent extends PlayerEvent {
     @Override

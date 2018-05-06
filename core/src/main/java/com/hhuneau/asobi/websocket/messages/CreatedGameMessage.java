@@ -1,6 +1,6 @@
 package com.hhuneau.asobi.websocket.messages;
 
-import com.hhuneau.asobi.game.CreateGameDTO;
+import com.hhuneau.asobi.mtg.game.CreateGameDTO;
 
 public class CreatedGameMessage extends Message {
 

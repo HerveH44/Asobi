@@ -1,6 +1,6 @@
 package com.hhuneau.asobi.websocket.messages;
 
-import com.hhuneau.asobi.game.pool.Booster;
+import com.hhuneau.asobi.mtg.pool.Booster;
 
 import java.util.List;
 import java.util.stream.Collectors;
