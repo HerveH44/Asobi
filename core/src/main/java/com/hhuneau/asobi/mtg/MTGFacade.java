@@ -11,4 +11,6 @@ public interface MTGFacade {
     void handle(CreateGameEvent event);
 
     void handle(GameEvent event);
+
+    void broadcastState(long gameId);
 }

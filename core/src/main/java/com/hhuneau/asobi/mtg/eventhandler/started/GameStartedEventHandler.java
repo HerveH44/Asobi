@@ -11,7 +11,10 @@ import static com.hhuneau.asobi.mtg.game.Status.STARTED;
 public abstract class GameStartedEventHandler implements EventHandler {
     @Override
     public void handle(Game game, JoinGameEvent evt) {
-
+        game.getPlayers().stream()
+            .filter(player -> player.getPlayerId() == evt.playerId)
+            .findFirst()
+            .ifPresent(player -> player.setUserId(evt.sessionId));
     }
 
     @Override

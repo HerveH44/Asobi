@@ -1,7 +1,6 @@
 package com.hhuneau.asobi.mtg.player;
 
 import com.hhuneau.asobi.mtg.pool.Booster;
-import com.hhuneau.asobi.mtg.pool.Pack;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,14 +27,15 @@ public class Player {
     @OneToMany(mappedBy = "player")
     private List<Booster> pool;
 
-    @OneToMany(cascade = ALL)
-    @JoinColumn(name = "player_id")
-    private List<Pack> remainingPacks;
+    @OneToOne(cascade = ALL, optional = false)
+    @JoinColumn(name = "player_state_id", unique = true, nullable = false)
+    private PlayerState playerState;
 
     static public Player of(String userId, String name) {
         final Player player = new Player();
         player.setUserId(userId);
         player.setName(name);
+        player.setPlayerState(new PlayerState());
         return player;
     }
 }

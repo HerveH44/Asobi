@@ -34,8 +34,9 @@ public class DraftCreatedEventHandler extends GameCreatedEventHandler {
                 //put the first booster as available
                 final Pack firstPack = new Pack();
                 firstPack.setCards(new ArrayList<>(pool.get(0).getCards()));
-                player.getRemainingPacks().add(firstPack);
-                customerService.send(player.getUserId(), PlayerStateMessage.of(firstPack));
+                player.getPlayerState().getWaitingPacks().add(firstPack);
+                customerService.send(player.getUserId(),
+                    PlayerStateMessage.of(player.getPlayerState()));
             }
         });
     }

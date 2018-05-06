@@ -21,14 +21,10 @@ import static com.hhuneau.asobi.mtg.game.Status.STARTED;
 public class DefaultGameService implements GameService {
     private final GameRepository gameRepository;
     private final MTGSetsService setService;
-    private final PlayerService playerService;
-    private final CustomerService customerService;
 
     public DefaultGameService(GameRepository gameRepository, MTGSetsService setService, PlayerService playerService, CustomerService customerService) {
         this.gameRepository = gameRepository;
         this.setService = setService;
-        this.playerService = playerService;
-        this.customerService = customerService;
     }
 
     @Override
@@ -62,44 +58,17 @@ public class DefaultGameService implements GameService {
     }
 
     @Override
-    public boolean canStart(Game game, String authToken) {
-        return game.getAuthToken().equals(authToken) && !game.getStatus().hasStarted();
-    }
-
-    @Override
-    public void broadcastState(Game game) {
-//        final Map<String, Integer> gameState = mtg.getPlayers()
-//            .stream()
-//            .collect(Collectors.toMap(Player::getName, player -> player.getRemainingPacks().size()));
-//        mtg.getPlayers().forEach(player -> {
-//            customerService.send(player.getUserId(), GameStateMessage.of(gameState));
-//        });
-    }
-
-    @Override
     public void save(Game game) {
         gameRepository.save(game);
     }
 
     @Override
-    public boolean isPresent(long gameId) {
-        return getGame(gameId).isPresent();
-    }
-
-    @Override
-    public boolean hasStarted(long gameId) {
-        final Optional<Game> game = getGame(gameId);
-        if (!game.isPresent()) {
-            throw new IllegalArgumentException(String.format("%s does not exist", gameId));
-        }
-        return game.get().getStatus().hasStarted();
-    }
-
-    @Override
     public Player addPlayer(Game game, Player player) {
-        final Player savedPlayer = playerService.save(player);
-        game.getPlayers().add(savedPlayer);
+        game.getPlayers().add(player);
         gameRepository.save(game);
-        return savedPlayer;
+        return game.getPlayers().stream()
+            .filter(player1 -> player1.getUserId().equals(player.getUserId()))
+            .findFirst()
+            .orElse(null);
     }
 }

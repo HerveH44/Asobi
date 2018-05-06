@@ -6,11 +6,12 @@ import com.hhuneau.asobi.mtg.game.GameService;
 import com.hhuneau.asobi.mtg.pool.Booster;
 import com.hhuneau.asobi.mtg.pool.PoolService;
 import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
-import com.hhuneau.asobi.websocket.messages.PoolMessage;
+import com.hhuneau.asobi.websocket.messages.PlayerStateMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.hhuneau.asobi.mtg.game.GameType.SEALED;
 
@@ -26,7 +27,12 @@ public class SealedCreatedEventHandler extends GameCreatedEventHandler {
         super.handle(game, evt);
         game.getPlayers().forEach(player -> {
             final List<Booster> pool = player.getPool();
-            customerService.send(player.getUserId(), PoolMessage.of(pool));
+            player.getPlayerState().setPickedCards(
+                pool.stream()
+                    .flatMap(booster -> booster.getCards().stream())
+                    .collect(Collectors.toList())
+            );
+            customerService.send(player.getUserId(), PlayerStateMessage.of(player.getPlayerState()));
         });
         gameService.finishGame(game);
     }

@@ -47,7 +47,7 @@ public abstract class GameCreatedEventHandler implements EventHandler {
                 final Player savedPlayer = gameService.addPlayer(game, player);
                 sendPlayerIdMessage(sessionId, savedPlayer);
             } else {
-                customerService.send(sessionId, ErrorMessage.of("mtg " + game.getGameId() + " is already full"));
+                customerService.send(sessionId, ErrorMessage.of("game " + game.getGameId() + " is already full"));
             }
         };
     }
