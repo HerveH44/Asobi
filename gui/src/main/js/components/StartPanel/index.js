@@ -1,6 +1,6 @@
 import React from "react";
 import {func, string, bool} from "prop-types";
-import { FormControlLabel, Checkbox, Select, FormControl, MenuItem } from "material-ui";
+import { FormControlLabel, Checkbox, Select, FormControl, MenuItem } from "material-ui/Form";
 
 const StartPanel = ({type, packsInfo, isHost, didGameStart, ...rest}) => (
   <fieldset className='start-controls fieldset'>

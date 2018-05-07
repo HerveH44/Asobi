@@ -7,7 +7,7 @@ import Grid from "material-ui/Grid";
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 import TextField from 'material-ui/TextField';
-import _ from "lodash";
+import _ from "lodash.uniqueid";
 
 const styles = theme => ({
     root: {

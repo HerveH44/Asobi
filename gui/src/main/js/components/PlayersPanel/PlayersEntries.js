@@ -1,7 +1,9 @@
 import React, {Component} from "react";
 import {array, object, number, bool, func} from "prop-types";
-import _ from "lodash"
+import _ from "lodash.uniqueid"
 import {onSwap, onKick} from "../../actions/game"
+import arrowUp from "../../../resources/media/arrow-up.png"
+import arrowDown from "../../../resources/media/arrow-down.png"
 
 import { connect } from "react-redux"
 
@@ -73,10 +75,10 @@ const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, players: 
             columns.push(
                 <td key={_.uniqueId()}>
                     <button onClick={()=> onSwap([index, index - 1])}>
-                        <img src="../../../resources/media/arrow-up.png" width="16px"/>
+                        <img src={arrowDown} width="16px"/>
                     </button>
                     <button onClick={()=> onSwap([index, index + 1])}>
-                        <img src="../../../resources/media/arrow-down.png" width="16px"/>
+                        <img src={arrowUp} width="16px"/>
                     </button>
                 </td>);
         //Kick button

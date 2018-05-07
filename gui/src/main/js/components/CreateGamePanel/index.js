@@ -7,7 +7,7 @@ import {
     bool,
     func
 } from "prop-types";
-import _ from "lodash";
+import _ from "lodash.uniqueid";
 
 import {withStyles} from 'material-ui/styles';
 import Input, {InputLabel} from 'material-ui/Input';

@@ -1,6 +1,6 @@
 import React from "react";
 import {array} from "prop-types";
-import _ from "lodash";
+import _ from "lodash.uniqueid";
 
 /**
  * Utils offers a list of "connected" tools
