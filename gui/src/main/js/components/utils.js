@@ -1,6 +1,6 @@
 import React from "react";
 import {array} from "prop-types";
-import _ from "lodash.uniqueid";
+import uniqueId from "lodash/uniqueId";
 
 /**
  * Utils offers a list of "connected" tools
@@ -32,10 +32,10 @@ import _ from "lodash.uniqueid";
 
 export const Spaced = ({elements}) => (
   elements
-    .map(x => <span key={_.uniqueId()}>{x}</span>)
+    .map(x => <span key={uniqueId()}>{x}</span>)
     .reduce((prev, curr) => [
       prev,
-      <span key = {_.uniqueId()} className = 'spacer-dot' />,
+      <span key = {uniqueId()} className = 'spacer-dot' />,
       curr
     ])
 );

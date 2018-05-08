@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {array, object, number, bool, func} from "prop-types";
-import _ from "lodash.uniqueid"
+import uniqueId from "lodash/uniqueId"
 import {onSwap, onKick} from "../../actions/game"
 import arrowUp from "../../../resources/media/arrow-up.png"
 import arrowDown from "../../../resources/media/arrow-down.png"
@@ -25,7 +25,7 @@ class PlayerEntries extends Component {
         return (
             this.props.players.map((p,i) =>
                 <PlayerEntry
-                    key ={_.uniqueId()}
+                    key ={uniqueId()}
                     player={p}
                     index={i}
                     {...this.props} />)
@@ -60,20 +60,20 @@ const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, players: 
         title={isBot ? "This player is a bot.": ""} />;
 
     const columns = [
-        <td key={_.uniqueId()}>{index + 1}</td>,
-        <td key={_.uniqueId()}>{connectionStatusIndicator}</td>,
-        <td key={_.uniqueId()}>{name}</td>,
-        <td key={_.uniqueId()}>{packs}</td>,
-        <td key={_.uniqueId()}>{time}</td>,
-        <td key={_.uniqueId()}>{hash && hash.cock}</td>,
-        <td key={_.uniqueId()}>{hash && hash.mws}</td>
+        <td key={uniqueId()}>{index + 1}</td>,
+        <td key={uniqueId()}>{connectionStatusIndicator}</td>,
+        <td key={uniqueId()}>{name}</td>,
+        <td key={uniqueId()}>{packs}</td>,
+        <td key={uniqueId()}>{time}</td>,
+        <td key={uniqueId()}>{hash && hash.cock}</td>,
+        <td key={uniqueId()}>{hash && hash.mws}</td>
     ];
 
     if (isHost) {
         //Move Player
         if(!didGameStart)
             columns.push(
-                <td key={_.uniqueId()}>
+                <td key={uniqueId()}>
                     <button onClick={()=> onSwap([index, index - 1])}>
                         <img src={arrowDown} width="16px"/>
                     </button>
@@ -84,17 +84,17 @@ const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, players: 
         //Kick button
         if (index !== self && !isBot) {
             columns.push(
-                <td key={_.uniqueId()}>
+                <td key={uniqueId()}>
                     <button onClick={()=> onKick(index)}>
                         kick
                     </button>
                 </td>);
         } else {
-            columns.push(<td key={_.uniqueId()}/>);
+            columns.push(<td key={uniqueId()}/>);
         }
     }
 
-    return <tr key={_.uniqueId()} className={className}>{columns}</tr>;
+    return <tr key={uniqueId()} className={className}>{columns}</tr>;
 };
 
 PlayerEntry.propTypes = {

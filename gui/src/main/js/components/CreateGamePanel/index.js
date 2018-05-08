@@ -7,7 +7,8 @@ import {
     bool,
     func
 } from "prop-types";
-import _ from "lodash.uniqueid";
+import uniqueId from "lodash/uniqueId";
+import range from "lodash/range";
 
 import {withStyles} from 'material-ui/styles';
 import Input, {InputLabel} from 'material-ui/Input';
@@ -105,9 +106,8 @@ class CreatePanel extends React.Component {
                             name: 'age',
                             id: 'age-simple'
                         }}>
-                            {_
-                                .range(2, 10)
-                                .map(x => <MenuItem key={_.uniqueId()} value={x}>{x}</MenuItem>)}
+                            {range(2, 10)
+                                .map(x => <MenuItem key={uniqueId()} value={x}>{x}</MenuItem>)}
                         </Select>
                     </FormControl>
                     <FormControl className={classes.formControl}>
@@ -124,7 +124,7 @@ class CreatePanel extends React.Component {
                             onChange={this.onChangeGameType}
                             row>
                             {gameTypes.map(val => <FormControlLabel
-                                key={_.uniqueId()}
+                                key={uniqueId()}
                                 value={val}
                                 control={< Radio />}
                                 label={val}/>)}

@@ -7,7 +7,7 @@ import Grid from "material-ui/Grid";
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 import TextField from 'material-ui/TextField';
-import _ from "lodash.uniqueid";
+import uniqueId from "lodash/uniqueId";
 
 const styles = theme => ({
     root: {
@@ -43,7 +43,7 @@ class CenteredTabs extends React.Component {
                     indicatorColor="primary"
                     textColor="primary"
                     centered>
-                    {gameModes.map(mode => (<Tab key={_.uniqueId()} value={mode} label={mode}/>))}
+                    {gameModes.map(mode => (<Tab key={uniqueId()} value={mode} label={mode}/>))}
                 </Tabs>
                 {gameMode == "NORMAL" && <NormalGameSettings
                     availableSets={availableSets}
@@ -67,7 +67,7 @@ const NormalGameSettings = ({availableSets, sets, classes}) => (
     <Grid item sm>
         <Paper className={classes.list}>
             {sets.map(set => (<Set
-                key={_.uniqueId()}
+                key={uniqueId()}
                 set={set}
                 classes={classes}
                 availableSets={availableSets}/>))}
@@ -102,9 +102,9 @@ const Set = ({availableSets, set, classes}) => (
             .entries(availableSets)
             .map(([label, sets]) => {
                 return (
-                    <optgroup key={_.uniqueId()} label={label}>
+                    <optgroup key={uniqueId()} label={label}>
                         {sets.map(({name}) => {
-                            return <option key={_.uniqueId()}>{name}</option>
+                            return <option key={uniqueId()}>{name}</option>
                         })}
                     </optgroup>
                 )
