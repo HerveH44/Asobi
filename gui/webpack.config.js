@@ -2,8 +2,10 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Visualizer = require('webpack-visualizer-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
+    devtool: 'sourcemaps',
     entry: {
         app: './src/main/js/index.js'
     },
@@ -28,7 +30,11 @@ module.exports = {
             filename: 'index.html',
             hash: true
         }),
-        new Visualizer()
+        new Visualizer(),
+        new MiniCssExtractPlugin({
+            filename: "[name].css",
+            chunkFilename: "[id].css"
+          })
     ],
     optimization: {
         splitChunks : {
@@ -46,7 +52,11 @@ module.exports = {
             {
                 test: /\.(jpe?g|png|gif|svg)$/,
                 loader: 'url-loader'
-            }
+            },
+            {
+                test: /\.css$/,
+                use: [MiniCssExtractPlugin.loader, "css-loader"]
+            },
         ]
     }
 };

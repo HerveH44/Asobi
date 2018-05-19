@@ -36,7 +36,13 @@ const JoinPanel = ({roomsInfo}) => {
 };
 
 JoinPanel.propTypes = {
-    roomsInfo: arrayOf(shape({title: string, type: string, packsInfo: string, usedSeats: number.isRequired, totalSeats: number.isRequired}).isRequired).isRequired
+    roomsInfo: arrayOf(shape({
+        title: string,
+        type: string,
+        packsInfo: string,
+        usedSeats: number.isRequired,
+        totalSeats: number.isRequired
+    }).isRequired).isRequired
 };
 
 export default JoinPanel;

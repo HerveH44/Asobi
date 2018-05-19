@@ -8,9 +8,10 @@ import {ConnectedRouter} from 'react-router-redux';
 import history from "../state/history";
 
 const App = ({connected}) => (
-    !connected
-        ? <div>You are not connected!</div>
-        : <ConnectedRouter history={history}>
+    // !connected
+    //     ? <div>You are not connected!</div>
+    //     :
+        <ConnectedRouter history={history}>
             <Switch>
                 <Route path="/games/:gameId" exact component={Game}/>
                 <Route path="/" exact component={Lobby}/>

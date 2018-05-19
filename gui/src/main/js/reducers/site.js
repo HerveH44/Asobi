@@ -3,7 +3,7 @@ import {createAction, handleActions} from 'redux-actions';
 export const editDefault = createAction("EDIT_DEFAULT");
 
 const initialState = {
-    siteTitle: "www.dr4ft.info",
+    siteTitle: "Asobi",
     err: "",
     numUsers: 0,
     numPlayers: 0,
@@ -16,7 +16,6 @@ const initialState = {
 
 export default handleActions({
     [editDefault](state, {payload}) {
-        console.log("editing default ...", state, payload);
         return {
             ...state,
             ...payload

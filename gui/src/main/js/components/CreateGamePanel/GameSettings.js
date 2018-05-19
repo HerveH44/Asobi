@@ -1,121 +1,88 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {func, array, string, object} from 'prop-types';
-import {withStyles} from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
-import Tabs, {Tab} from 'material-ui/Tabs';
-import Grid from "material-ui/Grid";
-import Button from 'material-ui/Button';
-import AddIcon from 'material-ui-icons/Add';
-import TextField from 'material-ui/TextField';
 import uniqueId from "lodash/uniqueId";
+import "./style.css"
 
-const styles = theme => ({
-    root: {
-        flexGrow: 1,
-        marginTop: theme.spacing.unit * 3
-    },
-    list: {
-        padding: 20,
-        marginTop: 10,
-        marginBottom: 10
-    },
-    button: {
-        margin: theme.spacing.unit
-    }
-});
+class GameSettings extends React.Component {
 
-class CenteredTabs extends React.Component {
-
-    handleChange = (event, gameMode) => {
-        this
-            .props
-            .editGame({gameMode})
+    handleChange = name => event => {
+        this.props.editGame({[name]: event.target.value})
     };
 
+    handleSet = index => event => {
+        this.props.editGame({
+            sets: {
+                ...this.props.sets,
+                [this.props.gameType]: this.props.sets[this.props.gameType]
+                                            .map((set, i) => i == index ? event.currentTarget.value : set )
+            }
+        })
+    }
+
     render() {
-        const {availableSets, classes, gameMode, gameModes, sets} = this.props;
+        const {availableSets, gameMode, gameType, gameModes, sets} = this.props;
 
         return (
-            <Paper className={classes.root}>
-                <Tabs
-                    value={gameMode}
-                    onChange={this.handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    centered>
-                    {gameModes.map(mode => (<Tab key={uniqueId()} value={mode} label={mode}/>))}
-                </Tabs>
+            <Fragment >
+                <div className="tab">
+                    {gameModes.map(mode => (
+                        <button key={uniqueId()} value={mode} className="tablinks" onClick={this.handleChange("gameMode")}>
+                            {mode}
+                        </button>))}
+                </div>
                 {gameMode == "NORMAL" && <NormalGameSettings
                     availableSets={availableSets}
-                    sets={sets}
-                    classes={classes}/>}
-            </Paper>
+                    sets={sets[gameType]}
+                    onChangeSet={this.handleSet.bind(this)}
+                    />}
+            </Fragment>
         );
     }
 }
 
-CenteredTabs.propTypes = {
-    classes: object.isRequired,
+GameSettings.propTypes = {
     gameModes: array.isRequired,
     gameMode: string.isRequired,
+    gameType: string.isRequired,
     editGame: func.isRequired,
-    sets: array.isRequired,
+    sets: object.isRequired,
     availableSets: object.isRequired
 };
 
-const NormalGameSettings = ({availableSets, sets, classes}) => (
-    <Grid item sm>
-        <Paper className={classes.list}>
-            {sets.map(set => (<Set
-                key={uniqueId()}
-                set={set}
-                classes={classes}
-                availableSets={availableSets}/>))}
-            <Button
-                mini
-                variant="fab"
-                color="primary"
-                aria-label="add"
-                className={classes.button}>
-                <AddIcon/>
-            </Button>
-        </Paper>
-    </Grid>
+const NormalGameSettings = ({availableSets, sets, onChangeSet}) => (
+    <div className="tabcontent" >
+        {sets.map((set, index) => (<Set
+            key={uniqueId()}
+            set={set}
+            availableSets={availableSets}
+            onChangeSet={onChangeSet(index)}/>))}
+    </div>
 )
 
 NormalGameSettings.propTypes = {
-    classes: object.isRequired,
     sets: array.isRequired,
-    availableSets: object.isRequired
+    availableSets: object.isRequired,
+    onChangeSet: func.isRequired
 };
 
-const Set = ({availableSets, set, classes}) => (
-    <TextField
-        id="select-currency-native"
-        select
-        label="Set"
-        value={1}
-        SelectProps={{ native: true }}
-        helperText="Please select a set"
-        margin="normal">
+const Set = ({availableSets, set, onChangeSet}) => (
+    <select value={set} onChange={onChangeSet}>
         {Object
             .entries(availableSets)
-            .map(([label, sets]) => {
-                return (
-                    <optgroup key={uniqueId()} label={label}>
-                        {sets.map(({name}) => {
-                            return <option key={uniqueId()}>{name}</option>
-                        })}
-                    </optgroup>
-                )
-            })}
-    </TextField>
+            .map(([label, sets]) => (
+                <optgroup key={uniqueId()} label={label}>
+                    {sets.map(({code, name}) => {
+                        return <option value={code} key={uniqueId()}>{name}</option>
+                    })}
+                </optgroup>
+            ))}
+    </select>
 )
 
 Set.propTypes = {
-    classes: object.isRequired,
     set: object.isRequired,
-    availableSets: object.isRequired
+    availableSets: object.isRequired,
+    onChangeSet: func.isRequired
 };
 
-export default withStyles(styles)(CenteredTabs);
+export default GameSettings;

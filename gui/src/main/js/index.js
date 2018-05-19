@@ -5,6 +5,7 @@ import App from './components/App'
 import createStore from "./state/store"
 import {WEBSOCKET_CONNECT} from "redux-middleware-websocket";
 import {PersistGate} from 'redux-persist/integration/react';
+import "../resources/css/style.css";
 
 const {store, persistor} = createStore();
 store.dispatch({
@@ -17,7 +18,7 @@ store.dispatch({
 render(
     <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-            <App/>
+                    <App/>
         </PersistGate>
 </Provider>, document.getElementById('root'));
 

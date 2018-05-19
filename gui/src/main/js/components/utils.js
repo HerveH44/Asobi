@@ -1,5 +1,5 @@
 import React from "react";
-import {array} from "prop-types";
+import {array, string, bool, func} from "prop-types";
 import uniqueId from "lodash/uniqueId";
 
 /**
@@ -7,28 +7,26 @@ import uniqueId from "lodash/uniqueId";
  * through a "link" prop to connect to the app state
  */
 
-// export const Checkbox = ({link, text, side, onChange}) => (
-//   <div>
-//     {side == "right"
-//       ? text
-//       : ""}
-//     <input
-//       type="checkbox"
-//       onChange={onChange || function (e) {
-//         App.save(link, e.currentTarget.checked);
-//       }}
-//       checked={App.state[link]}/> {side == "left"
-//       ? text
-//       : ""}
-//   </div>
-// );
-//
-// Checkbox.propTypes = {
-//   link: PropTypes.string,
-//   text: PropTypes.string,
-//   side: PropTypes.string,
-//   onChange: PropTypes.func
-// };
+export const Checkbox = ({checked, text, side, onChange}) => (
+  <div>
+    {side == "right"
+      ? text
+      : ""}
+    <input
+      type="checkbox"
+      onChange={onChange}
+      checked={checked}/> {side == "left"
+      ? text
+      : ""}
+  </div>
+);
+
+Checkbox.propTypes = {
+  checked: bool.isRequired,
+  text: string.isRequired,
+  side: string.isRequired,
+  onChange: func.isRequired
+};
 
 export const Spaced = ({elements}) => (
   elements

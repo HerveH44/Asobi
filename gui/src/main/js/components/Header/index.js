@@ -1,24 +1,19 @@
 import React from "react";
 import {string, number} from "prop-types";
-import AppBar from "material-ui/AppBar";
-import Toolbar from "material-ui/Toolbar";
-import Typography from 'material-ui/Typography';
 
 import {Spaced} from "../utils";
 
 const Header = ({siteTitle, numUsers, numPlayers, numActiveGames, err}) => (
-    <AppBar position="static" color="default">
-        <Toolbar>
-            <Typography variant="title" color="inherit">
-                {siteTitle}
-                <ServerInfo
+    <header>
+        <h1 className="lobby-header">
+            {siteTitle}
+        </h1>
+        <ServerInfo
                     numUsers={numUsers}
                     numPlayers={numPlayers}
                     numActiveGames={numActiveGames}/>
-                <ApplicationError err={err}/>
-            </Typography>
-        </Toolbar>
-    </AppBar>
+        <ApplicationError err={err}/>
+    </header>
 );
 
 Header.propTypes = {
