@@ -1,18 +1,11 @@
 import {CREATE_GAME} from "../reducers/game";
-import {WEBSOCKET_SEND, WEBSOCKET_OPEN} from "redux-middleware-websocket";
+import {WEBSOCKET_SEND} from "redux-middleware-websocket";
 import {push} from "react-router-redux";
 import {GAME_ID, joinGame} from "../actions/server";
 
 const createGame = ({getState, dispatch}) => next => action => {
     const {
-        game: {
-            isPrivate,
-            title,
-            seats,
-            gameType,
-            gameMode,
-            sets
-        },
+        game,
         gameSettings: {
             gameId,
             authToken
@@ -32,12 +25,8 @@ const createGame = ({getState, dispatch}) => next => action => {
                 type: WEBSOCKET_SEND,
                 payload: {
                     type: "CREATE_GAME",
-                    isPrivate,
-                    title,
-                    seats,
-                    gameType,
-                    gameMode,
-                    sets : ["XLN", "XLN", "XLN"] //TODO: fixme!
+                    ...game,
+                    sets: game.sets[game.gameType]
                 }
             });
         case "JOIN_GAME":
@@ -67,15 +56,6 @@ const createGame = ({getState, dispatch}) => next => action => {
                     authToken
                 }
             })
-        // case WEBSOCKET_OPEN:
-        //     return dispatch({
-        //         type: WEBSOCKET_SEND,
-        //         payload: {
-        //             type: "ID",
-        //             id,
-        //             name
-        //         }
-        //     })
         default:
             return next(action);
     }

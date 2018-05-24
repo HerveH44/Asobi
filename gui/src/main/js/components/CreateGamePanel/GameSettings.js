@@ -1,7 +1,9 @@
 import React, { Fragment } from 'react';
-import {func, array, string, object} from 'prop-types';
+import {func, array, string, object, bool} from 'prop-types';
 import uniqueId from "lodash/uniqueId";
 import "./style.css"
+import {NORMAL, CUBE, CHAOS} from "../../reducers/game";
+import { Textarea, Checkbox } from '../utils';
 
 class GameSettings extends React.Component {
 
@@ -20,7 +22,7 @@ class GameSettings extends React.Component {
     }
 
     render() {
-        const {availableSets, gameMode, gameType, gameModes, sets} = this.props;
+        const {availableSets, gameMode, gameType, gameModes, sets, cubeList, modernOnly, totalChaos} = this.props;
 
         return (
             <Fragment >
@@ -30,11 +32,21 @@ class GameSettings extends React.Component {
                             {mode}
                         </button>))}
                 </div>
-                {gameMode == "NORMAL" && <NormalGameSettings
+                {gameMode == NORMAL && <NormalGameSettings
                     availableSets={availableSets}
                     sets={sets[gameType]}
                     onChangeSet={this.handleSet.bind(this)}
                     />}
+                {gameMode == CUBE &&
+                    <CubeGameSettings
+                        cubeList={cubeList}
+                        onChangeCubeList={this.handleChange("cubeList")}/>}
+                {gameMode == CHAOS &&
+                    <ChaosGameSettings
+                        modernOnly={modernOnly}
+                        totalChaos={totalChaos}
+                        onChangeModernOnly={this.handleChange("modernOnly")}
+                        onChangeTotalChaos={this.handleChange("totalChaos")}/>}
             </Fragment>
         );
     }
@@ -46,7 +58,10 @@ GameSettings.propTypes = {
     gameType: string.isRequired,
     editGame: func.isRequired,
     sets: object.isRequired,
-    availableSets: object.isRequired
+    availableSets: object.isRequired,
+    cubeList: string.isRequired,
+    modernOnly: bool.isRequired,
+    totalChaos: bool.isRequired
 };
 
 const NormalGameSettings = ({availableSets, sets, onChangeSet}) => (
@@ -64,6 +79,45 @@ NormalGameSettings.propTypes = {
     availableSets: object.isRequired,
     onChangeSet: func.isRequired
 };
+
+const CubeGameSettings = ({cubeList, onChangeCubeList}) => (
+    <div>
+        <div>one card per line</div>
+        <Textarea placeholder='cube list' value={cubeList} onChange={onChangeCubeList}/>
+    </div>
+);
+
+CubeGameSettings.propTypes = {
+    cubeList: string.isRequired,
+    onChangeCubeList: func.isRequired
+}
+
+const ChaosGameSettings = ({modernOnly, totalChaos, onChangeModernOnly, onChangeTotalChaos}) => (
+    <div>
+        <div>
+            <Checkbox
+                checked={modernOnly}
+                side='right'
+                text='Only Modern Sets: '
+                onChange={onChangeModernOnly}/>
+        </div>
+        <div>
+            <Checkbox
+                checked={totalChaos}
+                side='right'
+                text='Total Chaos: '
+                onChange={onChangeTotalChaos}/>
+        </div>
+    </div>
+);
+
+ChaosGameSettings.propTypes = {
+    modernOnly: bool.isRequired,
+    totalChaos: bool.isRequired,
+    onChangeModernOnly: func.isRequired,
+    onChangeTotalChaos: func.isRequired
+}
+
 
 const Set = ({availableSets, set, onChangeSet}) => (
     <select value={set} onChange={onChangeSet}>

@@ -9,9 +9,9 @@ const DRAFT = "DRAFT";
 const SEALED = "SEALED";
 const gameTypes = [DRAFT, SEALED];
 
-const NORMAL = "NORMAL";
-const CUBE = "CUBE";
-const CHAOS = "CHAOS";
+export const NORMAL = "NORMAL";
+export const CUBE = "CUBE";
+export const CHAOS = "CHAOS";
 const gameModes = [NORMAL, CUBE, CHAOS];
 
 const initialState = {
@@ -43,7 +43,10 @@ const initialState = {
                 name: "Ixalan"
             }
         ]
-    }
+    },
+    cubeList: "",
+    modernOnly: false,
+    totalChaos: false
 };
 
 export default handleActions({

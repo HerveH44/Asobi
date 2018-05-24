@@ -59,6 +59,9 @@ class CreatePanel extends React.Component {
             gameType,
             gameModes,
             gameMode,
+            cubeList,
+            modernOnly,
+            totalChaos
         } = this.props;
 
         return (
@@ -116,7 +119,10 @@ class CreatePanel extends React.Component {
                 gameType={gameType}
                 sets={sets}
                 availableSets={availableSets}
-                packsNumber={packsNumber}/>
+                packsNumber={packsNumber}
+                cubeList={cubeList}
+                modernOnly={modernOnly}
+                totalChaos={totalChaos}/>
             <p>
                 <button onClick={createGame}>
                     Create game
@@ -140,7 +146,10 @@ CreatePanel.propTypes = {
     sets: object.isRequired,
     availableSets: object.isRequired,
     createGame: func.isRequired,
-    EDIT_PACK_NUMBER: func.isRequired
+    EDIT_PACK_NUMBER: func.isRequired,
+    cubeList: string.isRequired,
+    modernOnly: bool.isRequired,
+    totalChaos: bool.isRequired
 }
 
 export default CreatePanel;

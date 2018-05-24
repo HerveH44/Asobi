@@ -59,15 +59,15 @@ Spaced.propTypes = {
 //   link: PropTypes.string,
 //   opts: PropTypes.array
 // };
-//
-// export const Textarea = ({link, ...rest}) => (
-//   <textarea
-//     onChange=
-//       { (e) => { App.save("list", e.currentTarget.value); } }
-//     value={App.state[link]}
-//     {...rest} />
-// );
-//
-// Textarea.propTypes = {
-//   link: PropTypes.string
-// };
+
+export const Textarea = ({value, onChange, ...rest}) => (
+  <textarea
+    onChange={onChange}
+    value={value}
+    {...rest} />
+);
+
+Textarea.propTypes = {
+    value: string.isRequired,
+    onChange: func.isRequired
+};
