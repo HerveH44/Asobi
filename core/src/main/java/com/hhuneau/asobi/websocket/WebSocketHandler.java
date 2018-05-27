@@ -31,7 +31,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
-        LOGGER.info("Websocket connected " + session.toString());
         customerService.add(new WSCustomer(session, mapper));
         SessionConnectedEvent sessionConnectedEvent = new SessionConnectedEvent();
         sessionConnectedEvent.sessionId = session.getId();
@@ -48,7 +47,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         // TODO: Gérer les déconnections en controlant si la socket est rattachée à une partie
-        LOGGER.info("Websocket disconnected " + session.toString());
         customerService.remove(session.getId());
     }
 }

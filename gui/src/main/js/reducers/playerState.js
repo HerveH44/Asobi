@@ -3,7 +3,8 @@ import {PLAYER_STATE} from "../actions/server"
 
 const InitialState = {
     waitingPack: [],
-    pickedCards: []
+    pickedCards: [],
+    pack: []
 };
 
 export default handleActions({

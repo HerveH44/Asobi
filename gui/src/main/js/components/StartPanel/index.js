@@ -1,21 +1,18 @@
 import React from "react";
-import {func, string, bool} from "prop-types";
-import {FormControlLabel, FormControl } from "material-ui/Form";
-import Checkbox from "material-ui/Checkbox"
-import Select from "material-ui/Select"
-import MenuItem from "material-ui/Menu/MenuItem"
+import {func, string, bool, array} from "prop-types";
+import { Checkbox, Select } from "../utils";
 
 const StartPanel = ({type, packsInfo, isHost, didGameStart, ...rest}) => (
-  <fieldset className='start-controls fieldset'>
-    <legend className='legend game-legend'>Game</legend>
-    <span>
-      <div>Type: {type}</div>
-      <div>Infos: {packsInfo}</div>
-      {/*(isHost && !didGameStart)*/ true
-        ? <StartControls type={type} {...rest} />
-        : <div />}
-    </span>
-  </fieldset>
+    <fieldset className='start-controls fieldset'>
+        <legend className='legend game-legend'>Game</legend>
+        <span>
+        <div>Type: {type}</div>
+        <div>Infos: {packsInfo}</div>
+        {(isHost && !didGameStart)
+            ? <StartControls type={type} {...rest} />
+            : <div />}
+        </span>
+    </fieldset>
 );
 
 StartPanel.propTypes = {
@@ -47,66 +44,49 @@ StartControls.propTypes = {
     startGame: func.isRequired
 }
 
-const Options = ({useTimer, addBots, shufflePlayers, editGameSettings}) => {
-    const timers = ["Fast", "Moderate", "Slow", "Leisurely"];
-    const handleChange = name => (event) => {
+const Options = ({useTimer, timers, timerLength, addBots, shufflePlayers, editGameSettings}) => {
+    const handleChangeChecked = name => (event) => {
         editGameSettings({[name]: event.target.checked})
     };
-  return (
-    <span>
-      {/* <Checkbox side="left" link="addBots" text=" bots"/> */}
-      <FormControlLabel
-          control={
+
+    const handleChange = name => (event) => {
+        editGameSettings({[name]: event.target.value})
+    };
+
+    return (
+        <span>
             <Checkbox
-              checked={addBots}
-              onChange={handleChange('addBots')}
-              value="addBots"
+                checked={addBots}
+                onChange={handleChangeChecked('addBots')}
+                text=" bots"
             />
-          }
-          label="bots"
-        />
-      <div>
-        {/* <Checkbox side="left" link="useTimer" text=" timer: "/> */}
-        <FormControlLabel
-          control={
+            <div>
+                <Checkbox
+                    checked={useTimer}
+                    onChange={ handleChangeChecked('useTimer')}
+                    text=" timer: "
+                />
+                <Select
+                    value={timerLength}
+                    opts={timers}
+                    onChange={handleChange("timerLength")}
+                    disabled={!useTimer}/>
+            </div>
             <Checkbox
-              checked={useTimer}
-              onChange={ handleChange('useTimer')}
-              value="useTimer"
-            />
-          }
-          label="timer"
-        />
-        {/* <Select link="timerLength" opts={timers} disabled={!useTimer}/> */}
-        <FormControl>
-            <Select
-              value={10}
-            //   onChange={handleChange('timerLength')}
-            >
-                <MenuItem value={10}>Ten</MenuItem>
-            </Select>
-        </FormControl>
-        {/* <Checkbox side="left" link="shufflePlayers" text=" Random Seating"/> */}
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={shufflePlayers}
-              onChange={handleChange('shufflePlayers')}
-              value="shufflePlayers"
-            />
-          }
-          label="Random Seating"
-        />
-      </div>
-    </span>
-  );
+                checked={shufflePlayers}
+                onChange={handleChangeChecked('shufflePlayers')}
+                text=" Random Seating"/>
+        </span>
+    );
 };
 
 Options.propTypes = {
     useTimer: bool.isRequired,
     addBots: bool.isRequired,
     shufflePlayers: bool.isRequired,
-    editGameSettings: func.isRequired
+    editGameSettings: func.isRequired,
+    timers: array.isRequired,
+    timerLength: string.isRequired
 }
 
 export default StartPanel;

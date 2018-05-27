@@ -11,6 +11,10 @@ class GameSettings extends React.Component {
         this.props.editGame({[name]: event.target.value})
     };
 
+    handleChangeCheck = name => event => {
+        this.props.editGame({[name]: event.target.checked})
+    };
+
     handleSet = index => event => {
         this.props.editGame({
             sets: {
@@ -45,8 +49,8 @@ class GameSettings extends React.Component {
                     <ChaosGameSettings
                         modernOnly={modernOnly}
                         totalChaos={totalChaos}
-                        onChangeModernOnly={this.handleChange("modernOnly")}
-                        onChangeTotalChaos={this.handleChange("totalChaos")}/>}
+                        onChangeModernOnly={this.handleChangeCheck("modernOnly")}
+                        onChangeTotalChaos={this.handleChangeCheck("totalChaos")}/>}
             </Fragment>
         );
     }

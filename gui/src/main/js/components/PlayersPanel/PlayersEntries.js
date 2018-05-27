@@ -70,7 +70,7 @@ const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, players: 
     ];
 
     if (isHost) {
-        //Move Player
+        //Move Player Button
         if(!didGameStart)
             columns.push(
                 <td key={uniqueId()}>
@@ -81,7 +81,7 @@ const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, players: 
                         <img src={arrowUp} width="16px"/>
                     </button>
                 </td>);
-        //Kick button
+        //Kick Player button
         if (index !== self && !isBot) {
             columns.push(
                 <td key={uniqueId()}>

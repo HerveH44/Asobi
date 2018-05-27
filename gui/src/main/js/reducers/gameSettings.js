@@ -8,7 +8,9 @@ const InitialState = {
     packsInfo: "some packs infos",
     addBots: true,
     useTimer: true,
-    shufflePlayers: true
+    shufflePlayers: true,
+    timers: ["Fast", "Moderate", "Slow", "Leisurely"],
+    timerLength: "Moderate"
 };
 
 export default handleActions({

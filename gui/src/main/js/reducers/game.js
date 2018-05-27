@@ -66,7 +66,8 @@ export default handleActions({
         for( let k in state.sets) {
             const setsType = state.sets[k];
             if( setsType.length < packsNumber) {
-                for(var i = 0; i < packsNumber - setsType.length; i++) {
+                const toAdd = packsNumber - setsType.length;
+                for(var i = 0; i < toAdd; i++) {
                     setsType.push(setsType.slice(-1)[0]);
                 }
             } else if( setsType.length > packsNumber) {

@@ -7,24 +7,31 @@ import uniqueId from "lodash/uniqueId";
  * through a "link" prop to connect to the app state
  */
 
-export const Checkbox = ({checked, text, side, onChange}) => (
-  <div>
-    {side == "right"
-      ? text
-      : ""}
-    <input
-      type="checkbox"
-      onChange={onChange}
-      checked={checked}/> {side == "left"
-      ? text
-      : ""}
-  </div>
+/**
+ * @param  {boolean} {checked
+ * @param  {string} text
+ * @param  {string} side can by either right or left
+ * @param  {function} onChange}
+ */
+export const Checkbox = ({checked, text, side="left", onChange}) => (
+    <div>
+        {side == "right"
+            ? text
+            : ""}
+        <input
+            type="checkbox"
+            onChange={onChange}
+            checked={checked}/>
+            {side == "left"
+                ? text
+                : ""}
+    </div>
 );
 
 Checkbox.propTypes = {
   checked: bool.isRequired,
   text: string.isRequired,
-  side: string.isRequired,
+  side: string,
   onChange: func.isRequired
 };
 
@@ -42,29 +49,26 @@ Spaced.propTypes = {
   elements: array.isRequired
 };
 
-// export const Select = ({link, opts, ...rest}) => (
-//   <select
-//     onChange={(e) => {
-//       App.save(link, e.currentTarget.value);
-//     }}
-//     value={App.state[link]}
-//     {...rest}>
-//     {opts.map(opt =>
-//       <option key={_.uid()}>{opt}</option>
-//     )}
-//   </select>
-// );
-//
-// Select.propTypes = {
-//   link: PropTypes.string,
-//   opts: PropTypes.array
-// };
+export const Select = ({value, onChange, opts, ...rest}) => (
+    <select
+        onChange={onChange}
+        value={value}
+        {...rest}>
+            {opts.map(opt => <option key={uniqueId()}>{opt}</option>)}
+    </select>
+);
+
+Select.propTypes = {
+    opts: array.isRequired,
+    onChange: func.isRequired,
+    value: string.isRequired
+};
 
 export const Textarea = ({value, onChange, ...rest}) => (
-  <textarea
-    onChange={onChange}
-    value={value}
-    {...rest} />
+    <textarea
+        onChange={onChange}
+        value={value}
+        {...rest} />
 );
 
 Textarea.propTypes = {

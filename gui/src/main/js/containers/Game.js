@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {joinGame, leaveGame, startGame, editGameSettings} from "../actions/server"
 import StartPanel from "../components/StartPanel"
 import PlayersPanel from "../components/PlayersPanel"
+import CardsZone from "../components/CardsZone"
 
 class Game extends Component {
     componentDidMount() {
@@ -21,19 +22,17 @@ class Game extends Component {
         const {gameId, ...rest} = this.props;
         console.log(rest);
         return (
-            <Fragment>
-                <header>
-                    <h1>We are in game {gameId}!</h1>
-                </header>
+            <div className='game'>
                 <div className='game-controls'>
-                <div className='game-status'>
-                    <PlayersPanel/>
-                    <StartPanel {...rest}/>
+                    <div className='game-status'>
+                        <PlayersPanel/>
+                        <StartPanel {...rest}/>
+                    </div>
+                    {/* <DeckSettings /> */}
+                    {/* <GameSettings/> */}
                 </div>
-                {/* <DeckSettings /> */}
-                {/* <GameSettings/> */}
+                <CardsZone />
             </div>
-          </Fragment>
         )
     }
 }
@@ -46,10 +45,12 @@ Game.propTypes = {
 };
 
 const mapStateToProps = ({
-    gameSettings
+    gameSettings,
+    gameState
 }, {match: {params: {gameId}}}) => {
     return {
         ...gameSettings,
+        ...gameState,
         gameId
     }
 };
