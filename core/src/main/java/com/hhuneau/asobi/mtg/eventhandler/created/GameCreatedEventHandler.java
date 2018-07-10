@@ -9,6 +9,7 @@ import com.hhuneau.asobi.mtg.pool.PoolService;
 import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
 import com.hhuneau.asobi.websocket.events.game.player.JoinGameEvent;
 import com.hhuneau.asobi.websocket.events.game.player.LeaveGameEvent;
+import com.hhuneau.asobi.websocket.events.game.player.PickEvent;
 import com.hhuneau.asobi.websocket.messages.ErrorMessage;
 import com.hhuneau.asobi.websocket.messages.PlayerIdMessage;
 
@@ -75,6 +76,11 @@ public abstract class GameCreatedEventHandler implements EventHandler {
     public void handle(Game game, StartGameEvent evt) {
         poolService.createPools(game);
         gameService.startGame(evt.gameId);
+    }
+
+    @Override
+    public void handle(Game game, PickEvent evt) {
+
     }
 
     @Override

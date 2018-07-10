@@ -18,4 +18,8 @@ public interface GameService {
     void finishGame(Game game);
 
     void save(Game game);
+
+    Player getNextPlayer(Game game, Player player);
+
+    boolean isRoundFinished(Game game);
 }

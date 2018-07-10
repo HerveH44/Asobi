@@ -1,5 +1,6 @@
 import React, {Component} from "react"
 import uniqueId from "lodash.uniqueid"
+import {pick} from "../../actions/server"
 
 class Card extends Component {
     constructor(props) {
@@ -28,7 +29,7 @@ class Card extends Component {
     // }
 
     render() {
-        const {card, zoneName} = this.props;
+        const {card, zoneName, pick} = this.props;
         const isAutopickable = zoneName === "pack" && card.isAutopick;
 
         const className =
@@ -44,7 +45,7 @@ class Card extends Component {
             <span key={uniqueId()}
                 className={className}
                 title={title}
-                // onClick={App._emit("click", zoneName, card.name)}
+                onClick={pick}
                 // onMouseEnter={this.onMouseEnter}
                 // onMouseLeave={this.onMouseLeave}
                 >

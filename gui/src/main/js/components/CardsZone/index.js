@@ -1,11 +1,11 @@
 import React from "react"
 import {connect} from 'react-redux';
-import {string, array, number} from "prop-types"
+import {string, array, number, object} from "prop-types"
 import { Spaced } from "../utils";
 import Card from "./Card";
 import uniqueId from "lodash.uniqueid"
 
-const CardsZone = ({pack, pickedCards}) => (
+const CardsZone = ({waitingPack: {cards: pack}, pickedCards}) => (
     <div>
         <PackZone cards={pack} round={1} pick={1}/>
         <MainZone cards={pickedCards}/>
@@ -15,6 +15,7 @@ const CardsZone = ({pack, pickedCards}) => (
 CardsZone.propTypes = {
     pack: array.isRequired,
     pickedCards: array.isRequired,
+    waitingPack: object.isRequired
 }
 
 const PackZone = ({cards, round, pick}) => (
@@ -43,12 +44,12 @@ MainZone.propTypes = {
     cards: array.isRequired
 }
 
-const Grid = ({zoneName, zoneTitle, zoneSubtitle, cards}) => (
+const Grid = ({zoneName, zoneTitle, zoneSubtitle, cards, pick }) => (
     <div className='zone' key={uniqueId()}>
       <h1>
         <Spaced elements={[zoneTitle, zoneSubtitle]}/>
       </h1>
-      {cards.map(card => <Card key={uniqueId()} card={card} zoneName={zoneName} />)}
+      {cards.map(card => <Card key={uniqueId()} card={card} zoneName={zoneName} pick={pick(card.id)} />)}
     </div>
 );
 

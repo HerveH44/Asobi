@@ -2,9 +2,11 @@ import {handleActions} from 'redux-actions';
 import {PLAYER_STATE} from "../actions/server"
 
 const InitialState = {
-    waitingPack: [],
+    waitingPack: { cards: [] },
     pickedCards: [],
-    pack: []
+    pack: [],
+    side: [],
+    junk: []
 };
 
 export default handleActions({

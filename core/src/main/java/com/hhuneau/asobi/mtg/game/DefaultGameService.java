@@ -1,8 +1,7 @@
 package com.hhuneau.asobi.mtg.game;
 
-import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.mtg.player.Player;
-import com.hhuneau.asobi.mtg.player.PlayerService;
+import com.hhuneau.asobi.mtg.player.PlayerState;
 import com.hhuneau.asobi.mtg.sets.MTGSet;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
@@ -19,10 +18,11 @@ import static com.hhuneau.asobi.mtg.game.Status.STARTED;
 @Service
 @Transactional
 public class DefaultGameService implements GameService {
+
     private final GameRepository gameRepository;
     private final MTGSetsService setService;
 
-    public DefaultGameService(GameRepository gameRepository, MTGSetsService setService, PlayerService playerService, CustomerService customerService) {
+    public DefaultGameService(GameRepository gameRepository, MTGSetsService setService) {
         this.gameRepository = gameRepository;
         this.setService = setService;
     }
@@ -63,11 +63,46 @@ public class DefaultGameService implements GameService {
     }
 
     @Override
+    public Player getNextPlayer(Game game, Player player) {
+        final Player[] players = game.getPlayers().toArray(new Player[0]);
+        for (int i = 0; i < players.length; i++) {
+            final Player p = players[i];
+
+            // Get Player index
+            if (p.getPlayerId() == player.getPlayerId()) {
+
+                // Get next player according to round
+                final int round = game.getRound();
+                final int calculatedIndex = round % 2 == 0 ? i + 1 : i - 1;
+                int nextPlayerSeat = calculatedIndex % players.length;
+
+                // If the index is negative, we cycle from end of the list
+                if (nextPlayerSeat < 0) {
+                    nextPlayerSeat += players.length;
+                }
+                return players[nextPlayerSeat];
+            }
+        }
+
+        //Should never happened...
+        return player;
+    }
+
+    @Override
+    public boolean isRoundFinished(Game game) {
+        return game.getPlayers().stream()
+            .map(Player::getPlayerState)
+            .map(PlayerState::getWaitingPacks)
+            .filter(List::isEmpty)
+            .anyMatch(packs -> true);
+    }
+
+    @Override
     public Player addPlayer(Game game, Player player) {
         game.getPlayers().add(player);
         gameRepository.save(game);
         return game.getPlayers().stream()
-            .filter(player1 -> player1.getUserId().equals(player.getUserId()))
+            .filter(p -> p.getUserId().equals(player.getUserId()))
             .findFirst()
             .orElse(null);
     }

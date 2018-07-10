@@ -5,11 +5,13 @@ import com.hhuneau.asobi.websocket.events.game.GameEvent;
 import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
 import com.hhuneau.asobi.websocket.events.game.player.JoinGameEvent;
 import com.hhuneau.asobi.websocket.events.game.player.LeaveGameEvent;
+import com.hhuneau.asobi.websocket.events.game.player.PickEvent;
 
 public interface EventHandler {
     void handle(Game game, JoinGameEvent evt);
     void handle(Game game, LeaveGameEvent evt);
     void handle(Game game, StartGameEvent evt);
+    void handle(Game game, PickEvent evt);
     boolean isInterested(Game game);
 
     default void handle(Game game, GameEvent evt) {
