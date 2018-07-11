@@ -23,7 +23,8 @@ const PackZone = ({cards, round, pick}) => (
     <Grid
         zoneName={"Pack"}
         zoneTitle={`Pack ${round}`}
-        zoneSubtitle={`Pick ${pick}`}
+        // TODO: add pick in state
+        zoneSubtitle={`Pick TODO`}
         cards={cards}
         pick={pick} />
 );
