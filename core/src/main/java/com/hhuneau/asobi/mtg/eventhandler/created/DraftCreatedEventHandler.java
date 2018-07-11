@@ -1,11 +1,9 @@
 package com.hhuneau.asobi.mtg.eventhandler.created;
 
 import com.hhuneau.asobi.customer.CustomerService;
-import com.hhuneau.asobi.mtg.MTGFacade;
 import com.hhuneau.asobi.mtg.game.Game;
 import com.hhuneau.asobi.mtg.game.GameService;
 import com.hhuneau.asobi.mtg.player.Player;
-import com.hhuneau.asobi.mtg.player.PlayerService;
 import com.hhuneau.asobi.mtg.player.PlayerState;
 import com.hhuneau.asobi.mtg.pool.Booster;
 import com.hhuneau.asobi.mtg.pool.Pack;
@@ -27,11 +25,8 @@ import static com.hhuneau.asobi.mtg.game.GameType.DRAFT;
 @Transactional
 public class DraftCreatedEventHandler extends GameCreatedEventHandler {
 
-    private final MTGFacade facade;
-
-    public DraftCreatedEventHandler(GameService gameService, CustomerService customerService, PoolService poolService, PlayerService playerService, MTGFacade facade) {
+    public DraftCreatedEventHandler(GameService gameService, CustomerService customerService, PoolService poolService) {
         super(gameService, customerService, poolService);
-        this.facade = facade;
     }
 
     @Override
@@ -58,7 +53,7 @@ public class DraftCreatedEventHandler extends GameCreatedEventHandler {
 
         if (!isFinished.get()) {
             game.setRound(game.getRound() + 1);
-            facade.broadcastState(game.getGameId());
+            gameService.save(game);
         }
     }
 
@@ -90,9 +85,6 @@ public class DraftCreatedEventHandler extends GameCreatedEventHandler {
                     // START A NEW ROUND
                     startNewRound(game);
                 }
-
-                // Broadcast gameState
-                facade.broadcastState(game.getGameId());
             });
     }
 
