@@ -23,7 +23,7 @@ class PlayerEntries extends Component {
     }
     render() {
         return (
-            this.props.players.map((p,i) =>
+            this.props.playersStates.map((p,i) =>
                 <PlayerEntry
                     key ={uniqueId()}
                     player={p}
@@ -34,7 +34,7 @@ class PlayerEntries extends Component {
 }
 
 PlayerEntries.propTypes = {
-    players: array.isRequired,
+    playersStates: array.isRequired,
     self: number.isRequired,
     didGameStart: bool.isRequired,
     isHost: bool.isRequired,
@@ -42,7 +42,7 @@ PlayerEntries.propTypes = {
     onKick: func.isRequired
 }
 
-const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, players: {length}, self, didGameStart, isHost, onSwap, onKick}) => {
+const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, playersStates: {length}, self, didGameStart, isHost, onSwap, onKick}) => {
     const opp
     = length % 2 === 0
         ? (self + length/2) % length

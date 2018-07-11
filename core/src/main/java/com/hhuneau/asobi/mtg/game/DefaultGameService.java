@@ -2,12 +2,17 @@ package com.hhuneau.asobi.mtg.game;
 
 import com.hhuneau.asobi.mtg.player.Player;
 import com.hhuneau.asobi.mtg.player.PlayerState;
+import com.hhuneau.asobi.mtg.pool.Booster;
+import com.hhuneau.asobi.mtg.pool.Pack;
+import com.hhuneau.asobi.mtg.pool.PoolService;
+import com.hhuneau.asobi.mtg.sets.MTGCard;
 import com.hhuneau.asobi.mtg.sets.MTGSet;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,10 +26,12 @@ public class DefaultGameService implements GameService {
 
     private final GameRepository gameRepository;
     private final MTGSetsService setService;
+    private final PoolService poolService;
 
-    public DefaultGameService(GameRepository gameRepository, MTGSetsService setService) {
+    public DefaultGameService(GameRepository gameRepository, MTGSetsService setService, PoolService poolService) {
         this.gameRepository = gameRepository;
         this.setService = setService;
+        this.poolService = poolService;
     }
 
     @Override
@@ -97,12 +104,32 @@ public class DefaultGameService implements GameService {
     }
 
     @Override
+    public void startNewRound(Game game) {
+        game.setRound(game.getRound() + 1);
+
+        game.getPlayers().forEach(player -> {
+            final List<Booster> pool = player.getPool();
+            if (!pool.isEmpty()) {
+                //put the first booster as available
+                final Pack firstPack = new Pack();
+                final Booster booster = pool.remove(0);
+                final List<MTGCard> poolCards = booster.getCards();
+                firstPack.setCards(new ArrayList<>(poolCards));
+                player.getPlayerState().getWaitingPacks().add(firstPack);
+                poolService.delete(booster);
+            }
+        });
+
+        save(game);
+    }
+
+    @Override
     public Player addPlayer(Game game, Player player) {
         game.getPlayers().add(player);
         gameRepository.save(game);
         return game.getPlayers().stream()
-            .filter(p -> p.getUserId().equals(player.getUserId()))
-            .findFirst()
-            .orElse(null);
+                   .filter(p -> p.getUserId().equals(player.getUserId()))
+                   .findFirst()
+                   .orElse(null);
     }
 }

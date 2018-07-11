@@ -22,4 +22,6 @@ public interface GameService {
     Player getNextPlayer(Game game, Player player);
 
     boolean isRoundFinished(Game game);
+
+    void startNewRound(Game game);
 }

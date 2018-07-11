@@ -9,11 +9,11 @@ import java.util.List;
 @Service
 public class DefaultPoolService implements PoolService {
 
-    private final PoolRepository repository;
+    private final PoolRepository poolRepository;
     private final List<PoolMaker> poolMakers;
 
-    public DefaultPoolService(PoolRepository repository, List<PoolMaker> poolMakers) {
-        this.repository = repository;
+    public DefaultPoolService(PoolRepository poolRepository, List<PoolMaker> poolMakers) {
+        this.poolRepository = poolRepository;
         this.poolMakers = poolMakers;
     }
 
@@ -25,11 +25,11 @@ public class DefaultPoolService implements PoolService {
             .findFirst()
             .orElseThrow(() -> new RuntimeException(String.format("gameMode %s is not supported", game.getGameMode())))
             .createPools(game);
-        repository.saveAll(boosters);
+        poolRepository.saveAll(boosters);
     }
 
     @Override
     public void delete(Booster booster) {
-        repository.delete(booster);
+        poolRepository.delete(booster);
     }
 }

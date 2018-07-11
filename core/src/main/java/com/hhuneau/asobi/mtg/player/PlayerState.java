@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
@@ -24,15 +25,15 @@ public class PlayerState {
 
     @OneToMany(cascade = ALL)
     @JoinColumn(name = "state_id")
-    private List<Pack> waitingPacks;
+    private List<Pack> waitingPacks = new ArrayList<>();
 
     @ManyToMany(cascade = ALL)
     @JoinColumn(name = "state_id")
-    private List<MTGCard> pickedCards;
+    private List<MTGCard> pickedCards = new ArrayList<>();
 
     public Pack getWaitingPack() {
-        return getWaitingPacks().isEmpty()
-            ? null
-            : getWaitingPacks().get(0);
+        return waitingPacks == null || waitingPacks.isEmpty()
+                   ? null
+                   : getWaitingPacks().get(0);
     }
 }
