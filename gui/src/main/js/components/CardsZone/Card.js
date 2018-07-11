@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import {string, func, object} from "prop-types"
+import { string, func, object } from "prop-types"
 import uniqueId from "lodash.uniqueid"
 
 class Card extends Component {
@@ -40,21 +40,16 @@ class Card extends Component {
             = isAutopickable
                 ? "This card will be automatically picked if your time expires."
                 : "";
-
-        console.log(card)
-        console.log(pick)
         return (
-            !card ?
-                <div /> :
-                <span key={uniqueId()}
-                    className={className}
-                    title={title}
-                    onClick={() => pick(card.id)}
-                // onMouseEnter={this.onMouseEnter}
-                // onMouseLeave={this.onMouseLeave}
-                >
-                    <img src={this.state.url} alt={card.name} />
-                </span>
+            <span key={uniqueId()}
+                className={className}
+                title={title}
+                onClick={() => pick(card.id)}
+            // onMouseEnter={this.onMouseEnter}
+            // onMouseLeave={this.onMouseLeave}
+            >
+                <img src={this.state.url} alt={card.name} />
+            </span>
         );
     }
 }
