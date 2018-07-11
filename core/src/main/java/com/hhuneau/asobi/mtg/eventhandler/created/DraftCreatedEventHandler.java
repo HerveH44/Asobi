@@ -3,14 +3,10 @@ package com.hhuneau.asobi.mtg.eventhandler.created;
 import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.mtg.game.Game;
 import com.hhuneau.asobi.mtg.game.GameService;
-import com.hhuneau.asobi.mtg.player.Player;
-import com.hhuneau.asobi.mtg.player.PlayerState;
 import com.hhuneau.asobi.mtg.pool.Booster;
 import com.hhuneau.asobi.mtg.pool.Pack;
 import com.hhuneau.asobi.mtg.pool.PoolService;
-import com.hhuneau.asobi.mtg.sets.MTGCard;
 import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
-import com.hhuneau.asobi.websocket.events.game.player.PickEvent;
 import com.hhuneau.asobi.websocket.messages.PlayerStateMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,10 +40,12 @@ public class DraftCreatedEventHandler extends GameCreatedEventHandler {
                 isFinished.set(false);
                 //put the first booster as available
                 final Pack firstPack = new Pack();
-                firstPack.setCards(new ArrayList<>(pool.remove(0).getCards()));
+                final Booster booster = pool.remove(0);
+                firstPack.setCards(new ArrayList<>(booster.getCards()));
                 player.getPlayerState().getWaitingPacks().add(firstPack);
                 customerService.send(player.getUserId(),
                     PlayerStateMessage.of(player.getPlayerState()));
+                poolService.delete(booster);
             }
         });
 
@@ -58,38 +56,8 @@ public class DraftCreatedEventHandler extends GameCreatedEventHandler {
     }
 
     @Override
-    public void handle(Game game, PickEvent evt) {
-        game.getPlayers().stream()
-            .filter(player -> player.getPlayerId() == evt.playerId)
-            .findFirst()
-            .ifPresent(player -> {
-                final PlayerState playerState = player.getPlayerState();
-                final Pack waitingPack = playerState.getWaitingPacks().remove(0);
-
-                // Pick the card
-                final MTGCard pickedCard = waitingPack.getCards().remove(evt.cardIndex);
-                playerState.getPickedCards().add(pickedCard);
-
-                // Alert player of the new pack
-                if (!playerState.getWaitingPacks().isEmpty()) {
-                    customerService.send(player.getUserId(), PlayerStateMessage.of(playerState));
-                }
-
-                // Pass the remaining pack
-                final Player nextPlayer = gameService.getNextPlayer(game, player);
-                final PlayerState nextPlayerState = nextPlayer.getPlayerState();
-                nextPlayerState.getWaitingPacks().add(waitingPack);
-                customerService.send(nextPlayer.getUserId(), PlayerStateMessage.of(nextPlayerState));
-
-                if (gameService.isRoundFinished(game)) {
-                    // START A NEW ROUND
-                    startNewRound(game);
-                }
-            });
-    }
-
-    @Override
     public boolean isInterested(Game game) {
+
         return super.isInterested(game) && game.getGameType().equals(DRAFT);
     }
 }

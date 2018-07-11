@@ -91,10 +91,9 @@ public class DefaultGameService implements GameService {
     @Override
     public boolean isRoundFinished(Game game) {
         return game.getPlayers().stream()
-            .map(Player::getPlayerState)
-            .map(PlayerState::getWaitingPacks)
-            .filter(List::isEmpty)
-            .anyMatch(packs -> true);
+                   .map(Player::getPlayerState)
+                   .map(PlayerState::getWaitingPacks)
+                   .allMatch(List::isEmpty);
     }
 
     @Override

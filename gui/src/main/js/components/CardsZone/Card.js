@@ -1,14 +1,15 @@
-import React, {Component} from "react"
+import React, { Component } from "react"
+import {string, func, object} from "prop-types"
 import uniqueId from "lodash.uniqueid"
 
 class Card extends Component {
     constructor(props) {
-      super(props);
-      this.state = {
-        url: `http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=${props.card.multiverseid}&type=card`
-      };
-    //   this.onMouseEnter = this.onMouseEnter.bind(this);
-    //   this.onMouseLeave = this.onMouseLeave.bind(this);
+        super(props);
+        this.state = {
+            url: `http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=${props.card.multiverseid}&type=card`
+        };
+        //   this.onMouseEnter = this.onMouseEnter.bind(this);
+        //   this.onMouseLeave = this.onMouseLeave.bind(this);
     }
 
     // onMouseEnter() {
@@ -28,31 +29,41 @@ class Card extends Component {
     // }
 
     render() {
-        const {card, zoneName, pick} = this.props;
+        const { card, zoneName, pick } = this.props;
         const isAutopickable = zoneName === "pack" && card.isAutopick;
 
         const className =
-        `card ${isAutopickable ? "autopick-card " : ""}
+            `card ${isAutopickable ? "autopick-card " : ""}
         card ${card.foil ? "foil-card " : ""}`;
 
         const title
-        = isAutopickable
-            ? "This card will be automatically picked if your time expires."
-            : "";
+            = isAutopickable
+                ? "This card will be automatically picked if your time expires."
+                : "";
 
+        console.log(card)
+        console.log(pick)
         return (
-            <span key={uniqueId()}
-                className={className}
-                title={title}
-                onClick={pick}
+            !card ?
+                <div /> :
+                <span key={uniqueId()}
+                    className={className}
+                    title={title}
+                    onClick={() => pick(card.id)}
                 // onMouseEnter={this.onMouseEnter}
                 // onMouseLeave={this.onMouseLeave}
                 >
-                <img src={this.state.url} alt={card.name}/>
-            </span>
+                    <img src={this.state.url} alt={card.name} />
+                </span>
         );
     }
-  }
+}
+
+Card.propTypes = {
+    card: object.isRequired,
+    zoneName: string.isRequired,
+    pick: func.isRequired
+}
 
 export default Card;
 

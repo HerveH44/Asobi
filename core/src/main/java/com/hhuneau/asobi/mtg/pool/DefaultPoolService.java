@@ -28,4 +28,8 @@ public class DefaultPoolService implements PoolService {
         repository.saveAll(boosters);
     }
 
+    @Override
+    public void delete(Booster booster) {
+        repository.delete(booster);
+    }
 }

@@ -4,7 +4,7 @@ import com.hhuneau.asobi.mtg.eventhandler.EventHandler;
 import com.hhuneau.asobi.mtg.game.Game;
 
 public class PickEvent extends PlayerEvent {
-    public int cardIndex;
+    public String cardIndex;
 
     @Override
     public void accepts(Game game, EventHandler eventHandler) {

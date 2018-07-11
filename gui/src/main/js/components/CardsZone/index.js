@@ -52,7 +52,7 @@ const Grid = ({zoneName, zoneTitle, zoneSubtitle, cards, pick }) => (
       <h1>
         <Spaced elements={[zoneTitle, zoneSubtitle]}/>
       </h1>
-      {cards.map(card => <Card key={uniqueId()} card={card} zoneName={zoneName} pick={pick(card.id)} />)}
+      {cards.map(card => <Card key={uniqueId()} card={card} zoneName={zoneName} pick={pick} />)}
     </div>
 );
 
