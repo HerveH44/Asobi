@@ -4,10 +4,11 @@ import {string, array, number, object} from "prop-types"
 import { Spaced } from "../utils";
 import Card from "./Card";
 import uniqueId from "lodash.uniqueid"
+import {pick} from "../../actions/server"
 
-const CardsZone = ({waitingPack: {cards: pack}, pickedCards}) => (
+const CardsZone = ({waitingPack: {cards: pack}, pick, pickedCards}) => (
     <div>
-        <PackZone cards={pack} round={1} pick={1}/>
+        <PackZone cards={pack} round={1} pick={pick}/>
         <MainZone cards={pickedCards}/>
     </div>
 );
@@ -23,7 +24,8 @@ const PackZone = ({cards, round, pick}) => (
         zoneName={"Pack"}
         zoneTitle={`Pack ${round}`}
         zoneSubtitle={`Pick ${pick}`}
-        cards={cards} />
+        cards={cards}
+        pick={pick} />
 );
 
 PackZone.propTypes = {
@@ -66,7 +68,7 @@ const mapStateToProps = ({playerState}) => (
     }
 );
 const mapDispatchToProps = {
-
+    pick
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CardsZone);

@@ -1,6 +1,5 @@
 import React, {Component} from "react"
 import uniqueId from "lodash.uniqueid"
-import {pick} from "../../actions/server"
 
 class Card extends Component {
     constructor(props) {
