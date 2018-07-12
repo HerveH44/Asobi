@@ -4,7 +4,6 @@ import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.mtg.eventhandler.EventHandler;
 import com.hhuneau.asobi.mtg.game.*;
 import com.hhuneau.asobi.mtg.player.Player;
-import com.hhuneau.asobi.mtg.player.PlayerState;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import com.hhuneau.asobi.mtg.sets.SetDTO;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
@@ -30,7 +29,7 @@ public class DefaultMTGFacade implements MTGFacade {
     private final GameService gameService;
     private final CustomerService customerService;
     private final List<EventHandler> eventHandlers;
-    private MTGSetsService setsService;
+    private final MTGSetsService setsService;
 
     public DefaultMTGFacade(GameService gameService, CustomerService customerService, List<EventHandler> eventHandlers, MTGSetsService setsService) {
         this.gameService = gameService;
@@ -81,10 +80,10 @@ public class DefaultMTGFacade implements MTGFacade {
     public void broadcastState(long gameId) {
         gameService.getGame(gameId)
             .ifPresent(game -> {
+                final GameStateMessage gameStateMessage = GameStateMessage.of(GameStateDTO.of(game));
                 game.getPlayers().forEach(player -> {
-                    final PlayerState playerState = player.getPlayerState();
-                    customerService.send(player.getUserId(), PlayerStateMessage.of(playerState));
-                    customerService.send(player.getUserId(), GameStateMessage.of(GameStateDTO.of(game)));
+                    customerService.send(player.getUserId(), PlayerStateMessage.of(player.getPlayerState()));
+                    customerService.send(player.getUserId(), gameStateMessage);
                 });
             });
     }
@@ -113,14 +112,13 @@ public class DefaultMTGFacade implements MTGFacade {
             gameStateDTO.seats = game.getSeats();
             gameStateDTO.status = game.getStatus();
             gameStateDTO.title = game.getTitle();
-            gameStateDTO.playersStates = game.getPlayers().stream()
-                                            .map(PartialPlayerStateDTO::of)
-                                            .collect(Collectors.toList());
             gameStateDTO.didGameStart = game.getStatus().hasStarted();
+            gameStateDTO.playersStates = game.getPlayers().stream()
+                                             .map(PartialPlayerStateDTO::of)
+                                             .collect(Collectors.toList());
             return gameStateDTO;
         }
     }
-
 
     public static class PartialPlayerStateDTO {
         public String name;
