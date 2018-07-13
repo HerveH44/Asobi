@@ -2,7 +2,9 @@ package com.hhuneau.asobi.mtg.game;
 
 import com.hhuneau.asobi.mtg.player.Player;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
+import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface GameService {
@@ -13,7 +15,7 @@ public interface GameService {
 
     Player addPlayer(Game game, Player player);
 
-    void startGame(long gameId);
+    void startGame(StartGameEvent evt);
 
     void finishGame(Game game);
 
@@ -24,4 +26,6 @@ public interface GameService {
     boolean isRoundFinished(Game game);
 
     void startNewRound(Game game);
+
+    List<Game> getAllCurrentGames();
 }

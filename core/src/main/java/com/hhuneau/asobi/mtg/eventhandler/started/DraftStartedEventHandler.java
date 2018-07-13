@@ -2,6 +2,7 @@ package com.hhuneau.asobi.mtg.eventhandler.started;
 
 import com.hhuneau.asobi.mtg.game.Game;
 import com.hhuneau.asobi.mtg.game.GameService;
+import com.hhuneau.asobi.mtg.game.TimeProducer;
 import com.hhuneau.asobi.mtg.player.Player;
 import com.hhuneau.asobi.mtg.player.PlayerState;
 import com.hhuneau.asobi.mtg.pool.Pack;
@@ -58,6 +59,12 @@ public class DraftStartedEventHandler extends GameStartedEventHandler {
                     final PlayerState nextPlayerState = nextPlayer.getPlayerState();
                     nextPlayerState.getWaitingPacks().add(waitingPack);
                 }
+
+                final int pick = playerState.getPick() + 1;
+                playerState.setPick(pick);
+
+                final int timeLeft = playerState.getWaitingPack() == null ? 0 : TimeProducer.calc(game.getTimer(), pick);
+                player.getPlayerState().setTimeLeft(timeLeft);
 
                 if (gameService.isRoundFinished(game)) {
                     // START A NEW ROUND

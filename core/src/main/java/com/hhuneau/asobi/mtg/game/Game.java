@@ -33,6 +33,7 @@ public class Game {
     private Date createdDate = new Date();
     private String authToken;
     private int round;
+    private Timer timer;
 
     @OneToMany(orphanRemoval = true, cascade = ALL)
     @JoinColumn(name = "game_id")

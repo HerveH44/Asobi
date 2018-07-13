@@ -8,7 +8,11 @@ const createGame = ({ getState, dispatch }) => next => action => {
         game,
         gameSettings: {
             gameId,
-            authToken
+            authToken,
+            addBots,
+            useTimer,
+            shufflePlayers,
+            timerLength
         },
         player: {
             playerId,
@@ -65,7 +69,11 @@ const createGame = ({ getState, dispatch }) => next => action => {
                 payload: {
                     type: "START_GAME",
                     gameId,
-                    authToken
+                    authToken,
+                    addBots,
+                    useTimer,
+                    shufflePlayers,
+                    timerLength
                 }
             })
         default:

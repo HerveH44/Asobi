@@ -75,7 +75,7 @@ public abstract class GameCreatedEventHandler implements EventHandler {
     @Override
     public void handle(Game game, StartGameEvent evt) {
         poolService.createPools(game);
-        gameService.startGame(evt.gameId);
+        gameService.startGame(evt);
     }
 
     @Override

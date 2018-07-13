@@ -20,7 +20,6 @@ class Game extends Component {
 
     render() {
         const {gameId, ...rest} = this.props;
-        console.log(rest);
         return (
             <div className='game'>
                 <div className='game-controls'>

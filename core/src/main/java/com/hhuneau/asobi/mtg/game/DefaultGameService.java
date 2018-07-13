@@ -9,6 +9,7 @@ import com.hhuneau.asobi.mtg.sets.MTGCard;
 import com.hhuneau.asobi.mtg.sets.MTGSet;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
+import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,10 +51,11 @@ public class DefaultGameService implements GameService {
     }
 
     @Override
-    public void startGame(long gameId) {
-        gameRepository.findById(gameId)
+    public void startGame(StartGameEvent evt) {
+        gameRepository.findById(evt.gameId)
             .ifPresent(game -> {
                 game.setStatus(STARTED);
+                game.setTimer(evt.timerLength);
                 gameRepository.save(game);
             });
     }
@@ -115,13 +117,38 @@ public class DefaultGameService implements GameService {
                 final Booster booster = pool.remove(0);
                 final List<MTGCard> poolCards = booster.getCards();
                 firstPack.setCards(new ArrayList<>(poolCards));
-                player.getPlayerState().getWaitingPacks().add(firstPack);
+                final PlayerState playerState = player.getPlayerState();
+                playerState.getWaitingPacks().add(firstPack);
+                final int pick = 1;
+                playerState.setTimeLeft(TimeProducer.calc(game.getTimer(), pick));
+                playerState.setPick(pick);
+                playerState.setPack(game.getRound());
+
                 poolService.delete(booster);
             }
         });
 
         save(game);
     }
+
+    @Override
+    public List<Game> getAllCurrentGames() {
+        return gameRepository.findAllByStatus(STARTED);
+    }
+
+//    public void decreaseTime() {
+//        gameRepository.findAll().stream()
+//            .filter(game -> game.getStatus().equals(STARTED))
+//            .map(Game::getPlayers)
+//            .flatMap(Set::stream)
+//            .map(Player::getPlayerState)
+//            .filter(ps -> ps.getTimeLeft() > 0)
+//            .forEach(ps -> {
+//                ps.setTimeLeft(ps.getTimeLeft() - 1);
+//                ps.getPlayer()
+//
+//            });
+//    }
 
     @Override
     public Player addPlayer(Game game, Player player) {

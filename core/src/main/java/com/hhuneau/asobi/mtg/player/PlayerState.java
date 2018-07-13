@@ -31,6 +31,10 @@ public class PlayerState {
     @JoinColumn(name = "state_id")
     private List<MTGCard> pickedCards = new ArrayList<>();
 
+    private int timeLeft;
+    private int pick;
+    private int pack;
+
     public Pack getWaitingPack() {
         return waitingPacks == null || waitingPacks.isEmpty()
                    ? null

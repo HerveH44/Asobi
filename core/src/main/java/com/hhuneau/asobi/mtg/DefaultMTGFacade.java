@@ -13,6 +13,7 @@ import com.hhuneau.asobi.websocket.messages.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,13 +80,27 @@ public class DefaultMTGFacade implements MTGFacade {
     @Override
     public void broadcastState(long gameId) {
         gameService.getGame(gameId)
-            .ifPresent(game -> {
-                final GameStateMessage gameStateMessage = GameStateMessage.of(GameStateDTO.of(game));
-                game.getPlayers().forEach(player -> {
-                    customerService.send(player.getUserId(), PlayerStateMessage.of(player.getPlayerState()));
-                    customerService.send(player.getUserId(), gameStateMessage);
-                });
-            });
+            .ifPresent(this::broadcastGameState);
+    }
+
+    private void broadcastGameState(Game game) {
+        final GameStateMessage gameStateMessage = GameStateMessage.of(GameStateDTO.of(game));
+        game.getPlayers().forEach(player -> {
+            customerService.send(player.getUserId(), PlayerStateMessage.of(player.getPlayerState()));
+            customerService.send(player.getUserId(), gameStateMessage);
+        });
+    }
+
+    @Scheduled(fixedRate = 1000)
+    public void decreaseTimeLeft() {
+        gameService.getAllCurrentGames().forEach(game -> {
+            game.getPlayers().stream()
+                .map(Player::getPlayerState)
+                .filter(ps -> ps.getTimeLeft() > 0)
+                .forEach(ps -> ps.setTimeLeft(ps.getTimeLeft() - 1));
+            broadcastGameState(game);
+            gameService.save(game);
+        });
     }
 
     public static class GameStateDTO {
@@ -131,6 +146,7 @@ public class DefaultMTGFacade implements MTGFacade {
             final PartialPlayerStateDTO dto = new PartialPlayerStateDTO();
             dto.name = player.getName();
             dto.packs = player.getPlayerState().getWaitingPacks().size();
+            dto.time = player.getPlayerState().getTimeLeft();
             return dto;
         }
     }
