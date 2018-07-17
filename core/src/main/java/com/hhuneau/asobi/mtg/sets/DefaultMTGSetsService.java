@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -14,17 +15,32 @@ import java.util.stream.Collectors;
 public class DefaultMTGSetsService implements MTGSetsService {
     private final MTGSetRepository setRepository;
     private final static Logger LOGGER = LoggerFactory.getLogger(DefaultMTGSetsService.class);
+    private final List<MTGCardFilter> filterList;
 
-    public DefaultMTGSetsService(MTGSetRepository setRepository) {
+    public DefaultMTGSetsService(MTGSetRepository setRepository, List<MTGCardFilter> filterList) {
         this.setRepository = setRepository;
+        this.filterList = filterList;
     }
 
     public void saveSet(MTGSet set) {
         try {
+
+            final Set<MTGCard> cards = filter(set, set.getCards());
+            set.setCards(cards);
             setRepository.save(set);
         } catch (final Exception e) {
             LOGGER.info("can't save set {} because {}", set.getCode(), e.getMessage());
         }
+    }
+
+    private Set<MTGCard> filter(MTGSet set, Set<MTGCard> cards) {
+        final List<MTGCardFilter> filterList = this.filterList.stream()
+            .filter(filter -> filter.isInterested(set))
+            .collect(Collectors.toList());
+        for (MTGCardFilter filter : filterList) {
+            cards = filter.apply(cards);
+        }
+        return cards;
     }
 
     public List<MTGSet> getSets() {

@@ -23,6 +23,8 @@ public class MTGCard {
     private String manaCost;
     private long multiverseid;
     private String name;
+    @ElementCollection
+    private List<String> names;
     private String number;
     private String power;
     @Enumerated(EnumType.STRING)

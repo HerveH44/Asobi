@@ -43,8 +43,8 @@ public class DefaultMTGFacade implements MTGFacade {
     @EventListener
     public void handle(SessionConnectedEvent event) {
         final Map<String, List<SetDTO>> sets = setsService.getSets().stream()
-                                                   .map(SetDTO::of)
-                                                   .collect(Collectors.groupingBy(SetDTO::getType));
+            .map(SetDTO::of)
+            .collect(Collectors.groupingBy(SetDTO::getType));
         customerService.send(event.sessionId, SetsExportMessage.of(sets));
     }
 
@@ -64,17 +64,21 @@ public class DefaultMTGFacade implements MTGFacade {
     @Override
     @EventListener
     public void handle(GameEvent evt) {
-        gameService.getGame(evt.gameId)
-            .ifPresentOrElse(
-                (game) -> eventHandlers.stream()
-                              .filter(eventHandler -> eventHandler.isInterested(game))
-                              .forEach(handler -> {
-                                  handler.handle(game, evt);
-                                  broadcastState(evt.gameId);
-                              }),
-                () -> customerService.send(evt.sessionId,
-                    ErrorMessage.of(String.format("gameId %s does not exist", evt.gameId)))
-            );
+        try {
+            gameService.getGame(evt.gameId)
+                .ifPresentOrElse(
+                    (game) -> eventHandlers.stream()
+                        .filter(eventHandler -> eventHandler.isInterested(game))
+                        .forEach(handler -> {
+                            handler.handle(game, evt);
+                            broadcastState(evt.gameId);
+                        }),
+                    () -> customerService.send(evt.sessionId,
+                        ErrorMessage.of(String.format("gameId %s does not exist", evt.gameId)))
+                );
+        } catch (Exception e) {
+            LOGGER.error("error while handling event {} {}", evt, e);
+        }
     }
 
     @Override
@@ -129,8 +133,8 @@ public class DefaultMTGFacade implements MTGFacade {
             gameStateDTO.title = game.getTitle();
             gameStateDTO.didGameStart = game.getStatus().hasStarted();
             gameStateDTO.playersStates = game.getPlayers().stream()
-                                             .map(PartialPlayerStateDTO::of)
-                                             .collect(Collectors.toList());
+                .map(PartialPlayerStateDTO::of)
+                .collect(Collectors.toList());
             return gameStateDTO;
         }
     }
