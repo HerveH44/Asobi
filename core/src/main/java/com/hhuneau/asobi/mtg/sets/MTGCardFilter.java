@@ -6,5 +6,5 @@ public interface MTGCardFilter {
 
     boolean isInterested(MTGSet set);
 
-    Set<MTGCard> apply(Set<MTGCard> cards);
+    Set<MTGCard> apply(MTGSet set, Set<MTGCard> cards);
 }

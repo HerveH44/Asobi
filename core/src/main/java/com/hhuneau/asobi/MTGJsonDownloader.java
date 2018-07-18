@@ -54,7 +54,9 @@ public class MTGJsonDownloader {
         final Map<String, MTGSet> sets = mapper.readValue(file, new TypeReference<Map<String, MTGSet>>() {
         });
         sets.forEach((setName, mtgSet) -> {
-            if (!"expansion".equals(mtgSet.getType())) {
+            //TODO: use switch
+            if (!"expansion".equals(mtgSet.getType()) &&
+                !"core".equals(mtgSet.getType())) {
                 return;
             }
             try {

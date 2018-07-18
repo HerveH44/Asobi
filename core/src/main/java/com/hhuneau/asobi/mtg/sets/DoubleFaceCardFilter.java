@@ -13,7 +13,7 @@ public class DoubleFaceCardFilter implements MTGCardFilter {
     }
 
     @Override
-    public Set<MTGCard> apply(Set<MTGCard> cards) {
+    public Set<MTGCard> apply(MTGSet set, Set<MTGCard> cards) {
         return cards.stream()
             .filter(this::filter)
             .collect(Collectors.toSet());

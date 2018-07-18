@@ -38,7 +38,7 @@ public class DefaultMTGSetsService implements MTGSetsService {
             .filter(filter -> filter.isInterested(set))
             .collect(Collectors.toList());
         for (MTGCardFilter filter : filterList) {
-            cards = filter.apply(cards);
+            cards = filter.apply(set, cards);
         }
         return cards;
     }
