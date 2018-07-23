@@ -5,27 +5,14 @@ import {onSwap, onKick} from "../../actions/game"
 import arrowUp from "../../../resources/media/arrow-up.png"
 import arrowDown from "../../../resources/media/arrow-down.png"
 
-import { connect } from "react-redux"
+import {connect} from "react-redux"
 
 class PlayerEntries extends Component {
-    decrement() {
-        //TODO: add a reducer method
-        console.log("add reducer for decrement method")
-        // for (let p of this.props.players)
-        //     if (p.time)
-        //         p.time--;
-    }
-    componentDidMount() {
-         this.timer = window.setInterval(this.decrement.bind(this), 1e3);
-    }
-    componentWillUnmount() {
-        window.clearInterval(this.timer);
-    }
     render() {
         return (
-            this.props.playersStates.map((p,i) =>
+            this.props.playersStates.map((p, i) =>
                 <PlayerEntry
-                    key ={uniqueId()}
+                    key={uniqueId()}
                     player={p}
                     index={i}
                     {...this.props} />)
@@ -44,20 +31,20 @@ PlayerEntries.propTypes = {
 
 const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, playersStates: {length}, self, didGameStart, isHost, onSwap, onKick}) => {
     const opp
-    = length % 2 === 0
-        ? (self + length/2) % length
+        = length % 2 === 0
+        ? (self + length / 2) % length
         : null;
 
     const className
-    = index === self
+        = index === self
         ? "self"
         : index === opp
-        ? "opp"
-        : null;
+            ? "opp"
+            : null;
 
     const connectionStatusIndicator
-    = <span className={isBot ? "icon-bot" : "icon-connected"}
-        title={isBot ? "This player is a bot.": ""} />;
+        = <span className={isBot ? "icon-bot" : "icon-connected"}
+                title={isBot ? "This player is a bot." : ""}/>;
 
     const columns = [
         <td key={uniqueId()}>{index + 1}</td>,
@@ -71,13 +58,13 @@ const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, playersSt
 
     if (isHost) {
         //Move Player Button
-        if(!didGameStart)
+        if (!didGameStart)
             columns.push(
                 <td key={uniqueId()}>
-                    <button onClick={()=> onSwap([index, index - 1])}>
+                    <button onClick={() => onSwap([index, index - 1])}>
                         <img src={arrowDown} width="16px"/>
                     </button>
-                    <button onClick={()=> onSwap([index, index + 1])}>
+                    <button onClick={() => onSwap([index, index + 1])}>
                         <img src={arrowUp} width="16px"/>
                     </button>
                 </td>);
@@ -85,7 +72,7 @@ const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, playersSt
         if (index !== self && !isBot) {
             columns.push(
                 <td key={uniqueId()}>
-                    <button onClick={()=> onKick(index)}>
+                    <button onClick={() => onKick(index)}>
                         kick
                     </button>
                 </td>);

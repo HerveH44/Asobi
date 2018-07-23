@@ -1,5 +1,5 @@
-import React, { Component } from "react"
-import { string, func, object } from "prop-types"
+import React, {Component} from "react"
+import {string, func, object} from "prop-types"
 import uniqueId from "lodash.uniqueid"
 
 class Card extends Component {
@@ -29,8 +29,8 @@ class Card extends Component {
     // }
 
     render() {
-        const { card, zoneName, pick } = this.props;
-        const isAutopickable = zoneName === "pack" && card.isAutopick;
+        const {card, zoneName, pick, autoPick, autoPickId} = this.props;
+        const isAutopickable = zoneName === "Pack" && card.id === autoPickId;
 
         const className =
             `card ${isAutopickable ? "autopick-card " : ""}
@@ -38,17 +38,17 @@ class Card extends Component {
 
         const title
             = isAutopickable
-                ? "This card will be automatically picked if your time expires."
-                : "";
+            ? "This card will be automatically picked if your time expires."
+            : "";
         return (
             <span key={uniqueId()}
-                className={className}
-                title={title}
-                onClick={() => pick(card.id)}
-            // onMouseEnter={this.onMouseEnter}
-            // onMouseLeave={this.onMouseLeave}
+                  className={className}
+                  title={title}
+                  onClick={() => card.id === autoPickId ? pick(card.id) : autoPick(card.id)}
+                // onMouseEnter={this.onMouseEnter}
+                // onMouseLeave={this.onMouseLeave}
             >
-                <img src={this.state.url} alt={card.name} />
+                <img src={this.state.url} alt={card.name}/>
             </span>
         );
     }
@@ -57,8 +57,10 @@ class Card extends Component {
 Card.propTypes = {
     card: object.isRequired,
     zoneName: string.isRequired,
-    pick: func.isRequired
-}
+    pick: func.isRequired,
+    autoPick: func.isRequired,
+    autoPickId: string.isRequired,
+};
 
 export default Card;
 

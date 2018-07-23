@@ -2,11 +2,12 @@ import {handleActions} from 'redux-actions';
 import {PLAYER_STATE} from "../actions/server"
 
 const InitialState = {
-    waitingPack: { cards: [] },
+    waitingPack: {cards: []},
     pickedCards: [],
     pack: [],
     side: [],
-    junk: []
+    junk: [],
+    autoPickId: ""
 };
 
 export default handleActions({
@@ -14,6 +15,13 @@ export default handleActions({
         return {
             ...state,
             ...payload
+        }
+
+    },
+    ["AUTOPICK"](state, {payload}) {
+        return {
+            ...state,
+            autoPickId: payload
         }
     }
 }, InitialState);

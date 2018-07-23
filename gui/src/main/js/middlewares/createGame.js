@@ -1,9 +1,9 @@
-import { CREATE_GAME } from "../reducers/game";
-import { WEBSOCKET_SEND } from "redux-middleware-websocket";
-import { push } from "react-router-redux";
-import { GAME_ID, joinGame } from "../actions/server";
+import {CREATE_GAME} from "../reducers/game";
+import {WEBSOCKET_SEND} from "redux-middleware-websocket";
+import {push} from "react-router-redux";
+import {GAME_ID, joinGame, autoPick} from "../actions/server";
 
-const createGame = ({ getState, dispatch }) => next => action => {
+const createGame = ({getState, dispatch}) => next => action => {
     const {
         game,
         gameSettings: {
@@ -25,6 +25,7 @@ const createGame = ({ getState, dispatch }) => next => action => {
             next(action);
             return dispatch(push("games/" + action.payload.gameId));
         case "CREATE_GAME":
+            next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
                 payload: {
@@ -34,8 +35,7 @@ const createGame = ({ getState, dispatch }) => next => action => {
                 }
             });
         case "PICK":
-            console.log("youhou! Pick :)");
-            console.log(action);
+            next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
                 payload: {
@@ -46,6 +46,7 @@ const createGame = ({ getState, dispatch }) => next => action => {
                 }
             });
         case "JOIN_GAME":
+            next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
                 payload: {
@@ -55,6 +56,7 @@ const createGame = ({ getState, dispatch }) => next => action => {
                 }
             });
         case "LEAVE_GAME":
+            next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
                 payload: {
@@ -64,6 +66,7 @@ const createGame = ({ getState, dispatch }) => next => action => {
                 }
             });
         case "START_GAME":
+            next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
                 payload: {
@@ -75,7 +78,18 @@ const createGame = ({ getState, dispatch }) => next => action => {
                     shufflePlayers,
                     timerLength
                 }
-            })
+            });
+        case "AUTOPICK":
+            next(action);
+            return dispatch({
+                type: WEBSOCKET_SEND,
+                payload: {
+                    type: "AUTOPICK",
+                    gameId,
+                    playerId,
+                    autoPickId: action.payload
+                }
+            });
         default:
             return next(action);
     }

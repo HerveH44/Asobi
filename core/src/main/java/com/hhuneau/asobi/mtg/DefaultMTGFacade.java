@@ -101,7 +101,14 @@ public class DefaultMTGFacade implements MTGFacade {
             game.getPlayers().stream()
                 .map(Player::getPlayerState)
                 .filter(ps -> ps.getTimeLeft() > 0)
-                .forEach(ps -> ps.setTimeLeft(ps.getTimeLeft() - 1));
+                .forEach(ps -> {
+                    final int timeLeft = ps.getTimeLeft() - 1;
+                    ps.setTimeLeft(timeLeft);
+
+                    if (timeLeft == 0) {
+                        gameService.pick(game, ps.getPlayer(), ps.getAutoPickId());
+                    }
+                });
             broadcastGameState(game);
             gameService.save(game);
         });

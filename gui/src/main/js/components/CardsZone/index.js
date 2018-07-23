@@ -1,16 +1,18 @@
 import React from "react"
-import { connect } from 'react-redux';
-import { string, array, number, object } from "prop-types"
-import { Spaced } from "../utils";
+import {connect} from 'react-redux';
+import {string, array, number, object, func} from "prop-types"
+import {Spaced} from "../utils";
 import Card from "./Card";
 import uniqueId from "lodash.uniqueid"
-import { pick } from "../../actions/server"
-import gameState from "../../reducers/gameState";
+import {pick, autoPick} from "../../actions/server"
 
-const CardsZone = ({ waitingPack, round, pick, pickedCards }) => (
+const CardsZone = ({waitingPack, round, pick, autoPick, autoPickId, pickedCards}) => (
     <div>
-        <PackZone cards={(waitingPack || {}).cards || []} round={round} pick={pick} />
-        <MainZone cards={pickedCards} />
+        <PackZone cards={(waitingPack || {}).cards || []} round={round}
+                  pick={pick}
+                  autoPick={autoPick}
+                  autoPickId={autoPickId}/>
+        <MainZone cards={pickedCards}/>
     </div>
 );
 
@@ -18,43 +20,59 @@ CardsZone.propTypes = {
     round: number.isRequired,
     pack: array.isRequired,
     pickedCards: array.isRequired,
-    waitingPack: object.isRequired
-}
+    waitingPack: object.isRequired,
+    autoPick: func.isRequired,
+    pick: func.isRequired,
+    autoPickId: string.isRequired
+};
 
-const PackZone = ({ cards, round, pick }) => (
+const PackZone = ({cards, round, pick, autoPick, autoPickId}) => (
     <Grid
         zoneName={"Pack"}
         zoneTitle={`Pack ${round}`}
         // TODO: add pick in state
         zoneSubtitle={`Pick TODO`}
         cards={cards}
-        pick={pick} />
+        pick={pick}
+        autoPick={autoPick}
+        autoPickId={autoPickId}/>
 );
 
 PackZone.propTypes = {
     cards: array.isRequired,
     round: number.isRequired,
-    pick: number.isRequired
-}
+    pick: func.isRequired,
+    autoPick: func.isRequired,
+    autoPickId: string.isRequired
+};
 
-const MainZone = ({ cards }) => (
+const MainZone = ({cards}) => (
     <Grid
         zoneName={"Main"}
         zoneTitle={"Main"}
         zoneSubtitle={cards.length}
-        cards={cards} />
+        autoPick={() => ""}
+        autoPickId={""}
+        pick={() => ""}
+        cards={cards}/>
 );
 
 MainZone.propTypes = {
     cards: array.isRequired
-}
+};
 
-const Grid = ({ zoneName, zoneTitle, zoneSubtitle, cards, pick }) => (
+const Grid = ({zoneName, zoneTitle, zoneSubtitle, cards, pick, autoPick, autoPickId}) => (
     <div className='zone' key={uniqueId()}>
         <h1>
-            <Spaced elements={[zoneTitle, zoneSubtitle]} />
+            <Spaced elements={[zoneTitle, zoneSubtitle]}/>
         </h1>
-        {cards.map(card => <Card key={uniqueId()} card={card} zoneName={zoneName} pick={pick} />)}
+        {cards.map(card => <Card key={uniqueId()}
+                                 card={card}
+                                 zoneName={zoneName}
+                                 pick={pick}
+                                 autoPick={autoPick}
+                                 autoPickId={autoPickId}
+        />)}
     </div>
 );
 
@@ -63,14 +81,17 @@ Grid.propTypes = {
     zoneTitle: string.isRequired,
     zoneSubtitle: string.isRequired,
     cards: array.isRequired,
-}
+    pick: func.isRequired,
+    autoPick: func.isRequired,
+    autoPickId: string.isRequired
+};
 
-const mapStateToProps = ({ playerState, gameState }) => ({
+const mapStateToProps = ({playerState, gameState}) => ({
     ...playerState,
     ...gameState
 });
 const mapDispatchToProps = {
-    pick
+    pick, autoPick
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CardsZone);

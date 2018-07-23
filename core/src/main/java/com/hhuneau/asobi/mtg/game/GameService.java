@@ -28,4 +28,6 @@ public interface GameService {
     void startNewRound(Game game);
 
     List<Game> getAllCurrentGames();
+
+    void pick(Game game, Player player, String cardI);
 }

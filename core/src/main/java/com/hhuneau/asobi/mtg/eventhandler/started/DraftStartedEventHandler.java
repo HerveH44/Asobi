@@ -2,17 +2,12 @@ package com.hhuneau.asobi.mtg.eventhandler.started;
 
 import com.hhuneau.asobi.mtg.game.Game;
 import com.hhuneau.asobi.mtg.game.GameService;
-import com.hhuneau.asobi.mtg.game.TimeProducer;
 import com.hhuneau.asobi.mtg.player.Player;
-import com.hhuneau.asobi.mtg.player.PlayerState;
-import com.hhuneau.asobi.mtg.pool.Pack;
-import com.hhuneau.asobi.mtg.sets.MTGCard;
+import com.hhuneau.asobi.mtg.player.PlayerService;
+import com.hhuneau.asobi.websocket.events.game.player.AutoPickEvent;
 import com.hhuneau.asobi.websocket.events.game.player.PickEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 import static com.hhuneau.asobi.mtg.game.GameType.DRAFT;
 
@@ -21,9 +16,11 @@ import static com.hhuneau.asobi.mtg.game.GameType.DRAFT;
 public class DraftStartedEventHandler extends GameStartedEventHandler {
 
     private final GameService gameService;
+    private final PlayerService playerService;
 
-    public DraftStartedEventHandler(GameService gameService) {
+    public DraftStartedEventHandler(GameService gameService, PlayerService playerService) {
         this.gameService = gameService;
+        this.playerService = playerService;
     }
 
     @Override
@@ -31,46 +28,26 @@ public class DraftStartedEventHandler extends GameStartedEventHandler {
         game.getPlayers().stream()
             .filter(player -> player.getPlayerId() == evt.playerId)
             .findFirst()
-            .ifPresent(player -> {
-                final PlayerState playerState = player.getPlayerState();
-                final List<Pack> waitingPacks = playerState.getWaitingPacks();
+            .ifPresent(player -> gameService.pick(game, player, evt.cardIndex));
+    }
 
-                // TODO: ameliorer check que les packs n'existent pas
-                if (waitingPacks.isEmpty()) {
-                    return;
-                }
-                final Pack waitingPack = waitingPacks.remove(0);
+    @Override
+    public void handle(Game game, AutoPickEvent evt) {
+        game.getPlayers().stream()
+            .filter(player -> player.getPlayerId() == evt.playerId)
+            .findFirst()
+            .ifPresent(player -> autoPick(game, evt, player));
+    }
 
-                // Pick the card
-                final Optional<MTGCard> possiblePick = waitingPack.getCards().stream()
-                                                           .filter(card -> card.getId().equals(evt.cardIndex))
-                                                           .findFirst();
+    private void autoPick(Game game, AutoPickEvent evt, Player player) {
+        final String autoPickId = player.getPlayerState().getAutoPickId();
 
-                // TODO: ameliorer check que la carte existe pas
-                if (!possiblePick.isPresent()) {
-                    return;
-                }
-                waitingPack.getCards().remove(possiblePick.get());
-                playerState.getPickedCards().add(possiblePick.get());
-
-                // Pass the remaining pack
-                if (!waitingPack.getCards().isEmpty()) {
-                    final Player nextPlayer = gameService.getNextPlayer(game, player);
-                    final PlayerState nextPlayerState = nextPlayer.getPlayerState();
-                    nextPlayerState.getWaitingPacks().add(waitingPack);
-                }
-
-                final int pick = playerState.getPick() + 1;
-                playerState.setPick(pick);
-
-                final int timeLeft = playerState.getWaitingPack() == null ? 0 : TimeProducer.calc(game.getTimer(), pick);
-                player.getPlayerState().setTimeLeft(timeLeft);
-
-                if (gameService.isRoundFinished(game)) {
-                    // START A NEW ROUND
-                    gameService.startNewRound(game);
-                }
-            });
+        if (autoPickId != null && autoPickId.equals(evt.autoPickId)) {
+            gameService.pick(game, player, autoPickId);
+        } else {
+            player.getPlayerState().setAutoPickId(evt.autoPickId);
+            playerService.save(player);
+        }
     }
 
     @Override

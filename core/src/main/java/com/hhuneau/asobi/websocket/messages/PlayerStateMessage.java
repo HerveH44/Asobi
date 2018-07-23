@@ -17,10 +17,12 @@ public class PlayerStateMessage extends Message {
     public static class StateDTO {
         public List<MTGCard> pickedCards;
         public Pack waitingPack;
+        public String autoPick;
 
         public static StateDTO of(PlayerState state) {
             final StateDTO stateDTO = new StateDTO();
             stateDTO.pickedCards = state.getPickedCards();
+            stateDTO.autoPick = state.getAutoPickId();
             stateDTO.waitingPack = state.getWaitingPack();
             return stateDTO;
         }

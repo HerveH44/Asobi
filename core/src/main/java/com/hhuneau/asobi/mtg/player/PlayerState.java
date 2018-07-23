@@ -34,6 +34,7 @@ public class PlayerState {
     private int timeLeft;
     private int pick;
     private int pack;
+    private String autoPickId;
 
     public Pack getWaitingPack() {
         return waitingPacks == null || waitingPacks.isEmpty()

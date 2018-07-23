@@ -5,4 +5,4 @@ import createGameMiddleware from './createGame';
 import router from "./router";
 import websocket from "redux-middleware-websocket";
 
-export default applyMiddleware(loggerMiddleware, createGameMiddleware, websocket, websocketMiddleware, router);
+export default applyMiddleware(/*loggerMiddleware, */createGameMiddleware, websocket, websocketMiddleware, router);

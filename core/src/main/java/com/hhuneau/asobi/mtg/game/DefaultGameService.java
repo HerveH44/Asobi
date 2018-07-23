@@ -13,10 +13,7 @@ import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.hhuneau.asobi.mtg.game.Status.FINISHED;
 import static com.hhuneau.asobi.mtg.game.Status.STARTED;
@@ -100,9 +97,9 @@ public class DefaultGameService implements GameService {
     @Override
     public boolean isRoundFinished(Game game) {
         return game.getPlayers().stream()
-                   .map(Player::getPlayerState)
-                   .map(PlayerState::getWaitingPacks)
-                   .allMatch(List::isEmpty);
+            .map(Player::getPlayerState)
+            .map(PlayerState::getWaitingPacks)
+            .allMatch(List::isEmpty);
     }
 
     @Override
@@ -136,6 +133,46 @@ public class DefaultGameService implements GameService {
         return gameRepository.findAllByStatus(STARTED);
     }
 
+    @Override
+    public void pick(Game game, Player player, String cardId) {
+        final PlayerState playerState = player.getPlayerState();
+        final List<Pack> waitingPacks = playerState.getWaitingPacks();
+
+        // TODO: ameliorer check que les packs n'existent pas
+        if (waitingPacks.isEmpty()) {
+            return;
+        }
+        final Pack waitingPack = waitingPacks.remove(0);
+
+        // Pick the card
+        final MTGCard pickedCard = waitingPack.getCards().stream()
+            .filter(card -> card.getId().equals(cardId))
+            .findFirst()
+            .orElse(waitingPack.getCards().get(new Random().nextInt(waitingPack.getCards().size())));
+
+        waitingPack.getCards().remove(pickedCard);
+        playerState.getPickedCards().add(pickedCard);
+        playerState.setAutoPickId("");
+
+        // Pass the remaining pack
+        if (!waitingPack.getCards().isEmpty()) {
+            final Player nextPlayer = getNextPlayer(game, player);
+            final PlayerState nextPlayerState = nextPlayer.getPlayerState();
+            nextPlayerState.getWaitingPacks().add(waitingPack);
+        }
+
+        final int pick = playerState.getPick() + 1;
+        playerState.setPick(pick);
+
+        final int timeLeft = playerState.getWaitingPack() == null ? 0 : TimeProducer.calc(game.getTimer(), pick);
+        player.getPlayerState().setTimeLeft(timeLeft);
+
+        if (isRoundFinished(game)) {
+            // START A NEW ROUND
+            startNewRound(game);
+        }
+    }
+
 //    public void decreaseTime() {
 //        gameRepository.findAll().stream()
 //            .filter(game -> game.getStatus().equals(STARTED))
@@ -155,8 +192,8 @@ public class DefaultGameService implements GameService {
         game.getPlayers().add(player);
         gameRepository.save(game);
         return game.getPlayers().stream()
-                   .filter(p -> p.getUserId().equals(player.getUserId()))
-                   .findFirst()
-                   .orElse(null);
+            .filter(p -> p.getUserId().equals(player.getUserId()))
+            .findFirst()
+            .orElse(null);
     }
 }
