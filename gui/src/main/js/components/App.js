@@ -21,12 +21,12 @@ const App = ({connected}) => (
 
 App.propTypes = {
     connected: bool.isRequired
-}
+};
 
 const mapStateToProps = ({websocket: {
         connected
     }}) => {
     return {connected}
-}
+};
 
 export default connect(mapStateToProps)(App);

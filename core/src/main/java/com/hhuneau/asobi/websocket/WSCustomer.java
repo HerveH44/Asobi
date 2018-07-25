@@ -16,9 +16,9 @@ public class WSCustomer implements Customer {
     private final WebSocketSession session;
     private final ObjectMapper mapper;
 
-    WSCustomer(WebSocketSession session, ObjectMapper mapper) {
+    WSCustomer(WebSocketSession session, String sessionId, ObjectMapper mapper) {
         this.session = session;
-        this.sessionId = session.getId();
+        this.sessionId = sessionId;
         this.mapper = mapper;
     }
 

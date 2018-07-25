@@ -2,5 +2,7 @@ package com.hhuneau.asobi.mtg.player;
 
 public interface PlayerService {
 
-    Player save(Player player);
+    void save(Player player);
+
+    void disconnectPlayersWithSession(String sessionId);
 }

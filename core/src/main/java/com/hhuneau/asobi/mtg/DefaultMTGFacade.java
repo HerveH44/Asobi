@@ -4,10 +4,12 @@ import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.mtg.eventhandler.EventHandler;
 import com.hhuneau.asobi.mtg.game.*;
 import com.hhuneau.asobi.mtg.player.Player;
+import com.hhuneau.asobi.mtg.player.PlayerService;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import com.hhuneau.asobi.mtg.sets.SetDTO;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import com.hhuneau.asobi.websocket.events.SessionConnectedEvent;
+import com.hhuneau.asobi.websocket.events.SessionDisconnectedEvent;
 import com.hhuneau.asobi.websocket.events.game.GameEvent;
 import com.hhuneau.asobi.websocket.messages.*;
 import org.slf4j.Logger;
@@ -31,12 +33,14 @@ public class DefaultMTGFacade implements MTGFacade {
     private final CustomerService customerService;
     private final List<EventHandler> eventHandlers;
     private final MTGSetsService setsService;
+    private final PlayerService playerService;
 
-    public DefaultMTGFacade(GameService gameService, CustomerService customerService, List<EventHandler> eventHandlers, MTGSetsService setsService) {
+    public DefaultMTGFacade(GameService gameService, CustomerService customerService, List<EventHandler> eventHandlers, MTGSetsService setsService, PlayerService playerService) {
         this.gameService = gameService;
         this.customerService = customerService;
         this.eventHandlers = eventHandlers;
         this.setsService = setsService;
+        this.playerService = playerService;
     }
 
     @Override
@@ -46,6 +50,11 @@ public class DefaultMTGFacade implements MTGFacade {
             .map(SetDTO::of)
             .collect(Collectors.groupingBy(SetDTO::getType));
         customerService.send(event.sessionId, SetsExportMessage.of(sets));
+    }
+
+    @Override
+    public void handle(SessionDisconnectedEvent event) {
+        playerService.disconnectPlayersWithSession(event.sessionId);
     }
 
     @Override

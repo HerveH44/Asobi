@@ -20,7 +20,10 @@ public abstract class GameStartedEventHandler implements EventHandler {
 
     @Override
     public void handle(Game game, LeaveGameEvent evt) {
-
+        game.getPlayers().stream()
+            .filter(player -> player.getPlayerId() == evt.playerId)
+            .findFirst()
+            .ifPresent(player -> player.setUserId(""));
     }
 
     @Override

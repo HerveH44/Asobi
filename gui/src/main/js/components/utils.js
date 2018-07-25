@@ -15,14 +15,14 @@ import uniqueId from "lodash/uniqueId";
  */
 export const Checkbox = ({checked, text, side="left", onChange}) => (
     <div>
-        {side == "right"
+        {side === "right"
             ? text
             : ""}
         <input
             type="checkbox"
             onChange={onChange}
             checked={checked}/>
-            {side == "left"
+            {side === "left"
                 ? text
                 : ""}
     </div>

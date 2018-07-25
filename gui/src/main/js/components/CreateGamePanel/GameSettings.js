@@ -20,10 +20,10 @@ class GameSettings extends React.Component {
             sets: {
                 ...this.props.sets,
                 [this.props.gameType]: this.props.sets[this.props.gameType]
-                                            .map((set, i) => i == index ? event.currentTarget.value : set )
+                                            .map((set, i) => i === index ? event.currentTarget.value : set )
             }
         })
-    }
+    };
 
     render() {
         const {availableSets, gameMode, gameType, gameModes, sets, cubeList, modernOnly, totalChaos} = this.props;
@@ -36,16 +36,16 @@ class GameSettings extends React.Component {
                             {mode}
                         </button>))}
                 </div>
-                {gameMode == NORMAL && <NormalGameSettings
+                {gameMode === NORMAL && <NormalGameSettings
                     availableSets={availableSets}
                     sets={sets[gameType]}
                     onChangeSet={this.handleSet.bind(this)}
                     />}
-                {gameMode == CUBE &&
+                {gameMode === CUBE &&
                     <CubeGameSettings
                         cubeList={cubeList}
                         onChangeCubeList={this.handleChange("cubeList")}/>}
-                {gameMode == CHAOS &&
+                {gameMode === CHAOS &&
                     <ChaosGameSettings
                         modernOnly={modernOnly}
                         totalChaos={totalChaos}
@@ -76,7 +76,7 @@ const NormalGameSettings = ({availableSets, sets, onChangeSet}) => (
             availableSets={availableSets}
             onChangeSet={onChangeSet(index)}/>))}
     </div>
-)
+);
 
 NormalGameSettings.propTypes = {
     sets: array.isRequired,
@@ -94,7 +94,7 @@ const CubeGameSettings = ({cubeList, onChangeCubeList}) => (
 CubeGameSettings.propTypes = {
     cubeList: string.isRequired,
     onChangeCubeList: func.isRequired
-}
+};
 
 const ChaosGameSettings = ({modernOnly, totalChaos, onChangeModernOnly, onChangeTotalChaos}) => (
     <div>
@@ -120,7 +120,7 @@ ChaosGameSettings.propTypes = {
     totalChaos: bool.isRequired,
     onChangeModernOnly: func.isRequired,
     onChangeTotalChaos: func.isRequired
-}
+};
 
 
 const Set = ({availableSets, set, onChangeSet}) => (
@@ -135,7 +135,7 @@ const Set = ({availableSets, set, onChangeSet}) => (
                 </optgroup>
             ))}
     </select>
-)
+);
 
 Set.propTypes = {
     set: object.isRequired,

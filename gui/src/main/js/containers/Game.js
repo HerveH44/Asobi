@@ -9,7 +9,7 @@ import CardsZone from "../components/CardsZone"
 class Game extends Component {
     componentDidMount() {
         const {joinGame, editGameSettings, gameId} = this.props;
-        editGameSettings({gameId})
+        editGameSettings({gameId});
         joinGame(gameId);
     }
 
@@ -30,7 +30,7 @@ class Game extends Component {
                     {/* <DeckSettings /> */}
                     {/* <GameSettings/> */}
                 </div>
-                <CardsZone />
+                <CardsZone/>
             </div>
         )
     }
@@ -43,10 +43,7 @@ Game.propTypes = {
     editGameSettings: func.isRequired
 };
 
-const mapStateToProps = ({
-    gameSettings,
-    gameState
-}, {match: {params: {gameId}}}) => {
+const mapStateToProps = ({gameSettings, gameState}, {match: {params: {gameId}}}) => {
     return {
         ...gameSettings,
         ...gameState,

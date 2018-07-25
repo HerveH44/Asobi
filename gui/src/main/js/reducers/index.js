@@ -14,7 +14,7 @@ const rootPersistConfig = {
     key: 'root',
     storage,
     whitelist: ['game', 'player']
-}
+};
 
 const reducers = combineReducers({
     site,

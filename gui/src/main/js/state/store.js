@@ -5,7 +5,7 @@ import middlewares from "../middlewares";
 import {persistStore} from 'redux-persist'
 
 export default() => {
-    let store = reduxCreateStore(reducers, composeWithDevTools(middlewares))
-    let persistor = persistStore(store)
+    let store = reduxCreateStore(reducers, composeWithDevTools(middlewares));
+    let persistor = persistStore(store);
     return {store, persistor}
 }

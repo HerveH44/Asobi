@@ -8,6 +8,6 @@ const websocket = ({dispatch}) => next => action => {
         return next(action);
     }
     dispatch(JSON.parse(data))
-}
+};
 
 export default websocket;

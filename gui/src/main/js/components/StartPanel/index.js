@@ -20,7 +20,7 @@ StartPanel.propTypes = {
     packsInfo: string.isRequired,
     isHost: bool.isRequired,
     didGameStart: bool.isRequired
-}
+};
 
 const StartControls = ({type, startGame, ...rest}) => {
 //   const isDraft = type !== "sealed" && type !== "cube sealed";
@@ -42,7 +42,7 @@ StartControls.propTypes = {
     type: string.isRequired,
     useTimer: bool.isRequired,
     startGame: func.isRequired
-}
+};
 
 const Options = ({useTimer, timers, timerLength, addBots, shufflePlayers, editGameSettings}) => {
     const handleChangeChecked = name => (event) => {
@@ -87,6 +87,6 @@ Options.propTypes = {
     editGameSettings: func.isRequired,
     timers: array.isRequired,
     timerLength: string.isRequired
-}
+};
 
 export default StartPanel;

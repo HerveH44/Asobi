@@ -23,5 +23,8 @@ export default handleActions({
             ...state,
             autoPickId: payload
         }
+    },
+    ["LEAVE_GAME"]() {
+        return InitialState;
     }
 }, InitialState);

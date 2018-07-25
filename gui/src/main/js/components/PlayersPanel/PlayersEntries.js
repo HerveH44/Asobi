@@ -27,7 +27,7 @@ PlayerEntries.propTypes = {
     isHost: bool.isRequired,
     onSwap: func.isRequired,
     onKick: func.isRequired
-}
+};
 
 const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, playersStates: {length}, self, didGameStart, isHost, onSwap, onKick}) => {
     const opp
@@ -97,11 +97,11 @@ PlayerEntry.propTypes = {
 
 const mapStateToProps = ({gameState}) => ({
     ...gameState
-})
+});
 
 const mapDispatchToProps = {
     onSwap,
     onKick
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayerEntries)

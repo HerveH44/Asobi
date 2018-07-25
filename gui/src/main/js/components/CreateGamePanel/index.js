@@ -15,19 +15,19 @@ import {Checkbox} from "../utils"
 class CreatePanel extends React.Component {
     onChangeGameType = ({target : {value: gameType}}) => {
         this.props.editGame({gameType});
-    }
+    };
 
     handleCheck = name => event => {
         this.props.editGame({[name]: event.target.checked});
-    }
+    };
 
     onChangeTitle = ({ currentTarget: { value: title } }) => {
         this.props.editGame({title});
-    }
+    };
 
     onChangeValue = name => event => {
         this.props.editGame({[name]: event.target.value});
-    }
+    };
 
     onChangeSeats = ({
         currentTarget: {
@@ -35,7 +35,7 @@ class CreatePanel extends React.Component {
         }
     }) => {
         this.props.editGame({seats: +seats});
-    }
+    };
 
     onChangePacksNumber = ({
         currentTarget: {
@@ -43,7 +43,7 @@ class CreatePanel extends React.Component {
         }
     }) => {
         this.props.EDIT_PACK_NUMBER({packsNumber: +packsNumber});
-    }
+    };
 
     render() {
         const {
@@ -106,7 +106,7 @@ class CreatePanel extends React.Component {
                                 type='radio'
                                 value={type}
                                 onChange={this.onChangeValue("gameType")}
-                                checked={gameType == type}/> {type}
+                                checked={gameType === type}/> {type}
                             </label>
                         ))}
                         </span>
@@ -150,6 +150,6 @@ CreatePanel.propTypes = {
     cubeList: string.isRequired,
     modernOnly: bool.isRequired,
     totalChaos: bool.isRequired
-}
+};
 
 export default CreatePanel;

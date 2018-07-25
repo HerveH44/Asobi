@@ -30,7 +30,7 @@ Lobby.propTypes = {
     game: object.isRequired,
     editGame: func.isRequired,
     createGame: func.isRequired
-}
+};
 
 const mapStateToProps = (state) => (state);
 const mapDispatchToProps = {
