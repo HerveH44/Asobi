@@ -25,9 +25,11 @@ public class WSCustomer implements Customer {
     @Override
     public void send(Message message) {
         try {
-            session.sendMessage(new TextMessage(mapper.writeValueAsString(message)));
-        } catch (IOException e) {
-            LOGGER.error("Error while sending message", e);
+            synchronized (session) {
+                session.sendMessage(new TextMessage(mapper.writeValueAsString(message)));
+            }
+        } catch (IOException | IllegalStateException e) {
+            LOGGER.error("Error while sending message", e.getMessage());
         }
     }
 

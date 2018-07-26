@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {joinGame, leaveGame, startGame, editGameSettings} from "../actions/server"
 import StartPanel from "../components/StartPanel"
 import PlayersPanel from "../components/PlayersPanel"
+import DeckSettings from "../components/DeckSettings"
 import CardsZone from "../components/CardsZone"
 
 class Game extends Component {
@@ -19,15 +20,14 @@ class Game extends Component {
     }
 
     render() {
-        const {gameId, ...rest} = this.props;
         return (
             <div className='game'>
                 <div className='game-controls'>
                     <div className='game-status'>
                         <PlayersPanel/>
-                        <StartPanel {...rest}/>
+                        <StartPanel/>
                     </div>
-                    {/* <DeckSettings /> */}
+                    <DeckSettings/>
                     {/* <GameSettings/> */}
                 </div>
                 <CardsZone/>
@@ -43,13 +43,9 @@ Game.propTypes = {
     editGameSettings: func.isRequired
 };
 
-const mapStateToProps = ({gameSettings, gameState}, {match: {params: {gameId}}}) => {
-    return {
-        ...gameSettings,
-        ...gameState,
-        gameId
-    }
-};
+const mapStateToProps = ({}, {match: {params: {gameId}}}) => ({
+    gameId
+});
 
 const mapDispatchToProps = {
     leaveGame,

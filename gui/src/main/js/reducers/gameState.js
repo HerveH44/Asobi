@@ -20,7 +20,8 @@ const InitialState = {
     gameType: "",
     status: "",
     createdDate: "",
-    round: 0
+    round: 0,
+    deckSize: 40
 };
 
 export default handleActions({

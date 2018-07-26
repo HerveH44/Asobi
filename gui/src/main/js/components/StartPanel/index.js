@@ -1,6 +1,8 @@
 import React from "react";
 import {func, string, bool, array} from "prop-types";
 import { Checkbox, Select } from "../utils";
+import {editGameSettings, joinGame, leaveGame, startGame} from "../../actions/server";
+import {connect} from "react-redux";
 
 const StartPanel = ({type, packsInfo, isHost, didGameStart, ...rest}) => (
     <fieldset className='start-controls fieldset'>
@@ -89,4 +91,17 @@ Options.propTypes = {
     timerLength: string.isRequired
 };
 
-export default StartPanel;
+const mapStateToProps = ({gameState, gameSettings}) => ({
+    ...gameState,
+    ...gameSettings
+});
+
+const mapDispatchToProps = {
+    leaveGame,
+    joinGame,
+    startGame,
+    editGameSettings
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(StartPanel);
+

@@ -138,7 +138,7 @@ const Set = ({availableSets, set, onChangeSet}) => (
 );
 
 Set.propTypes = {
-    set: object.isRequired,
+    set: string.isRequired,
     availableSets: object.isRequired,
     onChangeSet: func.isRequired
 };

@@ -12,6 +12,10 @@ class Card extends Component {
         //   this.onMouseLeave = this.onMouseLeave.bind(this);
     }
 
+    onClick(card, autoPickId, pick, autoPick) {
+        return () => card.id === autoPickId ? pick(card.id) : autoPick(card.id);
+    }
+
     // onMouseEnter() {
     //   if(this.props.card.isDoubleFaced) {
     //     this.setState({
@@ -44,7 +48,7 @@ class Card extends Component {
             <span key={uniqueId()}
                   className={className}
                   title={title}
-                  onClick={() => card.id === autoPickId ? pick(card.id) : autoPick(card.id)}
+                  onClick={this.onClick(card, autoPickId, pick, autoPick)}
                 // onMouseEnter={this.onMouseEnter}
                 // onMouseLeave={this.onMouseLeave}
             >

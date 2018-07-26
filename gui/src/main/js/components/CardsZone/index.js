@@ -5,22 +5,23 @@ import {Spaced} from "../utils";
 import Card from "./Card";
 import uniqueId from "lodash.uniqueid"
 import {pick, autoPick} from "../../actions/server"
+import {MAIN, SIDE} from "../../reducers/playerState";
+import MainZone from "./MainZone";
+import Grid from "./Grid";
 
-const CardsZone = ({waitingPack, round, pick, autoPick, autoPickId, pickedCards}) => (
+const CardsZone = ({waitingPack, round, pick, autoPick, autoPickId}) => (
     <div>
         <PackZone cards={(waitingPack || {}).cards || []} round={round}
                   pick={pick}
                   autoPick={autoPick}
                   autoPickId={autoPickId}/>
-        <MainZone cards={pickedCards}/>
+        <MainZone/>
     </div>
 );
 
 CardsZone.propTypes = {
     round: number.isRequired,
-    pack: array.isRequired,
-    pickedCards: array.isRequired,
-    waitingPack: object.isRequired,
+    waitingPack: object,
     autoPick: func.isRequired,
     pick: func.isRequired,
     autoPickId: string.isRequired
@@ -41,46 +42,6 @@ const PackZone = ({cards, round, pick, autoPick, autoPickId}) => (
 PackZone.propTypes = {
     cards: array.isRequired,
     round: number.isRequired,
-    pick: func.isRequired,
-    autoPick: func.isRequired,
-    autoPickId: string.isRequired
-};
-
-const MainZone = ({cards}) => (
-    <Grid
-        zoneName={"Main"}
-        zoneTitle={"Main"}
-        zoneSubtitle={cards.length}
-        autoPick={() => ""}
-        autoPickId={""}
-        pick={() => ""}
-        cards={cards}/>
-);
-
-MainZone.propTypes = {
-    cards: array.isRequired
-};
-
-const Grid = ({zoneName, zoneTitle, zoneSubtitle, cards, pick, autoPick, autoPickId}) => (
-    <div className='zone' key={uniqueId()}>
-        <h1>
-            <Spaced elements={[zoneTitle, zoneSubtitle]}/>
-        </h1>
-        {cards.map(card => <Card key={uniqueId()}
-                                 card={card}
-                                 zoneName={zoneName}
-                                 pick={pick}
-                                 autoPick={autoPick}
-                                 autoPickId={autoPickId}
-        />)}
-    </div>
-);
-
-Grid.propTypes = {
-    zoneName: string.isRequired,
-    zoneTitle: string.isRequired,
-    zoneSubtitle: string.isRequired,
-    cards: array.isRequired,
     pick: func.isRequired,
     autoPick: func.isRequired,
     autoPickId: string.isRequired

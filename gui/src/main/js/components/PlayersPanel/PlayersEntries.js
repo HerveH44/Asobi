@@ -87,7 +87,7 @@ const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, playersSt
 PlayerEntry.propTypes = {
     player: object.isRequired,
     index: number.isRequired,
-    players: array.isRequired,
+    playersStates: array.isRequired,
     self: number.isRequired,
     didGameStart: bool.isRequired,
     isHost: bool.isRequired,
