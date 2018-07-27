@@ -6,6 +6,7 @@ import StartPanel from "../components/StartPanel"
 import PlayersPanel from "../components/PlayersPanel"
 import DeckSettings from "../components/DeckSettings"
 import CardsZone from "../components/CardsZone"
+import GameSettings from "../components/GameSettings";
 
 class Game extends Component {
     componentDidMount() {
@@ -28,7 +29,7 @@ class Game extends Component {
                         <StartPanel/>
                     </div>
                     <DeckSettings/>
-                    {/* <GameSettings/> */}
+                     <GameSettings/>
                 </div>
                 <CardsZone/>
             </div>

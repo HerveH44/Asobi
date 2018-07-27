@@ -14,7 +14,13 @@ const InitialState = {
     timerLength: "Moderate",
     fileTypes: ["cod", "json", "txt"],
     fileType: "txt",
-    fileName: "fileName"
+    fileName: "fileName",
+    showChat: true,
+    addPicksToSB: false,
+    beep: false,
+    columnView: false,
+    sort: "cmc",
+    sortTypes: ["cmc", "color", "type", "rarity"]
 };
 
 export default handleActions({
