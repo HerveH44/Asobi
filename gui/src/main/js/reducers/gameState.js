@@ -22,7 +22,6 @@ const InitialState = {
     status: "",
     createdDate: "",
     round: 0,
-    deckSize: 40
 };
 
 export default handleActions({
@@ -30,13 +29,6 @@ export default handleActions({
         return {
             ...state,
             ...payload
-        }
-    },
-    [onChangeDeckSize](state, {payload: event}) {
-        event.persist();
-        return {
-            ...state,
-            deckSize: event.target.value
         }
     }
 }, InitialState);

@@ -1,6 +1,6 @@
 import {handleActions} from 'redux-actions';
-import {PLAYER_STATE, autoPick, leaveGame,} from "../actions/server"
-import {onChangeLand, onResetLands} from "../actions/game";
+import {PLAYER_STATE, autoPick, leaveGame} from "../actions/server"
+import {onChangeDeckSize, onChangeLand, onResetLands, onSuggestLands} from "../actions/game";
 
 export const MAIN = "Main";
 export const SIDE = "Side";
@@ -20,7 +20,8 @@ const InitialState = {
     [MAIN]: [],
     [SIDE]: [],
     [JUNK]: [],
-    autoPickId: ""
+    autoPickId: "",
+    deckSize: 40
 };
 
 export default handleActions({
@@ -77,5 +78,97 @@ export default handleActions({
             [MAIN]: state[MAIN].filter(({name}) => !Object.keys(CARDS).includes(name)),
             [SIDE]: state[SIDE].filter(({name}) => !Object.keys(CARDS).includes(name)),
         };
+    },
+    [onChangeDeckSize](state, {payload: event}) {
+        event.persist();
+        return {
+            ...state,
+            deckSize: +event.target.value
+        }
+    },
+    [onSuggestLands](state) {
+
+        //Reset Lands
+        state[MAIN] = state[MAIN].filter(({name}) => !Object.keys(CARDS).includes(name));
+        state[SIDE] = state[SIDE].filter(({name}) => !Object.keys(CARDS).includes(name));
+
+        // Algorithm: count the number of mana symbols appearing in the costs of
+        // the cards in the pool, then assign lands roughly commensurately.
+        const colors = ["W", "U", "B", "R", "G"];
+        const colorRegex = /{[^}]+}/g;
+        const manaSymbols = {};
+        colors.forEach(x => manaSymbols[x] = 0);
+
+        // Count the number of mana symbols of each type.
+        for (let card of state[MAIN]) {
+            if (!card.manaCost)
+                continue;
+            let cardManaSymbols = card.manaCost.match(colorRegex);
+
+            for (let color of colors)
+                for (let symbol of cardManaSymbols)
+                    // Test to see if '{U}' contains 'U'. This also handles things like
+                    // '{G/U}' triggering both 'G' and 'U'.
+                    if (symbol.indexOf(color) !== -1)
+                        manaSymbols[color] += 1;
+        }
+
+        // Round-robin choose the lands to go into the deck. For example, if the
+        // mana symbol counts are W: 2, U: 2, B: 1, cycle through the sequence
+        // [Plains, Island, Swamp, Plains, Island] infinitely until the deck is
+        // finished.
+        //
+        // This has a few nice effects:
+        //
+        //   * Colors with greater mana symbol counts get more lands.
+        //
+        //   * When in a typical two color deck adding 17 lands, the 9/8 split will
+        //   be in favor of the color with slightly more mana symbols of that
+        //   color.
+        //
+        //   * Every color in the deck is represented, if it is possible to do so
+        //   in the remaining number of cards.
+        //
+        //   * Because of the minimum mana symbol count for each represented color,
+        //   splashing cards doesn't add exactly one land of the given type
+        //   (although the land count may still be low for that color).
+        //
+        //   * The problem of deciding how to round land counts is now easy to
+        //   solve.
+        let manaSymbolsToAdd = colors.map(color => manaSymbols[color]);
+        let colorsToAdd = [];
+        const emptyManaSymbols = () => !manaSymbolsToAdd.every(x => x === 0);
+
+        for (let i = 0; emptyManaSymbols(); i = (i + 1) % colors.length) {
+            if (manaSymbolsToAdd[i] === 0)
+                continue;
+            colorsToAdd.push(colors[i]);
+            manaSymbolsToAdd[i]--;
+        }
+
+        if (colorsToAdd.length > 0) {
+            let mainDeckSize = state[MAIN].length;
+            let landsToAdd = state.deckSize - mainDeckSize;
+
+            let j = 0;
+            for (let i = 0; i < landsToAdd; i++) {
+                const color = colorsToAdd[j];
+                const COLORS_TO_LANDS = {
+                    "W": "Plains",
+                    "U": "Island",
+                    "B": "Swamp",
+                    "R": "Mountain",
+                    "G": "Forest",
+                };
+                const land = COLORS_TO_LANDS[color];
+                state[MAIN].push({name: land, multiverseid: CARDS[land], manaCost: 0});
+
+                j = (j + 1) % colorsToAdd.length;
+            }
+        }
+
+        return {
+            ...state
+        }
     }
 }, InitialState);

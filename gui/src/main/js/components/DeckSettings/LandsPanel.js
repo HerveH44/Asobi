@@ -80,9 +80,9 @@ SuggestLands.propTypes = {
     deckSize: number.isRequired
 };
 
-const mapStateToProps = ({gameState, playerState: {Main, Side}}) => ({
+const mapStateToProps = ({playerState: {Main, Side, deckSize}}) => ({
     cards: { Main, Side },
-    deckSize: gameState.deckSize
+    deckSize
 });
 
 const mapDispatchToProps = {
