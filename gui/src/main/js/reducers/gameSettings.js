@@ -1,6 +1,6 @@
-import {handleActions} from 'redux-actions';
+import {createAction, handleActions} from 'redux-actions';
 import {joinGame, editGameSettings, GAME_ID} from "../actions/server"
-import {onChangeFileName, onChangeFileType} from "../actions/game";
+import {onChangeFileName, onChangeFileType, onToggleChat, onChangeBeep, onChangeColumnView, onChangePicksToSB, onChangeSort} from "../actions/game";
 
 const InitialState = {
     gameId: null,
@@ -56,6 +56,41 @@ export default handleActions({
         return {
             ...state,
             fileName: event.target.value,
+        }
+    },
+    [onToggleChat](state, {payload: event}) {
+        event.persist();
+        return {
+            ...state,
+            showChat: event.target.checked,
+        }
+    },
+    [onChangePicksToSB](state, {payload: event}) {
+        event.persist();
+        return {
+            ...state,
+            addPicksToSB: event.target.checked,
+        }
+    },
+    [onChangeBeep](state, {payload: event}) {
+        event.persist();
+        return {
+            ...state,
+            beep: event.target.checked,
+        }
+    },
+    [onChangeColumnView](state, {payload: event}) {
+        event.persist();
+        return {
+            ...state,
+            columnView: event.target.checked,
+        }
+    },
+    [onChangeSort](state, {payload: event}) {
+        event.persist();
+        return {
+            ...state,
+            sort: event.target.value,
         }
     },
 }, InitialState);
