@@ -1,6 +1,6 @@
 import {handleActions} from 'redux-actions';
-import {PLAYER_STATE, autoPick, leaveGame} from "../actions/server"
-import {onChangeLand} from "../actions/game";
+import {PLAYER_STATE, autoPick, leaveGame,} from "../actions/server"
+import {onChangeLand, onResetLands} from "../actions/game";
 
 export const MAIN = "Main";
 export const SIDE = "Side";
@@ -70,5 +70,12 @@ export default handleActions({
         return {
             ...state
         }
+    },
+    [onResetLands](state) {
+        return {
+            ...state,
+            [MAIN]: state[MAIN].filter(({name}) => !Object.keys(CARDS).includes(name)),
+            [SIDE]: state[SIDE].filter(({name}) => !Object.keys(CARDS).includes(name)),
+        };
     }
 }, InitialState);

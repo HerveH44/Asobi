@@ -8,7 +8,7 @@ const Grid = ({zoneName, zoneTitle, zoneSubtitle, cards, pick, autoPick, autoPic
         <h1>
             <Spaced elements={[zoneTitle, zoneSubtitle]}/>
         </h1>
-        {cards.map(card => <Card key={card.name}
+        {cards.map((card, index) => <Card key={card.name + index}
                                         card={card}
                                         zoneName={zoneName}
                                         pick={pick}

@@ -19,8 +19,8 @@ DeckSettings.propTypes = {
     didGameStart: bool.isRequired,
 };
 
-const mapStateToProps = () => ({
-    didGameStart: true
+const mapStateToProps = ({gameState}) => ({
+    didGameStart: gameState.didGameStart
 });
 const mapDispatchToProps = {
     onChangeLand
