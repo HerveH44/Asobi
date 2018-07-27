@@ -1,5 +1,6 @@
 import {handleActions} from 'redux-actions';
 import {GAME_STATE} from "../actions/server"
+import {onChangeDeckSize} from "../actions/game";
 
 const InitialState = {
     playersStates: [{
@@ -29,6 +30,13 @@ export default handleActions({
         return {
             ...state,
             ...payload
+        }
+    },
+    [onChangeDeckSize](state, {payload: event}) {
+        event.persist();
+        return {
+            ...state,
+            deckSize: event.target.value
         }
     }
 }, InitialState);
