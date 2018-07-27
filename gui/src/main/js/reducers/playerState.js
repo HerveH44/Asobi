@@ -170,5 +170,69 @@ export default handleActions({
         return {
             ...state
         }
-    }
+    },
 }, InitialState);
+
+
+export const getDeckInTxt = (state) => {
+    let main = {};
+    state[MAIN].forEach(({name}) => {
+        main[name] = main[name] ? main[name] + 1 : 1;
+    });
+
+    let side = {};
+    state[SIDE].forEach(({name}) => {
+        side[name] = side[name] ? side[name] + 1 : 1;
+    });
+
+    return Object.entries(main)
+            .map(([name, number]) => name + " " + number)
+            .join("\n") + "\nSideboard\n" +
+        Object.entries(side)
+            .map(([name, number]) => name + " " + number)
+            .join("\n");
+};
+
+export const downloadDeck = (state, fileName, fileType) => () => {
+    let data = "";
+    switch (fileType) {
+        case "cod":
+            data = `\
+                <?xml version="1.0" encoding="UTF-8"?>
+                <cockatrice_deck version="1">
+                  <deckname>${fileName}</deckname>
+                  <zone name="main">
+                ${codify(state[MAIN])}
+                  </zone>
+                  <zone name="side">
+                ${codify(state[SIDE])}
+                  </zone>
+                </cockatrice_deck>`;
+            break;
+        case "json":
+            data = JSON.stringify({main: state[MAIN], side: state[SIDE]}, null, 2);
+            break;
+
+        case "txt":
+            data = getDeckInTxt(state);
+            break;
+    }
+
+    let link = document.createElement('a');
+    link.download = fileName + "." + fileType;
+    link.href = `data:,${encodeURIComponent(data)}`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+};
+
+const codify = (zone) => {
+    const reduced = zone.reduce((acc, {name}) => {
+        acc[name] = (acc[name] || 0) + 1;
+        return acc;
+    }, {});
+
+    return Object.entries(reduced)
+        .map(([name, number]) => `    <card number="${number}" name="${name}"/>`)
+        .join("\n");
+};

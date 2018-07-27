@@ -10,7 +10,7 @@ const DeckSettings = ({didGameStart}) => (
     didGameStart
         ? <div className='deck-settings'>
             <LandsPanel/>
-            {/*<DownloadPanel/>*/}
+            <DownloadPanel/>
         </div>
         : <div/>
 );
