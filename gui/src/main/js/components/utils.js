@@ -1,6 +1,5 @@
 import React from "react";
 import {array, string, bool, func} from "prop-types";
-import uniqueId from "lodash/uniqueId";
 
 /**
  * Utils offers a list of "connected" tools
@@ -37,10 +36,10 @@ Checkbox.propTypes = {
 
 export const Spaced = ({elements}) => (
   elements
-    .map(x => <span key={uniqueId()}>{x}</span>)
-    .reduce((prev, curr) => [
+    .map((x,key) => <span key={key}>{x}</span>)
+    .reduce((prev, curr, index) => [
       prev,
-      <span key = {uniqueId()} className = 'spacer-dot' />,
+      <span key={curr} className = 'spacer-dot' />,
       curr
     ])
 );
@@ -54,7 +53,7 @@ export const Select = ({value, onChange, opts, ...rest}) => (
         onChange={onChange}
         value={value}
         {...rest}>
-            {opts.map(opt => <option key={uniqueId()}>{opt}</option>)}
+            {opts.map((opt, key) => <option key={key}>{opt}</option>)}
     </select>
 );
 

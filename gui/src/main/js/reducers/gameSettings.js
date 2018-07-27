@@ -33,6 +33,5 @@ export default handleActions({
         }
     },
     "POOL"(state, {payload}) {
-        console.log(payload);
     }
 }, InitialState);

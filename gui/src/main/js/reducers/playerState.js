@@ -27,7 +27,6 @@ export default handleActions({
     [PLAYER_STATE](state, {payload}) {
         //Faire diff entre cartes que l'on a déjà et les nouvelles venues du server
         if (state.pickedCards.length < payload.pickedCards.length) {
-            console.log(`${state.pickedCards} ${payload.pickedCards}`)
             Array.prototype.push.apply(
                 state[MAIN],
                 payload.pickedCards.slice(state.pickedCards.length))
@@ -50,7 +49,7 @@ export default handleActions({
     },
     [onChangeLand](state, {payload: {zoneName, cardName, event}}) {
         event.persist();
-        var zone = state[zoneName];
+        let zone = state[zoneName];
         const diff = event.target.value - zone.filter(({name}) => name === cardName).length;
 
         switch (true) {
@@ -67,8 +66,6 @@ export default handleActions({
                 }
                 break;
         }
-
-        console.log(state[MAIN])
 
         return {
             ...state

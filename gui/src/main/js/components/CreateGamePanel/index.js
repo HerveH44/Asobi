@@ -7,7 +7,6 @@ import {
     bool,
     func
 } from "prop-types";
-import uniqueId from "lodash/uniqueId";
 import range from "lodash/range";
 import GameSettings from "./GameSettings";
 import {Checkbox} from "../utils"
@@ -82,14 +81,14 @@ class CreatePanel extends React.Component {
                     Number of players:{" "}
                     <select value={seats} onChange={this.onChangeSeats}>
                     {range(2, 20).map(x =>
-                        <option key={uniqueId()}>{x}</option>)}
+                        <option key={x}>{x}</option>)}
                     </select>
                 </div>
                 <div>
                     Number of packs:{" "}
                     <select value={packsNumber} onChange={this.onChangePacksNumber}>
                     {range(1, 10).map(x =>
-                        <option key={uniqueId()}>{x}</option>)}
+                        <option key={x}>{x}</option>)}
                     </select>
                 </div>
                 <div>
@@ -98,8 +97,8 @@ class CreatePanel extends React.Component {
                 <div>
                     <p>Game type:{" "}
                         <span className='connected-container'>
-                        {gameTypes.map((type) => (
-                            <label key={uniqueId()} className='radio-label connected-component'>
+                        {gameTypes.map((type, key) => (
+                            <label key={key} className='radio-label connected-component'>
                             <input
                                 className="radio-input connected-component"
                                 name='draft-type'

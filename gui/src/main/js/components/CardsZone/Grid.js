@@ -1,20 +1,19 @@
 import React from "react";
 import {array, func, string} from "prop-types";
-import uniqueId from "lodash.uniqueid";
 import Card from "./Card";
 import {Spaced} from "../utils";
 
 const Grid = ({zoneName, zoneTitle, zoneSubtitle, cards, pick, autoPick, autoPickId}) => (
-    <div className='zone' key={uniqueId()}>
+    <div className='zone'>
         <h1>
             <Spaced elements={[zoneTitle, zoneSubtitle]}/>
         </h1>
-        {cards.map(card => <Card key={uniqueId()}
-                                 card={card}
-                                 zoneName={zoneName}
-                                 pick={pick}
-                                 autoPick={autoPick}
-                                 autoPickId={autoPickId}
+        {cards.map(card => <Card key={card.name}
+                                        card={card}
+                                        zoneName={zoneName}
+                                        pick={pick}
+                                        autoPick={autoPick}
+                                        autoPickId={autoPickId}
         />)}
     </div>
 );

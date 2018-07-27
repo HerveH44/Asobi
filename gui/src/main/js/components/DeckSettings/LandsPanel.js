@@ -3,9 +3,7 @@ import {array, func, number, object} from "prop-types";
 import LandsRow from "./LandsRow";
 import {connect} from "react-redux";
 import {onChangeDeckSize, onChangeLand, onSuggestLands, onResetLands} from "../../actions/game";
-import uniqueId from "lodash/uniqueId";
 import {MAIN, SIDE} from "../../reducers/playerState";
-import game from "../../reducers/game";
 
 const LandsPanel = ({cards, onChangeLand, onResetLands, onSuggestLands, onChangeDeckSize, deckSize}) => (
     <fieldset className='land-controls fieldset'>
@@ -42,8 +40,8 @@ const ManaSymbols = () => {
     return (
         <tr>
             <td/>
-            {manaSymbols.map(x =>
-                <td key={uniqueId()}>
+            {manaSymbols.map((x, key) =>
+                <td key={key}>
                     <img src={url(x)} alt={x}/>
                 </td>)
             }

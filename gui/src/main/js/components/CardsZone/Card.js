@@ -1,6 +1,5 @@
 import React, {Component} from "react"
 import {string, func, object} from "prop-types"
-import uniqueId from "lodash.uniqueid"
 
 class Card extends Component {
     constructor(props) {
@@ -45,8 +44,7 @@ class Card extends Component {
             ? "This card will be automatically picked if your time expires."
             : "";
         return (
-            <span key={uniqueId()}
-                  className={className}
+            <span className={className}
                   title={title}
                   onClick={this.onClick(card, autoPickId, pick, autoPick)}
                 // onMouseEnter={this.onMouseEnter}

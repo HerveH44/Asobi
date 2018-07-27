@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {array, object, number, bool, func} from "prop-types";
-import uniqueId from "lodash/uniqueId"
 import {onSwap, onKick} from "../../actions/game"
 import arrowUp from "../../../resources/media/arrow-up.png"
 import arrowDown from "../../../resources/media/arrow-down.png"
@@ -12,7 +11,7 @@ class PlayerEntries extends Component {
         return (
             this.props.playersStates.map((p, i) =>
                 <PlayerEntry
-                    key={uniqueId()}
+                    key={i}
                     player={p}
                     index={i}
                     {...this.props} />)
@@ -47,20 +46,20 @@ const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, playersSt
                 title={isBot ? "This player is a bot." : ""}/>;
 
     const columns = [
-        <td key={uniqueId()}>{index + 1}</td>,
-        <td key={uniqueId()}>{connectionStatusIndicator}</td>,
-        <td key={uniqueId()}>{name}</td>,
-        <td key={uniqueId()}>{packs}</td>,
-        <td key={uniqueId()}>{time}</td>,
-        <td key={uniqueId()}>{hash && hash.cock}</td>,
-        <td key={uniqueId()}>{hash && hash.mws}</td>
+        <td key={0}>{index + 1}</td>,
+        <td key={1}>{connectionStatusIndicator}</td>,
+        <td key={2}>{name}</td>,
+        <td key={3}>{packs}</td>,
+        <td key={4}>{time}</td>,
+        <td key={5}>{hash && hash.cock}</td>,
+        <td key={6}>{hash && hash.mws}</td>
     ];
 
     if (isHost) {
         //Move Player Button
         if (!didGameStart)
             columns.push(
-                <td key={uniqueId()}>
+                <td key={7}>
                     <button onClick={() => onSwap([index, index - 1])}>
                         <img src={arrowDown} width="16px"/>
                     </button>
@@ -71,17 +70,17 @@ const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, playersSt
         //Kick Player button
         if (index !== self && !isBot) {
             columns.push(
-                <td key={uniqueId()}>
+                <td key={8}>
                     <button onClick={() => onKick(index)}>
                         kick
                     </button>
                 </td>);
         } else {
-            columns.push(<td key={uniqueId()}/>);
+            columns.push(<td key={9}/>);
         }
     }
 
-    return <tr key={uniqueId()} className={className}>{columns}</tr>;
+    return <tr className={className}>{columns}</tr>;
 };
 
 PlayerEntry.propTypes = {

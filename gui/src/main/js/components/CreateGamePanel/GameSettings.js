@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import {func, array, string, object, bool} from 'prop-types';
-import uniqueId from "lodash/uniqueId";
 import "./style.css"
 import {NORMAL, CUBE, CHAOS} from "../../reducers/game";
 import { Textarea, Checkbox } from '../utils';
@@ -31,8 +30,8 @@ class GameSettings extends React.Component {
         return (
             <Fragment >
                 <div className="tab">
-                    {gameModes.map(mode => (
-                        <button key={uniqueId()} value={mode} className="tablinks" onClick={this.handleChange("gameMode")}>
+                    {gameModes.map((mode, key) => (
+                        <button key={key} value={mode} className="tablinks" onClick={this.handleChange("gameMode")}>
                             {mode}
                         </button>))}
                 </div>
@@ -71,7 +70,7 @@ GameSettings.propTypes = {
 const NormalGameSettings = ({availableSets, sets, onChangeSet}) => (
     <div className="tabcontent" >
         {sets.map((set, index) => (<Set
-            key={uniqueId()}
+            key={index}
             set={set}
             availableSets={availableSets}
             onChangeSet={onChangeSet(index)}/>))}
@@ -127,10 +126,10 @@ const Set = ({availableSets, set, onChangeSet}) => (
     <select value={set} onChange={onChangeSet}>
         {Object
             .entries(availableSets)
-            .map(([label, sets]) => (
-                <optgroup key={uniqueId()} label={label}>
-                    {sets.map(({code, name}) => {
-                        return <option value={code} key={uniqueId()}>{name}</option>
+            .map(([label, sets], key) => (
+                <optgroup key={key} label={label}>
+                    {sets.map(({code, name}, index) => {
+                        return <option value={code} key={index}>{name}</option>
                     })}
                 </optgroup>
             ))}

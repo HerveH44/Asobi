@@ -2,10 +2,7 @@ import React from "react"
 import {connect} from 'react-redux';
 import {string, array, number, object, func} from "prop-types"
 import {Spaced} from "../utils";
-import Card from "./Card";
-import uniqueId from "lodash.uniqueid"
 import {pick, autoPick} from "../../actions/server"
-import {MAIN, SIDE} from "../../reducers/playerState";
 import MainZone from "./MainZone";
 import Grid from "./Grid";
 
