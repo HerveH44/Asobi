@@ -1,7 +1,9 @@
 import {handleActions} from 'redux-actions';
 import {PLAYER_STATE, autoPick, leaveGame} from "../actions/server"
 import {onChangeDeckSize, onChangeLand, onResetLands, onSuggestLands} from "../actions/game";
+import _ from "../lib/utils";
 
+export const PACK = "Pack";
 export const MAIN = "Main";
 export const SIDE = "Side";
 export const JUNK = "Junk";
@@ -15,8 +17,8 @@ export const CARDS = {
 };
 
 const InitialState = {
-    waitingPack: {cards: []},
     pickedCards: [],
+    [PACK]: [],
     [MAIN]: [],
     [SIDE]: [],
     [JUNK]: [],
@@ -35,7 +37,8 @@ export default handleActions({
 
         return {
             ...state,
-            ...payload
+            ...payload,
+            [PACK]: (payload.waitingPack || {cards: []}).cards
         }
 
     },
@@ -173,6 +176,91 @@ export default handleActions({
     },
 }, InitialState);
 
+export const getCardsAsMap = (state, zone, sort) => {
+    let groups = _.group(state[zone], sort);
+    for (let key in groups)
+        _.sort(groups[key], sortLandsBeforeNonLands, "color", "cmc", "name");
+
+    let keys = Object.keys(groups);
+    let arr;
+
+    switch(sort) {
+        case "cmc":
+            arr = [];
+            for (let key in groups)
+                if (parseInt(key) > 6) {
+                    [].push.apply(arr, groups[key]);
+                    delete groups[key];
+                }
+
+            if (arr.length) {
+                groups["6"] || (groups["6"] = [])
+                ;[].push.apply(groups["6"], arr);
+            }
+            return groups;
+
+        case "color":
+            keys =
+                ["Colorless", "White", "Blue", "Black", "Red", "Green", "Multicolor"]
+                    .filter(x => keys.indexOf(x) > -1);
+            break;
+        case "rarity":
+            keys =
+                ["Basic", "Common", "Uncommon", "Rare", "Mythic Rare", "Special"]
+                    .filter(x => keys.indexOf(x) > -1);
+            break;
+        case "type":
+            keys = keys.sort();
+            break;
+    }
+
+    let o = {};
+    for (let key of keys)
+        o[key] = groups[key];
+    return o;
+};
+
+function sortLandsBeforeNonLands(lhs, rhs) {
+    let isLand = x => x.type.toLowerCase().indexOf("land") !== -1;
+    let lhsIsLand = isLand(lhs);
+    let rhsIsLand = isLand(rhs);
+    return rhsIsLand - lhsIsLand;
+}
+
+export const getCardsAsArray = (state, zone, sort) => {
+    let groups = _.group(state[zone], sort);
+    for (let key in groups)
+        _.sort(groups[key], sortLandsBeforeNonLands, "color", "cmc", "name");
+
+    let keys = Object.keys(groups);
+    let arr;
+    switch(sort) {
+        case "cmc":
+            arr = [];
+            for (let key in groups)
+                arr[parseInt(key)] = groups[key];
+            return arr.reduce((acc, val) => acc.concat(val), []);
+        case "color":
+            keys =
+                ["Colorless", "White", "Blue", "Black", "Red", "Green", "Multicolor"]
+                    .filter(x => keys.indexOf(x) > -1);
+            break;
+        case "rarity":
+            keys =
+                ["Basic", "Common", "Uncommon", "Rare", "Mythic Rare", "Special"]
+                    .filter(x => keys.indexOf(x) > -1);
+            break;
+        case "type":
+            keys = keys.sort();
+            break;
+    }
+
+    let o = [];
+    for (let key of keys) {
+        o.push(...groups[key]);
+    }
+    return o;
+};
 
 export const getDeckInTxt = (state) => {
     let main = {};

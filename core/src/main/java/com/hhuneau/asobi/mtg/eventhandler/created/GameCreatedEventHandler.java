@@ -1,15 +1,14 @@
 package com.hhuneau.asobi.mtg.eventhandler.created;
 
 import com.hhuneau.asobi.customer.CustomerService;
+import com.hhuneau.asobi.mtg.eventhandler.EventHandler;
 import com.hhuneau.asobi.mtg.game.Game;
 import com.hhuneau.asobi.mtg.game.GameService;
-import com.hhuneau.asobi.mtg.eventhandler.EventHandler;
 import com.hhuneau.asobi.mtg.player.Player;
 import com.hhuneau.asobi.mtg.pool.PoolService;
 import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
 import com.hhuneau.asobi.websocket.events.game.player.JoinGameEvent;
 import com.hhuneau.asobi.websocket.events.game.player.LeaveGameEvent;
-import com.hhuneau.asobi.websocket.events.game.player.PickEvent;
 import com.hhuneau.asobi.websocket.messages.ErrorMessage;
 import com.hhuneau.asobi.websocket.messages.PlayerIdMessage;
 
@@ -76,11 +75,6 @@ public abstract class GameCreatedEventHandler implements EventHandler {
     public void handle(Game game, StartGameEvent evt) {
         poolService.createPools(game);
         gameService.startGame(evt);
-    }
-
-    @Override
-    public void handle(Game game, PickEvent evt) {
-
     }
 
     @Override

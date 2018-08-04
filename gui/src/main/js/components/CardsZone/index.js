@@ -5,10 +5,13 @@ import {Spaced} from "../utils";
 import {pick, autoPick} from "../../actions/server"
 import MainZone from "./MainZone";
 import Grid from "./Grid";
+import PackZone from "./PackZone";
+import {getCardsAsArray, PACK} from "../../reducers/playerState";
 
-const CardsZone = ({waitingPack, round, pick, autoPick, autoPickId}) => (
+const CardsZone = ({cards, round, pick, autoPick, autoPickId}) => (
     <div>
-        <PackZone cards={(waitingPack || {}).cards || []} round={round}
+        <PackZone cards={cards}
+                  round={round}
                   pick={pick}
                   autoPick={autoPick}
                   autoPickId={autoPickId}/>
@@ -24,29 +27,10 @@ CardsZone.propTypes = {
     autoPickId: string.isRequired
 };
 
-const PackZone = ({cards, round, pick, autoPick, autoPickId}) => (
-    <Grid
-        zoneName={"Pack"}
-        zoneTitle={`Pack ${round}`}
-        // TODO: add pick in state
-        zoneSubtitle={`Pick TODO`}
-        cards={cards}
-        pick={pick}
-        autoPick={autoPick}
-        autoPickId={autoPickId}/>
-);
-
-PackZone.propTypes = {
-    cards: array.isRequired,
-    round: number.isRequired,
-    pick: func.isRequired,
-    autoPick: func.isRequired,
-    autoPickId: string.isRequired
-};
-
-const mapStateToProps = ({playerState, gameState}) => ({
+const mapStateToProps = ({playerState, gameState, gameSettings}) => ({
     ...playerState,
-    ...gameState
+    ...gameState,
+    cards: getCardsAsArray(playerState, PACK, gameSettings.sort)
 });
 const mapDispatchToProps = {
     pick, autoPick

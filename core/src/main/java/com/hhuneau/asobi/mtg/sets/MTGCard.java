@@ -18,6 +18,7 @@ public class MTGCard {
     private List<String> colorIdentity;
     @ElementCollection
     private List<String> colors;
+    private String color;
     private String imageName;
     private String layout;
     private String manaCost;

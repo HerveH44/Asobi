@@ -16,10 +16,12 @@ public class DefaultMTGSetsService implements MTGSetsService {
     private final MTGSetRepository setRepository;
     private final static Logger LOGGER = LoggerFactory.getLogger(DefaultMTGSetsService.class);
     private final List<MTGCardFilter> filterList;
+    private final List<MTGCardModifier> modifierList;
 
-    public DefaultMTGSetsService(MTGSetRepository setRepository, List<MTGCardFilter> filterList) {
+    public DefaultMTGSetsService(MTGSetRepository setRepository, List<MTGCardFilter> filterList, List<MTGCardModifier> cardModifierList) {
         this.setRepository = setRepository;
         this.filterList = filterList;
+        this.modifierList = cardModifierList;
     }
 
     public void saveSet(MTGSet set) {
@@ -33,14 +35,24 @@ public class DefaultMTGSetsService implements MTGSetsService {
         }
     }
 
-    private Set<MTGCard> filter(MTGSet set, Set<MTGCard> cards) {
+    private Set<MTGCard> filter(MTGSet set, final Set<MTGCard> cards) {
         final List<MTGCardFilter> filterList = this.filterList.stream()
             .filter(filter -> filter.isInterested(set))
             .collect(Collectors.toList());
+        Set<MTGCard> remainingCards = cards;
         for (MTGCardFilter filter : filterList) {
-            cards = filter.apply(set, cards);
+            remainingCards = filter.apply(set, cards);
         }
-        return cards;
+
+        /* Modify the remaining cards
+            For example: add colors...
+            To modify a card, use a component that implements MTGCardModifier
+         */
+        for(final MTGCard card : remainingCards) {
+            this.modifierList.forEach(modifier -> modifier.modify(card, cards));
+        }
+
+        return remainingCards;
     }
 
     public List<MTGSet> getSets() {

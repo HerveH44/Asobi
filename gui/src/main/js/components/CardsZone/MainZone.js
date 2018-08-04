@@ -1,11 +1,11 @@
 import React from "react";
-import {array, object} from "prop-types";
+import {array} from "prop-types";
 import Grid from "./Grid";
 import {connect} from "react-redux";
 import {autoPick, pick} from "../../actions/server";
-import {MAIN} from "../../reducers/playerState";
+import {getCardsAsArray, MAIN} from "../../reducers/playerState";
 
-const MainZone = ({Main: cards}) => (
+const MainZone = ({cards}) => (
     <Grid
         zoneName={"Main"}
         zoneTitle={"Main"}
@@ -17,11 +17,11 @@ const MainZone = ({Main: cards}) => (
 );
 
 MainZone.propTypes = {
-    Main: array.isRequired
+    cards: array.isRequired
 };
 
-const mapStateToProps = ({playerState}) => ({
-    ...playerState,
+const mapStateToProps = ({playerState, gameSettings}) => ({
+    cards: getCardsAsArray(playerState, MAIN, gameSettings.sort)
 });
 const mapDispatchToProps = {
     pick, autoPick
