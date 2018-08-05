@@ -14,3 +14,4 @@ export const onChangePicksToSB = createAction("CHANGE_PICKS_TO_SB");
 export const onChangeBeep = createAction("CHANGE_BEEP");
 export const onChangeColumnView = createAction("CHANGE_COLUMN_VIEW");
 export const onChangeSort = createAction("CHANGE_SORT");
+export const onClickZone = createAction("CLICK_CARD_ZONE");

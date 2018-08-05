@@ -1,6 +1,14 @@
-import {createAction, handleActions} from 'redux-actions';
-import {joinGame, editGameSettings, GAME_ID} from "../actions/server"
-import {onChangeFileName, onChangeFileType, onToggleChat, onChangeBeep, onChangeColumnView, onChangePicksToSB, onChangeSort} from "../actions/game";
+import {handleActions} from 'redux-actions';
+import {editGameSettings, GAME_ID, joinGame, onNewPack} from "../actions/server"
+import {
+    onChangeBeep,
+    onChangeColumnView,
+    onChangeFileName,
+    onChangeFileType,
+    onChangeSort,
+    onToggleChat
+} from "../actions/game";
+import beepSound from "../../resources/media/beep.wav"
 
 const InitialState = {
     gameId: null,
@@ -16,7 +24,6 @@ const InitialState = {
     fileType: "txt",
     fileName: "fileName",
     showChat: true,
-    addPicksToSB: false,
     beep: false,
     columnView: false,
     sort: "cmc",
@@ -24,6 +31,13 @@ const InitialState = {
 };
 
 export default handleActions({
+    [onNewPack](state) {
+        if(state.beep) {
+            const audio = new Audio(beepSound);
+            audio.play();
+        }
+        return state;
+    },
     [editGameSettings](state, {payload}) {
         return {
             ...state,
@@ -63,13 +77,6 @@ export default handleActions({
         return {
             ...state,
             showChat: event.target.checked,
-        }
-    },
-    [onChangePicksToSB](state, {payload: event}) {
-        event.persist();
-        return {
-            ...state,
-            addPicksToSB: event.target.checked,
         }
     },
     [onChangeBeep](state, {payload: event}) {

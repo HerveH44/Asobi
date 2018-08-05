@@ -7,7 +7,6 @@ const createGame = ({getState, dispatch}) => next => action => {
     const {
         game,
         gameSettings: {
-            gameId,
             authToken,
             addBots,
             useTimer,
@@ -17,6 +16,9 @@ const createGame = ({getState, dispatch}) => next => action => {
         player: {
             playerId,
             name
+        },
+        gameState: {
+            gameId
         }
     } = getState();
 
@@ -90,6 +92,8 @@ const createGame = ({getState, dispatch}) => next => action => {
                     autoPickId: action.payload
                 }
             });
+        case "ERROR":
+            console.log(`WEBSOCKET ERROR: ${action.paylod}`);
         default:
             return next(action);
     }

@@ -29,7 +29,7 @@ class Game extends Component {
                         <StartPanel/>
                     </div>
                     <DeckSettings/>
-                     <GameSettings/>
+                    <GameSettings/>
                 </div>
                 <CardsZone/>
             </div>

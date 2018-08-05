@@ -1,5 +1,5 @@
 import React from "react";
-import {func, bool} from "prop-types";
+import {bool, func} from "prop-types";
 import {Checkbox} from "../utils";
 import SortCards from "./SortCards"
 import {connect} from "react-redux";
@@ -47,8 +47,9 @@ GameSettings.propTypes = {
     onChangeColumnView: func.isRequired
 };
 
-const mapStateToProps = ({gameSettings}) => ({
-    ...gameSettings
+const mapStateToProps = ({gameSettings, playerState}) => ({
+    ...gameSettings,
+    addPicksToSB: playerState.addPicksToSB
 });
 
 const mapDispatchToProps = {

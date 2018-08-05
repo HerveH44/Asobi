@@ -17,11 +17,11 @@ public class TimeProducer {
     );
 
     static public int calc(Timer timer, int pick) {
-        final List<Integer> times = map.get(timer);
+        final List<Integer> times = map.getOrDefault(timer, List.of(0));
         final int correctedPick = pick - 1; // to adjust pick with index of map
 
         // If pick is out of scheduled times
-        if (correctedPick > times.size()) {
+        if (pick > times.size()) {
             return times.get(times.size() - 1);
         }
 

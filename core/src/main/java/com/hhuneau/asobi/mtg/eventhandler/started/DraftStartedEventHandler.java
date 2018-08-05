@@ -1,5 +1,6 @@
 package com.hhuneau.asobi.mtg.eventhandler.started;
 
+import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.mtg.game.Game;
 import com.hhuneau.asobi.mtg.game.GameService;
 import com.hhuneau.asobi.mtg.player.Player;
@@ -18,7 +19,8 @@ public class DraftStartedEventHandler extends GameStartedEventHandler {
     private final GameService gameService;
     private final PlayerService playerService;
 
-    public DraftStartedEventHandler(GameService gameService, PlayerService playerService) {
+    public DraftStartedEventHandler(GameService gameService, PlayerService playerService, CustomerService customerService) {
+        super(customerService);
         this.gameService = gameService;
         this.playerService = playerService;
     }

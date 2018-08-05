@@ -1,6 +1,6 @@
 import {handleActions} from 'redux-actions';
-import {PLAYER_STATE, autoPick, leaveGame} from "../actions/server"
-import {onChangeDeckSize, onChangeLand, onResetLands, onSuggestLands} from "../actions/game";
+import {autoPick, leaveGame, onNewPack, onPickedCard, onReconnect} from "../actions/server"
+import {onChangeDeckSize, onChangeLand, onChangePicksToSB, onResetLands, onSuggestLands} from "../actions/game";
 import _ from "../lib/utils";
 
 export const PACK = "Pack";
@@ -23,24 +23,30 @@ const InitialState = {
     [SIDE]: [],
     [JUNK]: [],
     autoPickId: "",
-    deckSize: 40
+    deckSize: 40,
+    addPicksToSB: false,
 };
 
 export default handleActions({
-    [PLAYER_STATE](state, {payload}) {
-        //Faire diff entre cartes que l'on a déjà et les nouvelles venues du server
-        if (state.pickedCards.length < payload.pickedCards.length) {
-            Array.prototype.push.apply(
-                state[MAIN],
-                payload.pickedCards.slice(state.pickedCards.length))
-        }
-
+    [onReconnect](state, {payload}) {
         return {
             ...state,
-            ...payload,
-            [PACK]: (payload.waitingPack || {cards: []}).cards
+            [MAIN]: payload
         }
 
+    },
+    [onNewPack](state, {payload}) {
+        return {
+            ...state,
+            [PACK]: payload
+        }
+    },
+    [onPickedCard](state, {payload}) {
+        const zone = state.addPicksToSB ? SIDE: MAIN;
+        return {
+            ...state,
+            [zone]: state[zone].concat([payload])
+        }
     },
     [autoPick](state, {payload}) {
         return {
@@ -87,6 +93,15 @@ export default handleActions({
         return {
             ...state,
             deckSize: +event.target.value
+        }
+    },
+    [onChangePicksToSB](state, {payload: event}) {
+        event.persist();
+        return {
+            ...state,
+            addPicksToSB: event.target.checked,
+            [MAIN]: [],
+            [SIDE]: state[MAIN].concat(state[SIDE])
         }
     },
     [onSuggestLands](state) {

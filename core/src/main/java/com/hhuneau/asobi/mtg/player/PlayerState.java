@@ -37,8 +37,10 @@ public class PlayerState {
     private String autoPickId;
 
     public Pack getWaitingPack() {
-        return waitingPacks == null || waitingPacks.isEmpty()
-                   ? null
-                   : getWaitingPacks().get(0);
+        return !hasWaitingPack() ? null : getWaitingPacks().get(0);
+    }
+
+    public boolean hasWaitingPack() {
+        return waitingPacks != null && !waitingPacks.isEmpty();
     }
 }

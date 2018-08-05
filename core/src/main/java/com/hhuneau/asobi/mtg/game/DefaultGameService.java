@@ -1,5 +1,6 @@
 package com.hhuneau.asobi.mtg.game;
 
+import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.mtg.player.Player;
 import com.hhuneau.asobi.mtg.player.PlayerState;
 import com.hhuneau.asobi.mtg.pool.Booster;
@@ -10,6 +11,8 @@ import com.hhuneau.asobi.mtg.sets.MTGSet;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
+import com.hhuneau.asobi.websocket.messages.PackMessage;
+import com.hhuneau.asobi.websocket.messages.PickMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,11 +28,13 @@ public class DefaultGameService implements GameService {
     private final GameRepository gameRepository;
     private final MTGSetsService setService;
     private final PoolService poolService;
+    private final CustomerService customerService;
 
-    public DefaultGameService(GameRepository gameRepository, MTGSetsService setService, PoolService poolService) {
+    public DefaultGameService(GameRepository gameRepository, MTGSetsService setService, PoolService poolService, CustomerService customerService) {
         this.gameRepository = gameRepository;
         this.setService = setService;
         this.poolService = poolService;
+        this.customerService = customerService;
     }
 
     @Override
@@ -120,8 +125,12 @@ public class DefaultGameService implements GameService {
                 playerState.setTimeLeft(TimeProducer.calc(game.getTimer(), pick));
                 playerState.setPick(pick);
                 playerState.setPack(game.getRound());
-
                 poolService.delete(booster);
+
+                final String userId = player.getUserId();
+                if ( userId != null && !userId.equals("") ) {
+                    customerService.send(userId, PackMessage.of(firstPack.getCards()));
+                }
             }
         });
 
@@ -139,7 +148,7 @@ public class DefaultGameService implements GameService {
         final List<Pack> waitingPacks = playerState.getWaitingPacks();
 
         // TODO: ameliorer check que les packs n'existent pas
-        if (waitingPacks.isEmpty()) {
+        if (!playerState.hasWaitingPack()) {
             return;
         }
         final Pack waitingPack = waitingPacks.remove(0);
@@ -154,17 +163,32 @@ public class DefaultGameService implements GameService {
         playerState.getPickedCards().add(pickedCard);
         playerState.setAutoPickId("");
 
+        final String sessionId = player.getUserId();
+        if ( sessionId != null && !sessionId.equals("") ) {
+            customerService.send(sessionId, PickMessage.of(pickedCard));
+        }
+
         // Pass the remaining pack
         if (!waitingPack.getCards().isEmpty()) {
             final Player nextPlayer = getNextPlayer(game, player);
             final PlayerState nextPlayerState = nextPlayer.getPlayerState();
             nextPlayerState.getWaitingPacks().add(waitingPack);
+            final String nextPlayerUserId = nextPlayer.getUserId();
+            if ( nextPlayerUserId != null && !nextPlayerUserId.equals("") ) {
+                customerService.send(nextPlayerUserId, PackMessage.of(waitingPack.getCards()));
+            }
         }
 
         final int pick = playerState.getPick() + 1;
         playerState.setPick(pick);
 
-        final int timeLeft = playerState.getWaitingPack() == null ? 0 : TimeProducer.calc(game.getTimer(), pick);
+        if (playerState.hasWaitingPack()) {
+            if ( sessionId != null && !sessionId.equals("") ) {
+                customerService.send(sessionId, PackMessage.of(playerState.getWaitingPack().getCards()));
+            }
+        }
+
+        final int timeLeft = playerState.hasWaitingPack() ? 0 : TimeProducer.calc(game.getTimer(), pick);
         player.getPlayerState().setTimeLeft(timeLeft);
 
         if (isRoundFinished(game)) {
@@ -172,20 +196,6 @@ public class DefaultGameService implements GameService {
             startNewRound(game);
         }
     }
-
-//    public void decreaseTime() {
-//        gameRepository.findAll().stream()
-//            .filter(game -> game.getStatus().equals(STARTED))
-//            .map(Game::getPlayers)
-//            .flatMap(Set::stream)
-//            .map(Player::getPlayerState)
-//            .filter(ps -> ps.getTimeLeft() > 0)
-//            .forEach(ps -> {
-//                ps.setTimeLeft(ps.getTimeLeft() - 1);
-//                ps.getPlayer()
-//
-//            });
-//    }
 
     @Override
     public Player addPlayer(Game game, Player player) {

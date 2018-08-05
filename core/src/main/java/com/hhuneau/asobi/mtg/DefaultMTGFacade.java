@@ -99,7 +99,6 @@ public class DefaultMTGFacade implements MTGFacade {
     private void broadcastGameState(Game game) {
         final GameStateMessage gameStateMessage = GameStateMessage.of(GameStateDTO.of(game));
         game.getPlayers().forEach(player -> {
-            customerService.send(player.getUserId(), PlayerStateMessage.of(player.getPlayerState()));
             customerService.send(player.getUserId(), gameStateMessage);
         });
     }
