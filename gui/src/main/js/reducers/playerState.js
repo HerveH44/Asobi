@@ -1,6 +1,13 @@
 import {handleActions} from 'redux-actions';
 import {autoPick, leaveGame, onNewPack, onPickedCard, onReconnect} from "../actions/server"
-import {onChangeDeckSize, onChangeLand, onChangePicksToSB, onResetLands, onSuggestLands} from "../actions/game";
+import {
+    onChangeDeckSize,
+    onChangeLand,
+    onChangePicksToSB,
+    onClickZone,
+    onResetLands,
+    onSuggestLands
+} from "../actions/game";
 import _ from "../lib/utils";
 
 export const PACK = "Pack";
@@ -28,6 +35,22 @@ const InitialState = {
 };
 
 export default handleActions({
+    [onClickZone](state, {payload: {zone, card}}) {
+        const newZone = zone !== MAIN ? MAIN : SIDE;
+
+        //Add card to the new Zone
+        state[newZone].push(card);
+
+        //Remove card from the current zone
+        const cardIndex = state[zone].map(({id}) => id).indexOf(card.id);
+        if (cardIndex !== -1) {
+            state[zone].splice(cardIndex, 1);
+        }
+
+        return {
+            ...state,
+        }
+    },
     [onReconnect](state, {payload}) {
         return {
             ...state,

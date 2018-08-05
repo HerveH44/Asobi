@@ -2,7 +2,7 @@ import React from "react";
 import {array, func} from "prop-types";
 import Grid from "./Grid";
 import {connect} from "react-redux";
-import {getCardsAsArray, MAIN, SIDE} from "../../reducers/playerState";
+import {getCardsAsArray, SIDE} from "../../reducers/playerState";
 import {onClickZone} from "../../actions/game";
 
 const SideZone = ({cards, onClickZone}) => (
@@ -11,7 +11,7 @@ const SideZone = ({cards, onClickZone}) => (
         zoneTitle={"Side"}
         zoneSubtitle={"" + cards.length}
         addCardClassNames={() => "card"}
-        onClickCard={(card) => () => onClickZone({zone: MAIN, card})}
+        onClickCard={(card) => () => onClickZone({zone: SIDE, card})}
         cards={cards}/>
 );
 
