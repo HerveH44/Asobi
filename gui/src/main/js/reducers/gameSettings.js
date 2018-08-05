@@ -4,11 +4,12 @@ import {
     onChangeBeep,
     onChangeColumnView,
     onChangeFileName,
-    onChangeFileType,
+    onChangeFileType, onChangePicksToSB,
     onChangeSort,
     onToggleChat
 } from "../actions/game";
 import beepSound from "../../resources/media/beep.wav"
+import {MAIN, SIDE} from "./playerState";
 
 const InitialState = {
     gameId: null,
@@ -27,7 +28,8 @@ const InitialState = {
     beep: false,
     columnView: false,
     sort: "cmc",
-    sortTypes: ["cmc", "color", "type", "rarity"]
+    sortTypes: ["cmc", "color", "type", "rarity"],
+    addPicksToSB: false,
 };
 
 export default handleActions({
@@ -98,6 +100,13 @@ export default handleActions({
         return {
             ...state,
             sort: event.target.value,
+        }
+    },
+    [onChangePicksToSB](state, {payload: event}) {
+        event.persist();
+        return {
+            ...state,
+            addPicksToSB: event.target.checked,
         }
     },
 }, InitialState);

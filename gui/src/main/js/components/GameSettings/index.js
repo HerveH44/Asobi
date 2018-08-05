@@ -47,9 +47,8 @@ GameSettings.propTypes = {
     onChangeColumnView: func.isRequired
 };
 
-const mapStateToProps = ({gameSettings, playerState}) => ({
+const mapStateToProps = ({gameSettings}) => ({
     ...gameSettings,
-    addPicksToSB: playerState.addPicksToSB
 });
 
 const mapDispatchToProps = {

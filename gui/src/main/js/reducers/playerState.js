@@ -1,5 +1,5 @@
 import {handleActions} from 'redux-actions';
-import {autoPick, leaveGame, onNewPack, onPickedCard, onReconnect} from "../actions/server"
+import {autoPick, leaveGame, onNewPack, onPickedCard, onReconnect, pick} from "../actions/server"
 import {
     onChangeDeckSize,
     onChangeLand,
@@ -69,6 +69,12 @@ export default handleActions({
         return {
             ...state,
             [zone]: state[zone].concat([payload])
+        }
+    },
+    [pick](state) {
+        return {
+            ...state,
+            [PACK]: []
         }
     },
     [autoPick](state, {payload}) {

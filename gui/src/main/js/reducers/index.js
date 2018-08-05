@@ -13,7 +13,7 @@ import {persistReducer} from 'redux-persist'
 const rootPersistConfig = {
     key: 'root',
     storage,
-    whitelist: ['game', 'player']
+    whitelist: ['game', 'player', "gameSettings"]
 };
 
 const reducers = combineReducers({
