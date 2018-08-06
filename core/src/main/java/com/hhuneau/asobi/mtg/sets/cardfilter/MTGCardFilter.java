@@ -1,4 +1,7 @@
-package com.hhuneau.asobi.mtg.sets;
+package com.hhuneau.asobi.mtg.sets.cardfilter;
+
+import com.hhuneau.asobi.mtg.sets.card.MTGCard;
+import com.hhuneau.asobi.mtg.sets.MTGSet;
 
 import java.util.Set;
 

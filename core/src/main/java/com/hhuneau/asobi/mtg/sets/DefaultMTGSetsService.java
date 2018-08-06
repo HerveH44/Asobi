@@ -1,5 +1,8 @@
 package com.hhuneau.asobi.mtg.sets;
 
+import com.hhuneau.asobi.mtg.sets.card.MTGCard;
+import com.hhuneau.asobi.mtg.sets.cardfilter.MTGCardFilter;
+import com.hhuneau.asobi.mtg.sets.cardmodifier.MTGCardModifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -39,9 +42,10 @@ public class DefaultMTGSetsService implements MTGSetsService {
         final List<MTGCardFilter> filterList = this.filterList.stream()
             .filter(filter -> filter.isInterested(set))
             .collect(Collectors.toList());
+
         Set<MTGCard> remainingCards = cards;
         for (MTGCardFilter filter : filterList) {
-            remainingCards = filter.apply(set, cards);
+            remainingCards = filter.apply(set, remainingCards);
         }
 
         /* Modify the remaining cards

@@ -1,5 +1,6 @@
-package com.hhuneau.asobi.mtg.sets;
+package com.hhuneau.asobi.mtg.sets.cardmodifier;
 
+import com.hhuneau.asobi.mtg.sets.card.MTGCard;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;

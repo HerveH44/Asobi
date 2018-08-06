@@ -3,9 +3,9 @@ package com.hhuneau.asobi.mtg.pool;
 import com.hhuneau.asobi.mtg.game.Game;
 import com.hhuneau.asobi.mtg.game.GameMode;
 import com.hhuneau.asobi.mtg.sets.CardsGroupedByRarity;
-import com.hhuneau.asobi.mtg.sets.MTGCard;
+import com.hhuneau.asobi.mtg.sets.card.MTGCard;
 import com.hhuneau.asobi.mtg.sets.MTGSet;
-import com.hhuneau.asobi.mtg.sets.Rarity;
+import com.hhuneau.asobi.mtg.sets.card.Rarity;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.hhuneau.asobi.mtg.game.GameMode.NORMAL;
-import static com.hhuneau.asobi.mtg.sets.Rarity.*;
+import static com.hhuneau.asobi.mtg.sets.card.Rarity.*;
 
 @Component
 // TODO: Merge with PoolService

@@ -295,11 +295,6 @@ button:disabled:active {
     cursor: pointer;
 }
 
-#doubleimg {
-    height: 340px;
-    width: 480px;
-}
-
 .col {
     float: left;
     width: 180px;

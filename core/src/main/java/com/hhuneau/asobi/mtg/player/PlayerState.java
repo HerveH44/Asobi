@@ -1,7 +1,7 @@
 package com.hhuneau.asobi.mtg.player;
 
 import com.hhuneau.asobi.mtg.pool.Pack;
-import com.hhuneau.asobi.mtg.sets.MTGCard;
+import com.hhuneau.asobi.mtg.sets.card.MTGCard;
 import lombok.Getter;
 import lombok.Setter;
 

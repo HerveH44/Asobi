@@ -1,4 +1,4 @@
-package com.hhuneau.asobi.mtg.sets;
+package com.hhuneau.asobi.mtg.sets.card;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -36,4 +36,6 @@ public class MTGCard {
     private String type;
     @ElementCollection
     private List<String> types;
+    private boolean isDoubleFace;
+    private long flipMultiverseid;
 }

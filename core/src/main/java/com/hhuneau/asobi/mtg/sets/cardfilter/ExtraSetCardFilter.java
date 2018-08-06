@@ -1,5 +1,7 @@
-package com.hhuneau.asobi.mtg.sets;
+package com.hhuneau.asobi.mtg.sets.cardfilter;
 
+import com.hhuneau.asobi.mtg.sets.card.MTGCard;
+import com.hhuneau.asobi.mtg.sets.MTGSet;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -35,7 +37,7 @@ public class ExtraSetCardFilter implements MTGCardFilter {
             .filter(mtgCard -> {
                 final Integer cardNumber = Integer.parseInt(mtgCard.getNumber().replaceAll("\\D", ""));
                 final Integer maxNumber = map.get(set.getCode());
-                return maxNumber > cardNumber;
+                return maxNumber >= cardNumber;
             })
             .collect(Collectors.toSet());
     }

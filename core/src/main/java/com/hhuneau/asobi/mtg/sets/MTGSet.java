@@ -1,5 +1,6 @@
 package com.hhuneau.asobi.mtg.sets;
 
+import com.hhuneau.asobi.mtg.sets.card.MTGCard;
 import lombok.Getter;
 import lombok.Setter;
 

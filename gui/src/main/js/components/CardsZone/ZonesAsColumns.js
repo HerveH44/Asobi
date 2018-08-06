@@ -55,19 +55,25 @@ class ZonesAsColumns extends Component {
     }
 }
 
-const ImageHelper = ({onMouseEnter, className, card}) => (
-    card
-        ? card.isDoubleFaced
-        ? <div className={className} id="doubleimg">
-            <img className="card" src={card.url} onMouseEnter={onMouseEnter(card)} />
-            <img className="card" src={card.flippedCardURL} onMouseEnter={onMouseEnter(card)} />
-        </div>
-        : <img className={className}
-               id='img'
-               onMouseEnter={onMouseEnter(card)}
-               src={`http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=${card.multiverseid}&type=card`}/>
-        : <div />
-);
+const ImageHelper = ({onMouseEnter, className, card}) => {
+    const src = (url) => `http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=${url}&type=card`;
+    const samePicture = !card ? false : card.multiverseid === card.flipMultiverseid; // to flip Kamigawa's cards
+
+    return (
+        card
+            ? card.doubleFace
+            ? <div className={className} id="doubleimg">
+                <img src={src(card.multiverseid)} onMouseEnter={onMouseEnter(card)} />
+                <img src={src(card.flipMultiverseid)} onMouseEnter={onMouseEnter(card)} style={samePicture? {"transform":"rotate(180deg)"}: {}}/>
+            </div>
+            : <img className={className}
+                   id='img'
+                   onMouseEnter={onMouseEnter(card)}
+                   src={src(card.multiverseid)}/>
+            : <div />
+    );
+};
+
 
 ImageHelper.propTypes = {
     onMouseEnter: func.isRequired,

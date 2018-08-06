@@ -6,7 +6,7 @@ import com.hhuneau.asobi.mtg.player.PlayerState;
 import com.hhuneau.asobi.mtg.pool.Booster;
 import com.hhuneau.asobi.mtg.pool.Pack;
 import com.hhuneau.asobi.mtg.pool.PoolService;
-import com.hhuneau.asobi.mtg.sets.MTGCard;
+import com.hhuneau.asobi.mtg.sets.card.MTGCard;
 import com.hhuneau.asobi.mtg.sets.MTGSet;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;

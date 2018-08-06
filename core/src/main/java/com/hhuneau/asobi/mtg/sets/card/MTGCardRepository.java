@@ -1,4 +1,4 @@
-package com.hhuneau.asobi.mtg.sets;
+package com.hhuneau.asobi.mtg.sets.card;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;

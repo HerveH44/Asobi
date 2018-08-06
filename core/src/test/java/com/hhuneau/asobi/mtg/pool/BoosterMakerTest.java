@@ -3,9 +3,9 @@ package com.hhuneau.asobi.mtg.pool;
 import com.hhuneau.asobi.mtg.game.Game;
 import com.hhuneau.asobi.mtg.game.GameType;
 import com.hhuneau.asobi.mtg.player.Player;
-import com.hhuneau.asobi.mtg.sets.MTGCard;
+import com.hhuneau.asobi.mtg.sets.card.MTGCard;
 import com.hhuneau.asobi.mtg.sets.MTGSet;
-import com.hhuneau.asobi.mtg.sets.Rarity;
+import com.hhuneau.asobi.mtg.sets.card.Rarity;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.hhuneau.asobi.mtg.game.GameMode.NORMAL;
-import static com.hhuneau.asobi.mtg.sets.Rarity.*;
+import static com.hhuneau.asobi.mtg.sets.card.Rarity.*;
 
 public class BoosterMakerTest {
 

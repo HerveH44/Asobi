@@ -1,5 +1,8 @@
 package com.hhuneau.asobi.mtg.sets;
 
+import com.hhuneau.asobi.mtg.sets.card.MTGCard;
+import com.hhuneau.asobi.mtg.sets.card.Rarity;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

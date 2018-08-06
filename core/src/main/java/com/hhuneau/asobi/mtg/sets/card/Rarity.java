@@ -1,4 +1,4 @@
-package com.hhuneau.asobi.mtg.sets;
+package com.hhuneau.asobi.mtg.sets.card;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
