@@ -42,7 +42,7 @@ public abstract class GameCreatedEventHandler implements EventHandler {
 
     private Runnable addPlayer(Game game, String sessionId, String name) {
         return () -> {
-            final Player player = Player.of(sessionId, name);
+            final Player player = Player.of(sessionId, name, false);
             if (!game.isFull()) {
                 final Player savedPlayer = gameService.addPlayer(game, player);
                 sendPlayerIdMessage(sessionId, savedPlayer);
@@ -73,8 +73,8 @@ public abstract class GameCreatedEventHandler implements EventHandler {
 
     @Override
     public void handle(Game game, StartGameEvent evt) {
-        poolService.createPools(game);
         gameService.startGame(evt);
+        poolService.createPools(game);
     }
 
     @Override

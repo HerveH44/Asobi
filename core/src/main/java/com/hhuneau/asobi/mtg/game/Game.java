@@ -8,7 +8,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import static com.hhuneau.asobi.mtg.game.Status.CREATED;
 import static javax.persistence.CascadeType.ALL;
@@ -34,10 +33,11 @@ public class Game {
     private String authToken;
     private int round;
     private Timer timer;
+    public boolean useTimer;
 
     @OneToMany(orphanRemoval = true, cascade = ALL)
     @JoinColumn(name = "game_id")
-    private Set<Player> players;
+    private List<Player> players;
     @ManyToMany
     @JoinColumn(name = "sets_list")
     private List<MTGSet> sets;

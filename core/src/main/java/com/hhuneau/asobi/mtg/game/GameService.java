@@ -30,4 +30,6 @@ public interface GameService {
     List<Game> getAllCurrentGames();
 
     void pick(Game game, Player player, String cardI);
+
+    boolean decreaseTimeLeft(Game game);
 }

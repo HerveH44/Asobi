@@ -11,7 +11,10 @@ import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import com.hhuneau.asobi.websocket.events.SessionConnectedEvent;
 import com.hhuneau.asobi.websocket.events.SessionDisconnectedEvent;
 import com.hhuneau.asobi.websocket.events.game.GameEvent;
-import com.hhuneau.asobi.websocket.messages.*;
+import com.hhuneau.asobi.websocket.messages.CreatedGameMessage;
+import com.hhuneau.asobi.websocket.messages.ErrorMessage;
+import com.hhuneau.asobi.websocket.messages.GameStateMessage;
+import com.hhuneau.asobi.websocket.messages.SetsExportMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
@@ -105,20 +108,12 @@ public class DefaultMTGFacade implements MTGFacade {
 
     @Scheduled(fixedRate = 1000)
     public void decreaseTimeLeft() {
-        gameService.getAllCurrentGames().forEach(game -> {
-            game.getPlayers().stream()
-                .map(Player::getPlayerState)
-                .filter(ps -> ps.getTimeLeft() > 0)
-                .forEach(ps -> {
-                    final int timeLeft = ps.getTimeLeft() - 1;
-                    ps.setTimeLeft(timeLeft);
 
-                    if (timeLeft == 0) {
-                        gameService.pick(game, ps.getPlayer(), ps.getAutoPickId());
-                    }
-                });
-            broadcastGameState(game);
-            gameService.save(game);
+        gameService.getAllCurrentGames().forEach(game -> {
+            boolean toBroadcast = gameService.decreaseTimeLeft(game);
+            if(toBroadcast) {
+                broadcastGameState(game);
+            }
         });
     }
 
@@ -166,6 +161,7 @@ public class DefaultMTGFacade implements MTGFacade {
             dto.name = player.getName();
             dto.packs = player.getPlayerState().getWaitingPacks().size();
             dto.time = player.getPlayerState().getTimeLeft();
+            dto.isBot = player.isBot();
             return dto;
         }
     }

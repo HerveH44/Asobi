@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
@@ -37,7 +38,12 @@ public class PlayerState {
     private String autoPickId;
 
     public Pack getWaitingPack() {
-        return !hasWaitingPack() ? null : getWaitingPacks().get(0);
+        if(!hasWaitingPack()) {
+            return null;
+        }
+        getWaitingPacks().sort(Comparator.comparingInt((Pack o) -> o.getCards().size()).reversed());
+
+        return getWaitingPacks().get(0);
     }
 
     public boolean hasWaitingPack() {

@@ -87,7 +87,7 @@ const CardsZone = ({zoneName, cardsMap, onClickCard, onMouseEnterCard, onMouseLe
 
     for (let key in cardsMap) {
         const cards = cardsMap[key].map((card, i) =>
-            <Card key={i} card={card}
+            <Card key={card.id + i} card={card}
                   onClick={onClickCard(card)}
                   onMouseEnter={onMouseEnterCard(card)}
                   onMouseLeave={onMouseLeaveCard}/>

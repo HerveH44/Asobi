@@ -26,7 +26,6 @@ public class DraftCreatedEventHandler extends GameCreatedEventHandler {
 
     @Override
     public boolean isInterested(Game game) {
-
         return super.isInterested(game) && game.getGameType().equals(DRAFT);
     }
 }

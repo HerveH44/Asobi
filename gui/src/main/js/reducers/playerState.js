@@ -24,7 +24,6 @@ export const CARDS = {
 };
 
 const InitialState = {
-    pickedCards: [],
     [PACK]: [],
     [MAIN]: [],
     [SIDE]: [],
@@ -68,6 +67,7 @@ export default handleActions({
         const zone = state.addPicksToSB ? SIDE: MAIN;
         return {
             ...state,
+            autoPickId: "",
             [zone]: state[zone].concat([payload])
         }
     },

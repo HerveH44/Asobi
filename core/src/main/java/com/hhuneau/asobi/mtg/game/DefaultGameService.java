@@ -6,9 +6,9 @@ import com.hhuneau.asobi.mtg.player.PlayerState;
 import com.hhuneau.asobi.mtg.pool.Booster;
 import com.hhuneau.asobi.mtg.pool.Pack;
 import com.hhuneau.asobi.mtg.pool.PoolService;
-import com.hhuneau.asobi.mtg.sets.card.MTGCard;
 import com.hhuneau.asobi.mtg.sets.MTGSet;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
+import com.hhuneau.asobi.mtg.sets.card.MTGCard;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
 import com.hhuneau.asobi.websocket.messages.PackMessage;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.hhuneau.asobi.mtg.game.Status.FINISHED;
 import static com.hhuneau.asobi.mtg.game.Status.STARTED;
@@ -57,7 +58,21 @@ public class DefaultGameService implements GameService {
         gameRepository.findById(evt.gameId)
             .ifPresent(game -> {
                 game.setStatus(STARTED);
+                game.setUseTimer(evt.useTimer);
                 game.setTimer(evt.timerLength);
+
+                if (evt.addBots) {
+                    final long emptySeats = game.getSeats() - game.getPlayers().size();
+                    for (int i = 0; i < emptySeats; i++) {
+                        final Player player = Player.of("", "bot" + i, true );
+                        game.getPlayers().add(player);
+                    }
+                }
+
+                if (evt.shufflePlayers) {
+                    Collections.shuffle(game.getPlayers());
+                }
+
                 gameRepository.save(game);
             });
     }
@@ -122,7 +137,11 @@ public class DefaultGameService implements GameService {
                 final PlayerState playerState = player.getPlayerState();
                 playerState.getWaitingPacks().add(firstPack);
                 final int pick = 1;
-                playerState.setTimeLeft(TimeProducer.calc(game.getTimer(), pick));
+
+                if(game.useTimer) {
+                    playerState.setTimeLeft(TimeProducer.calc(game.getTimer(), pick));
+                }
+
                 playerState.setPick(pick);
                 playerState.setPack(game.getRound());
                 poolService.delete(booster);
@@ -134,7 +153,31 @@ public class DefaultGameService implements GameService {
             }
         });
 
+        // Let the bots play
+        game.getPlayers().stream()
+            .filter(Player::isBot)
+            .forEach(bot -> pickAsBot(game, bot));
+
         save(game);
+    }
+
+    private void pickAsBot(Game game, Player botPlayer) {
+        final PlayerState botState = botPlayer.getPlayerState();
+
+        while (botState.hasWaitingPack()) {
+            final Pack pack = botState.getWaitingPack();
+            final MTGCard pickedCard = pack.getCards().get(new Random().nextInt(pack.getCards().size()));
+            pack.getCards().remove(pickedCard);
+            botState.getPickedCards().add(pickedCard);
+            botState.getWaitingPacks().remove(pack);
+            botState.setTimeLeft(0);
+
+            final Player nextPlayer = getNextPlayer(game, botPlayer);
+            if (!pack.getCards().isEmpty()) {
+                nextPlayer.getPlayerState().getWaitingPacks().add(pack);
+                passPack(game, nextPlayer);
+            }
+        }
     }
 
     @Override
@@ -145,13 +188,12 @@ public class DefaultGameService implements GameService {
     @Override
     public void pick(Game game, Player player, String cardId) {
         final PlayerState playerState = player.getPlayerState();
-        final List<Pack> waitingPacks = playerState.getWaitingPacks();
 
-        // TODO: ameliorer check que les packs n'existent pas
         if (!playerState.hasWaitingPack()) {
             return;
         }
-        final Pack waitingPack = waitingPacks.remove(0);
+
+        final Pack waitingPack = playerState.getWaitingPack();
 
         // Pick the card
         final MTGCard pickedCard = waitingPack.getCards().stream()
@@ -159,6 +201,7 @@ public class DefaultGameService implements GameService {
             .findFirst()
             .orElse(waitingPack.getCards().get(new Random().nextInt(waitingPack.getCards().size())));
 
+        playerState.getWaitingPacks().remove(waitingPack);
         waitingPack.getCards().remove(pickedCard);
         playerState.getPickedCards().add(pickedCard);
         playerState.setAutoPickId("");
@@ -173,10 +216,7 @@ public class DefaultGameService implements GameService {
             final Player nextPlayer = getNextPlayer(game, player);
             final PlayerState nextPlayerState = nextPlayer.getPlayerState();
             nextPlayerState.getWaitingPacks().add(waitingPack);
-            final String nextPlayerUserId = nextPlayer.getUserId();
-            if ( nextPlayerUserId != null && !nextPlayerUserId.equals("") ) {
-                customerService.send(nextPlayerUserId, PackMessage.of(waitingPack.getCards()));
-            }
+            passPack(game, nextPlayer);
         }
 
         final int pick = playerState.getPick() + 1;
@@ -187,13 +227,48 @@ public class DefaultGameService implements GameService {
                 customerService.send(sessionId, PackMessage.of(playerState.getWaitingPack().getCards()));
             }
         }
+        if(game.isUseTimer()) {
+            final int timeLeft = !playerState.hasWaitingPack() ? 0 : TimeProducer.calc(game.getTimer(), pick);
+            player.getPlayerState().setTimeLeft(timeLeft);
+        }
 
-        final int timeLeft = playerState.hasWaitingPack() ? 0 : TimeProducer.calc(game.getTimer(), pick);
-        player.getPlayerState().setTimeLeft(timeLeft);
+        if (isRoundFinished(game)) { startNewRound(game);
+        }
+    }
 
-        if (isRoundFinished(game)) {
-            // START A NEW ROUND
-            startNewRound(game);
+    @Override
+    public boolean decreaseTimeLeft(Game game) {
+        Boolean hasChanged = false;
+        final Iterator<PlayerState> list = game.getPlayers().stream()
+            .map(Player::getPlayerState)
+            .filter(ps -> ps.getTimeLeft() > 0)
+            .collect(Collectors.toList())
+            .iterator();
+
+        // TODO: find better way to dodge ConcurrentModificationException
+        while (list.hasNext()) {
+            final PlayerState ps = list.next();
+            hasChanged = true;
+            final int timeLeft = ps.getTimeLeft() - 1;
+            ps.setTimeLeft(timeLeft);
+
+            if (timeLeft == 0) {
+                pick(game, ps.getPlayer(), ps.getAutoPickId());
+            }
+        }
+
+        return hasChanged;
+    }
+
+    private void passPack(Game game, Player nextPlayer) {
+        if(nextPlayer.isBot()) {
+            pickAsBot(game, nextPlayer);
+        } else {
+            final boolean hasOnePack = nextPlayer.getPlayerState().getWaitingPacks().size() == 1;
+            final String nextPlayerUserId = nextPlayer.getUserId();
+            if ( hasOnePack && nextPlayerUserId != null && !nextPlayerUserId.equals("") ) {
+                customerService.send(nextPlayerUserId, PackMessage.of(nextPlayer.getPlayerState().getWaitingPack().getCards()));
+            }
         }
     }
 

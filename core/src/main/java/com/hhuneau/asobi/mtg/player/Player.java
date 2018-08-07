@@ -23,6 +23,7 @@ public class Player {
     private long playerId;
     private String userId;
     private String name;
+    private boolean isBot;
 
     @OneToMany(mappedBy = "player")
     private List<Booster> pool;
@@ -31,10 +32,11 @@ public class Player {
     @JoinColumn(name = "player_state_id", unique = true, nullable = false)
     private PlayerState playerState;
 
-    static public Player of(String userId, String name) {
+    static public Player of(String userId, String name, boolean isBot) {
         final Player player = new Player();
         player.setUserId(userId);
         player.setName(name);
+        player.setBot(isBot);
         player.setPlayerState(new PlayerState());
         return player;
     }
