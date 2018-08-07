@@ -47,7 +47,7 @@ class Card extends Component {
 
         return (
             <div className={classNames}
-                 onSClick={onClick}
+                 onClick={onClick}
                  title={title}
                  onMouseEnter={onMouseEnter ? onMouseEnter : this.onMouseEnter}
                  onMouseLeave={onMouseLeave ? onMouseLeave : this.onMouseLeave}

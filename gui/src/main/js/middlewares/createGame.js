@@ -54,6 +54,7 @@ const createGame = ({getState, dispatch}) => next => action => {
                 payload: {
                     type: "JOIN_GAME",
                     gameId: action.payload,
+                    playerId,
                     name
                 }
             });

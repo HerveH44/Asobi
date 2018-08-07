@@ -1,17 +1,17 @@
 import {handleActions} from 'redux-actions';
 import {GAME_STATE} from "../actions/server"
-import {onChangeDeckSize} from "../actions/game";
 
 const InitialState = {
     playersStates: [{
+        seat: 0,
         isBot: false,
         name: "",
         packs: 0,
         time: 0,
         hash: ""
     }],
-    self: 0, // TODO
-    isHost: true, // TODO
+    self: 0,
+    isHost: true,
     didGameStart: false,
     gameId: "",
     title: "",

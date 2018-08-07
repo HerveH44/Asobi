@@ -9,7 +9,9 @@ import {connect} from "react-redux"
 class PlayerEntries extends Component {
     render() {
         return (
-            this.props.playersStates.map((p, i) =>
+            this.props.playersStates
+                .sort((a, b) => a.seat - b.seat)
+                .map((p, i) =>
                 <PlayerEntry
                     key={i}
                     player={p}

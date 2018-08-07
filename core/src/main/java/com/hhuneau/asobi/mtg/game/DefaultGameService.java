@@ -48,7 +48,7 @@ public class DefaultGameService implements GameService {
     public CreateGameDTO createGame(CreateGameEvent evt) {
         final List<MTGSet> sets = setService.getSets(evt.sets);
         final String authToken = UUID.randomUUID().toString();
-        final Game game = Game.of(evt.title, evt.seats, evt.isPrivate, evt.gameMode, evt.gameType, sets, authToken);
+        final Game game = Game.of(evt.title, evt.seats, evt.isPrivate, evt.gameMode, evt.gameType, sets, authToken, evt.sessionId);
         final Game savedGame = gameRepository.save(game);
         return CreateGameDTO.of(savedGame.getGameId(), savedGame.getAuthToken());
     }
@@ -64,13 +64,17 @@ public class DefaultGameService implements GameService {
                 if (evt.addBots) {
                     final long emptySeats = game.getSeats() - game.getPlayers().size();
                     for (int i = 0; i < emptySeats; i++) {
-                        final Player player = Player.of("", "bot" + i, true );
-                        game.getPlayers().add(player);
+                        final Player player = Player.of("", "bot" + i, true);
+                        addPlayer(game, player);
                     }
                 }
 
                 if (evt.shufflePlayers) {
                     Collections.shuffle(game.getPlayers());
+                    for (int i = 0; i < game.getPlayers().size(); i++) {
+                        final Player player = game.getPlayers().get(i);
+                        player.setSeat(i);
+                    }
                 }
 
                 gameRepository.save(game);
@@ -138,7 +142,7 @@ public class DefaultGameService implements GameService {
                 playerState.getWaitingPacks().add(firstPack);
                 final int pick = 1;
 
-                if(game.useTimer) {
+                if (game.useTimer) {
                     playerState.setTimeLeft(TimeProducer.calc(game.getTimer(), pick));
                 }
 
@@ -147,7 +151,7 @@ public class DefaultGameService implements GameService {
                 poolService.delete(booster);
 
                 final String userId = player.getUserId();
-                if ( userId != null && !userId.equals("") ) {
+                if (userId != null && !userId.equals("")) {
                     customerService.send(userId, PackMessage.of(firstPack.getCards()));
                 }
             }
@@ -207,7 +211,7 @@ public class DefaultGameService implements GameService {
         playerState.setAutoPickId("");
 
         final String sessionId = player.getUserId();
-        if ( sessionId != null && !sessionId.equals("") ) {
+        if (sessionId != null && !sessionId.equals("")) {
             customerService.send(sessionId, PickMessage.of(pickedCard));
         }
 
@@ -223,16 +227,17 @@ public class DefaultGameService implements GameService {
         playerState.setPick(pick);
 
         if (playerState.hasWaitingPack()) {
-            if ( sessionId != null && !sessionId.equals("") ) {
+            if (sessionId != null && !sessionId.equals("")) {
                 customerService.send(sessionId, PackMessage.of(playerState.getWaitingPack().getCards()));
             }
         }
-        if(game.isUseTimer()) {
+        if (game.isUseTimer()) {
             final int timeLeft = !playerState.hasWaitingPack() ? 0 : TimeProducer.calc(game.getTimer(), pick);
             player.getPlayerState().setTimeLeft(timeLeft);
         }
 
-        if (isRoundFinished(game)) { startNewRound(game);
+        if (isRoundFinished(game)) {
+            startNewRound(game);
         }
     }
 
@@ -261,19 +266,28 @@ public class DefaultGameService implements GameService {
     }
 
     private void passPack(Game game, Player nextPlayer) {
-        if(nextPlayer.isBot()) {
+        if (nextPlayer.isBot()) {
             pickAsBot(game, nextPlayer);
         } else {
-            final boolean hasOnePack = nextPlayer.getPlayerState().getWaitingPacks().size() == 1;
-            final String nextPlayerUserId = nextPlayer.getUserId();
-            if ( hasOnePack && nextPlayerUserId != null && !nextPlayerUserId.equals("") ) {
-                customerService.send(nextPlayerUserId, PackMessage.of(nextPlayer.getPlayerState().getWaitingPack().getCards()));
+            final PlayerState nextPlayerState = nextPlayer.getPlayerState();
+            final boolean hasOnePack = nextPlayerState.getWaitingPacks().size() == 1;
+
+            if (hasOnePack) {
+                final int pick = nextPlayerState.getPick() + 1;
+                nextPlayerState.setPick(pick);
+
+                if (game.isUseTimer()) {
+                    final int timeLeft = TimeProducer.calc(game.getTimer(), pick);
+                    nextPlayerState.setTimeLeft(timeLeft);
+                }
+                customerService.send(nextPlayer.getUserId(), PackMessage.of(nextPlayerState.getWaitingPack().getCards()));
             }
         }
     }
 
     @Override
     public Player addPlayer(Game game, Player player) {
+        player.setSeat(game.getPlayers().size());
         game.getPlayers().add(player);
         gameRepository.save(game);
         return game.getPlayers().stream()

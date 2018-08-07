@@ -24,6 +24,7 @@ public class Player {
     private String userId;
     private String name;
     private boolean isBot;
+    private int seat;
 
     @OneToMany(mappedBy = "player")
     private List<Booster> pool;

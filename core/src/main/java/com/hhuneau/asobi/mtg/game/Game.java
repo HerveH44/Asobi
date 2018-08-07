@@ -34,6 +34,7 @@ public class Game {
     private int round;
     private Timer timer;
     public boolean useTimer;
+    public String hostId;
 
     @OneToMany(orphanRemoval = true, cascade = ALL)
     @JoinColumn(name = "game_id")
@@ -48,7 +49,8 @@ public class Game {
                           GameMode gameMode,
                           GameType gameType,
                           List<MTGSet> sets,
-                          String authToken) {
+                          String authToken,
+                          String hostId) {
         final Game game = new Game();
         game.setTitle(title);
         game.setSeats(seats);
@@ -57,10 +59,11 @@ public class Game {
         game.setGameType(gameType);
         game.setSets(sets);
         game.setAuthToken(authToken);
+        game.setHostId(hostId);
         return game;
     }
 
     public boolean isFull() {
-        return seats <= players.size();
+        return players.size() >= seats;
     }
 }

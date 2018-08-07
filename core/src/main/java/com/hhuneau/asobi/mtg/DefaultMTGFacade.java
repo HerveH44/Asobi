@@ -100,8 +100,8 @@ public class DefaultMTGFacade implements MTGFacade {
     }
 
     private void broadcastGameState(Game game) {
-        final GameStateMessage gameStateMessage = GameStateMessage.of(GameStateDTO.of(game));
         game.getPlayers().forEach(player -> {
+            final GameStateMessage gameStateMessage = GameStateMessage.of(GameStateDTO.of(game, player));
             customerService.send(player.getUserId(), gameStateMessage);
         });
     }
@@ -129,8 +129,12 @@ public class DefaultMTGFacade implements MTGFacade {
         public Date createdDate;
         public int round;
         public boolean didGameStart;
+        public long self;
+        public boolean isHost;
 
-        public static GameStateDTO of(Game game) {
+        public static GameStateDTO of(Game game, Player player) {
+            final int index = game.getPlayers().indexOf(player);
+
             final GameStateDTO gameStateDTO = new GameStateDTO();
             gameStateDTO.createdDate = game.getCreatedDate();
             gameStateDTO.gameId = game.getGameId();
@@ -141,6 +145,8 @@ public class DefaultMTGFacade implements MTGFacade {
             gameStateDTO.seats = game.getSeats();
             gameStateDTO.status = game.getStatus();
             gameStateDTO.title = game.getTitle();
+            gameStateDTO.self = game.getPlayers().get(index).getSeat();
+            gameStateDTO.isHost = game.getHostId().equals(player.getUserId());
             gameStateDTO.didGameStart = game.getStatus().hasStarted();
             gameStateDTO.playersStates = game.getPlayers().stream()
                 .map(PartialPlayerStateDTO::of)
@@ -154,6 +160,7 @@ public class DefaultMTGFacade implements MTGFacade {
         public boolean isBot;
         public int packs;
         public int time;
+        public int seat;
         public String hash;
 
         public static PartialPlayerStateDTO of(Player player) {
@@ -162,6 +169,7 @@ public class DefaultMTGFacade implements MTGFacade {
             dto.packs = player.getPlayerState().getWaitingPacks().size();
             dto.time = player.getPlayerState().getTimeLeft();
             dto.isBot = player.isBot();
+            dto.seat = player.getSeat();
             return dto;
         }
     }
