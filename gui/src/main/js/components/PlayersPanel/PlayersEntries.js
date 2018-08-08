@@ -62,11 +62,11 @@ const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, playersSt
         if (!didGameStart)
             columns.push(
                 <td key={7}>
-                    <button onClick={() => onSwap([index, index - 1])}>
-                        <img src={arrowDown} width="16px"/>
-                    </button>
                     <button onClick={() => onSwap([index, index + 1])}>
                         <img src={arrowUp} width="16px"/>
+                    </button>
+                    <button onClick={() => onSwap([index, index - 1])}>
+                        <img src={arrowDown} width="16px"/>
                     </button>
                 </td>);
         //Kick Player button
