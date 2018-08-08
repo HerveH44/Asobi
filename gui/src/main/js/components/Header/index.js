@@ -3,7 +3,7 @@ import {string, number} from "prop-types";
 
 import {Spaced} from "../utils";
 
-const Header = ({siteTitle, numUsers, numPlayers, numActiveGames, err}) => (
+const Header = ({siteTitle, numUsers, numPlayers, numActiveGames, error}) => (
     <header>
         <h1 className="lobby-header">
             {siteTitle}
@@ -12,7 +12,7 @@ const Header = ({siteTitle, numUsers, numPlayers, numActiveGames, err}) => (
                     numUsers={numUsers}
                     numPlayers={numPlayers}
                     numActiveGames={numActiveGames}/>
-        <ApplicationError err={err}/>
+        <ApplicationError err={error}/>
     </header>
 );
 
@@ -21,7 +21,7 @@ Header.propTypes = {
     numUsers: number,
     numPlayers: number,
     numActiveGames: number,
-    err: string
+    error: string
 };
 
 const ApplicationError = ({err}) => (

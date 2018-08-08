@@ -5,6 +5,7 @@ import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.websocket.events.Event;
 import com.hhuneau.asobi.websocket.events.SessionConnectedEvent;
 import com.hhuneau.asobi.websocket.events.SessionDisconnectedEvent;
+import com.hhuneau.asobi.websocket.messages.ErrorMessage;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -42,7 +43,11 @@ public class WebSocketHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         final Event evt = mapper.readValue(message.getPayload(), Event.class);
         evt.sessionId = getSessionId(session);
-        publisher.publishEvent(evt);
+        try {
+            publisher.publishEvent(evt);
+        } catch (Exception e) {
+            customerService.send(getSessionId(session), ErrorMessage.of("An error occured : " + e.getCause()));
+        }
     }
 
     @Override

@@ -10,7 +10,8 @@ import com.hhuneau.asobi.mtg.sets.MTGSet;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import com.hhuneau.asobi.mtg.sets.card.MTGCard;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
-import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
+import com.hhuneau.asobi.websocket.events.game.host.StartGameEvent;
+import com.hhuneau.asobi.websocket.messages.ErrorMessage;
 import com.hhuneau.asobi.websocket.messages.PackMessage;
 import com.hhuneau.asobi.websocket.messages.PickMessage;
 import org.springframework.stereotype.Service;
@@ -263,6 +264,35 @@ public class DefaultGameService implements GameService {
         }
 
         return hasChanged;
+    }
+
+    @Override
+    public void kick(Game game, long kick) {
+        game.getPlayers().stream()
+            .filter(player -> player.getSeat() == kick)
+            .findFirst()
+            .ifPresent(player -> {
+                    customerService.send(player.getUserId(), ErrorMessage.of("You have been kicked from game " + game.getGameId()));
+                }
+            );
+        game.getPlayers().removeIf(p -> p.getSeat() == kick);
+    }
+
+    @Override
+    public void swap(Game game, List<Long> swap) {
+        if (swap.size() < 2) {
+            return;
+        }
+
+        // Calculate max occupied seats
+        // from all the current players, we keep the max Seat and we add 1
+        final int gameSeats = 1 + game.getPlayers().stream().reduce(0, (maxSeat, player) -> Math.max(maxSeat, player.getSeat()), Math::max);
+        final int firstSeat = Math.toIntExact(swap.get(0));
+        final int secondSeat = Math.toIntExact((swap.get(1) % gameSeats + gameSeats) % gameSeats);
+
+        game.getPlayers().stream()
+            .filter(player -> player.getSeat() == firstSeat || player.getSeat() == secondSeat)
+            .forEach(player -> player.setSeat(player.getSeat() == firstSeat ? secondSeat : firstSeat));
     }
 
     private void passPack(Game game, Player nextPlayer) {

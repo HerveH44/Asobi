@@ -1,7 +1,7 @@
 import {CREATE_GAME} from "../reducers/game";
-import {WEBSOCKET_SEND} from "redux-middleware-websocket";
+import {WEBSOCKET_SEND, WEBSOCKET_CLOSED} from "redux-middleware-websocket";
 import {push} from "react-router-redux";
-import {GAME_ID, joinGame, autoPick} from "../actions/server";
+import {GAME_ID} from "../actions/server";
 
 const createGame = ({getState, dispatch}) => next => action => {
     const {
@@ -26,6 +26,7 @@ const createGame = ({getState, dispatch}) => next => action => {
         case "GAME_ID":
             next(action);
             return dispatch(push("games/" + action.payload.gameId));
+
         case "CREATE_GAME":
             next(action);
             return dispatch({
@@ -93,8 +94,39 @@ const createGame = ({getState, dispatch}) => next => action => {
                     autoPickId: action.payload
                 }
             });
+
+        case "KICK":
+            next(action);
+            return dispatch({
+                type: WEBSOCKET_SEND,
+                payload: {
+                    type: "KICK",
+                    gameId,
+                    authToken,
+                    kick: action.payload
+                }
+            });
+
+        case "SWAP":
+            next(action);
+            return dispatch({
+                type: WEBSOCKET_SEND,
+                payload: {
+                    type: "SWAP",
+                    gameId,
+                    authToken,
+                    swap: action.payload
+                }
+            });
+
         case "ERROR":
-            console.log(`WEBSOCKET ERROR: ${action.paylod}`);
+            next(action);
+            return dispatch(push("/"));
+
+        case WEBSOCKET_CLOSED:
+            next(action);
+            return dispatch(push("/"));
+
         default:
             return next(action);
     }

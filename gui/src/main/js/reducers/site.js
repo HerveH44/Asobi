@@ -1,10 +1,10 @@
 import {createAction, handleActions} from 'redux-actions';
-
+import {WEBSOCKET_CLOSED, WEBSOCKET_DISCONNECT} from "redux-middleware-websocket";
 export const editDefault = createAction("EDIT_DEFAULT");
 
 const initialState = {
     siteTitle: "Asobi",
-    err: "",
+    error: "",
     numUsers: 0,
     numPlayers: 0,
     numActiveGames: 0,
@@ -20,5 +20,23 @@ export default handleActions({
             ...state,
             ...payload
         };
+    },
+    "ERROR"(state, {payload}) {
+        return {
+            ...state,
+            error: payload
+        }
+    },
+    [WEBSOCKET_CLOSED](state, {payload}) {
+        return {
+            ...state,
+            error: "The connection with the server is closed. Please refresh your browser."
+        }
+    },
+    [WEBSOCKET_DISCONNECT](state, {payload}) {
+        return {
+            ...state,
+            error: "The connection with the server has been interrupted. Please refresh your browser."
+        }
     }
 }, initialState);

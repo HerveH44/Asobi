@@ -4,7 +4,7 @@ import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.mtg.game.Game;
 import com.hhuneau.asobi.mtg.game.GameService;
 import com.hhuneau.asobi.mtg.pool.PoolService;
-import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
+import com.hhuneau.asobi.websocket.events.game.host.StartGameEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

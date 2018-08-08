@@ -6,7 +6,9 @@ import com.hhuneau.asobi.mtg.game.Game;
 import com.hhuneau.asobi.mtg.game.GameService;
 import com.hhuneau.asobi.mtg.player.Player;
 import com.hhuneau.asobi.mtg.pool.PoolService;
-import com.hhuneau.asobi.websocket.events.game.StartGameEvent;
+import com.hhuneau.asobi.websocket.events.game.host.KickPlayerEvent;
+import com.hhuneau.asobi.websocket.events.game.host.StartGameEvent;
+import com.hhuneau.asobi.websocket.events.game.host.SwapPlayerEvent;
 import com.hhuneau.asobi.websocket.events.game.player.JoinGameEvent;
 import com.hhuneau.asobi.websocket.events.game.player.LeaveGameEvent;
 import com.hhuneau.asobi.websocket.messages.ErrorMessage;
@@ -75,6 +77,24 @@ public abstract class GameCreatedEventHandler implements EventHandler {
     public void handle(Game game, StartGameEvent evt) {
         gameService.startGame(evt);
         poolService.createPools(game);
+    }
+
+    @Override
+    public void handle(Game game, KickPlayerEvent evt) {
+        if (game.getAuthToken().equals(evt.authToken)) {
+            gameService.kick(game, evt.kick);
+        } else {
+            customerService.send(evt.sessionId, ErrorMessage.of("operation not permitted"));
+        }
+    }
+
+    @Override
+    public void handle(Game game, SwapPlayerEvent evt) {
+        if (game.getAuthToken().equals(evt.authToken)) {
+            gameService.swap(game, evt.swap);
+        } else {
+            customerService.send(evt.sessionId, ErrorMessage.of("operation not permitted"));
+        }
     }
 
     @Override
