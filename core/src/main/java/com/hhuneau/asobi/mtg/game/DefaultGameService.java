@@ -228,6 +228,10 @@ public class DefaultGameService implements GameService {
         playerState.setPick(pick);
 
         if (playerState.hasWaitingPack()) {
+            if (playerState.getWaitingPack().getCards().size() == 1) {
+                pick(game, player, playerState.getWaitingPack().getCards().get(0).getId());
+                return;
+            }
             if (sessionId != null && !sessionId.equals("")) {
                 customerService.send(sessionId, PackMessage.of(playerState.getWaitingPack().getCards()));
             }
@@ -303,6 +307,12 @@ public class DefaultGameService implements GameService {
             final boolean hasOnePack = nextPlayerState.getWaitingPacks().size() == 1;
 
             if (hasOnePack) {
+
+                if (nextPlayerState.getWaitingPack().getCards().size() == 1) {
+                    pick(game, nextPlayer, nextPlayerState.getWaitingPack().getCards().get(0).getId());
+                    return;
+                }
+
                 final int pick = nextPlayerState.getPick() + 1;
                 nextPlayerState.setPick(pick);
 
