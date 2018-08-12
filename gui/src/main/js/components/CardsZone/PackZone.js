@@ -1,4 +1,4 @@
-import React  from "react"
+import React from "react"
 import {string, array, number, object, func} from "prop-types"
 import Grid from "./Grid";
 import {getCardsAsArray, PACK} from "../../reducers/playerState";
@@ -6,16 +6,18 @@ import {connect} from "react-redux";
 import {autoPick, pick} from "../../actions/server";
 
 const PackZone = ({cards, pickNumber, round, autoPickId, pick, autoPick, addCardClassNames, addCardTitle}) => (
-    <Grid
-        zoneName={"Pack"}
-        zoneTitle={`Pack ${round}`}
-        zoneSubtitle={`Pick ${pickNumber}`}
-        cards={cards}
-        addCardClassNames={addCardClassNames}
-        addCardTitle={addCardTitle}
-        onClickCard={({id}) => () => {
-            id === autoPickId ? pick(id) : autoPick(id);
-        }}/>
+    !cards ?
+        <div/> :
+        <Grid
+            zoneName={"Pack"}
+            zoneTitle={`Pack ${round}`}
+            zoneSubtitle={`Pick ${pickNumber}`}
+            cards={cards}
+            addCardClassNames={addCardClassNames}
+            addCardTitle={addCardTitle}
+            onClickCard={({id}) => () => {
+                id === autoPickId ? pick(id) : autoPick(id);
+            }}/>
 );
 
 PackZone.propTypes = {
