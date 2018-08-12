@@ -33,7 +33,6 @@ public class PlayerState {
     private List<MTGCard> pickedCards = new ArrayList<>();
 
     private int timeLeft;
-    private int pick;
     private int pack;
     private String autoPickId;
 

@@ -20,4 +20,6 @@ public class Pack {
     @JoinColumn(name = "cards_ids")
     private List<MTGCard> cards;
 
+    private int pickNumber;
+
 }

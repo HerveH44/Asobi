@@ -1,15 +1,13 @@
 package com.hhuneau.asobi.websocket.messages;
 
-import com.hhuneau.asobi.mtg.sets.card.MTGCard;
-
-import java.util.List;
+import com.hhuneau.asobi.mtg.pool.Pack;
 
 public class PackMessage extends Message {
 
-    public static PackMessage of(List<MTGCard> cards) {
+    public static PackMessage of(Pack pack) {
         final PackMessage message = new PackMessage();
         message.setType("PACK");
-        message.setPayload(cards);
+        message.setPayload(pack);
         return message;
     }
 }

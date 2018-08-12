@@ -141,19 +141,18 @@ public class DefaultGameService implements GameService {
                 firstPack.setCards(new ArrayList<>(poolCards));
                 final PlayerState playerState = player.getPlayerState();
                 playerState.getWaitingPacks().add(firstPack);
-                final int pick = 1;
+                firstPack.setPickNumber(1);
 
                 if (game.useTimer) {
-                    playerState.setTimeLeft(TimeProducer.calc(game.getTimer(), pick));
+                    playerState.setTimeLeft(TimeProducer.calc(game.getTimer(), firstPack.getPickNumber()));
                 }
 
-                playerState.setPick(pick);
                 playerState.setPack(game.getRound());
                 poolService.delete(booster);
 
                 final String userId = player.getUserId();
                 if (userId != null && !userId.equals("")) {
-                    customerService.send(userId, PackMessage.of(firstPack.getCards()));
+                    customerService.send(userId, PackMessage.of(firstPack));
                 }
             }
         });
@@ -173,6 +172,7 @@ public class DefaultGameService implements GameService {
             final Pack pack = botState.getWaitingPack();
             final MTGCard pickedCard = pack.getCards().get(new Random().nextInt(pack.getCards().size()));
             pack.getCards().remove(pickedCard);
+            pack.setPickNumber(pack.getPickNumber() + 1);
             botState.getPickedCards().add(pickedCard);
             botState.getWaitingPacks().remove(pack);
             botState.setTimeLeft(0);
@@ -208,6 +208,7 @@ public class DefaultGameService implements GameService {
 
         playerState.getWaitingPacks().remove(waitingPack);
         waitingPack.getCards().remove(pickedCard);
+        waitingPack.setPickNumber(waitingPack.getPickNumber() + 1);
         playerState.getPickedCards().add(pickedCard);
         playerState.setAutoPickId("");
 
@@ -224,20 +225,17 @@ public class DefaultGameService implements GameService {
             passPack(game, nextPlayer);
         }
 
-        final int pick = playerState.getPick() + 1;
-        playerState.setPick(pick);
-
         if (playerState.hasWaitingPack()) {
             if (playerState.getWaitingPack().getCards().size() == 1) {
                 pick(game, player, playerState.getWaitingPack().getCards().get(0).getId());
                 return;
             }
             if (sessionId != null && !sessionId.equals("")) {
-                customerService.send(sessionId, PackMessage.of(playerState.getWaitingPack().getCards()));
+                customerService.send(sessionId, PackMessage.of(playerState.getWaitingPack()));
             }
         }
         if (game.isUseTimer()) {
-            final int timeLeft = !playerState.hasWaitingPack() ? 0 : TimeProducer.calc(game.getTimer(), pick);
+            final int timeLeft = !playerState.hasWaitingPack() ? 0 : TimeProducer.calc(game.getTimer(), playerState.getWaitingPack().getPickNumber());
             player.getPlayerState().setTimeLeft(timeLeft);
         }
 
@@ -275,9 +273,7 @@ public class DefaultGameService implements GameService {
         game.getPlayers().stream()
             .filter(player -> player.getSeat() == kick)
             .findFirst()
-            .ifPresent(player -> {
-                    customerService.send(player.getUserId(), ErrorMessage.of("You have been kicked from game " + game.getGameId()));
-                }
+            .ifPresent(player -> customerService.send(player.getUserId(), ErrorMessage.of("You have been kicked from game " + game.getGameId()))
             );
         game.getPlayers().removeIf(p -> p.getSeat() == kick);
     }
@@ -308,19 +304,17 @@ public class DefaultGameService implements GameService {
 
             if (hasOnePack) {
 
-                if (nextPlayerState.getWaitingPack().getCards().size() == 1) {
-                    pick(game, nextPlayer, nextPlayerState.getWaitingPack().getCards().get(0).getId());
+                final Pack waitingPack = nextPlayerState.getWaitingPack();
+                if (waitingPack.getCards().size() == 1) {
+                    pick(game, nextPlayer, waitingPack.getCards().get(0).getId());
                     return;
                 }
 
-                final int pick = nextPlayerState.getPick() + 1;
-                nextPlayerState.setPick(pick);
-
                 if (game.isUseTimer()) {
-                    final int timeLeft = TimeProducer.calc(game.getTimer(), pick);
+                    final int timeLeft = TimeProducer.calc(game.getTimer(), waitingPack.getPickNumber());
                     nextPlayerState.setTimeLeft(timeLeft);
                 }
-                customerService.send(nextPlayer.getUserId(), PackMessage.of(nextPlayerState.getWaitingPack().getCards()));
+                customerService.send(nextPlayer.getUserId(), PackMessage.of(waitingPack));
             }
         }
     }

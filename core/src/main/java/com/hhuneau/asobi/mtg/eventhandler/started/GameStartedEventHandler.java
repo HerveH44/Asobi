@@ -28,7 +28,7 @@ public abstract class GameStartedEventHandler implements EventHandler {
                 customerService.send(evt.sessionId, ReconnectMessage.of(player.getPlayerState().getPickedCards()));
 
                 if(player.getPlayerState().hasWaitingPack()) {
-                    customerService.send(evt.sessionId, PackMessage.of(player.getPlayerState().getWaitingPack().getCards()));
+                    customerService.send(evt.sessionId, PackMessage.of(player.getPlayerState().getWaitingPack()));
                 }
             });
     }

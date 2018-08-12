@@ -5,12 +5,11 @@ import {getCardsAsArray, PACK} from "../../reducers/playerState";
 import {connect} from "react-redux";
 import {autoPick, pick} from "../../actions/server";
 
-const PackZone = ({cards, round, autoPickId, pick, autoPick, addCardClassNames, addCardTitle}) => (
+const PackZone = ({cards, pickNumber, round, autoPickId, pick, autoPick, addCardClassNames, addCardTitle}) => (
     <Grid
         zoneName={"Pack"}
         zoneTitle={`Pack ${round}`}
-        // TODO: add pick in state
-        zoneSubtitle={`Pick TODO`}
+        zoneSubtitle={`Pick ${pickNumber}`}
         cards={cards}
         addCardClassNames={addCardClassNames}
         addCardTitle={addCardTitle}
@@ -22,6 +21,7 @@ const PackZone = ({cards, round, autoPickId, pick, autoPick, addCardClassNames, 
 PackZone.propTypes = {
     cards: array.isRequired,
     round: number.isRequired,
+    pickNumber: number.isRequired,
     autoPickId: string.isRequired,
     pick: func.isRequired,
     autoPick: func.isRequired,
@@ -31,6 +31,7 @@ PackZone.propTypes = {
 
 const mapStateToProps = ({gameState, playerState, gameSettings}) => ({
     round: gameState.round,
+    pickNumber: playerState.pickNumber,
     cards: getCardsAsArray(playerState, PACK, gameSettings.sort),
     autoPickId: playerState.autoPickId,
     addCardTitle: ({id}) => (

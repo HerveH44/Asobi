@@ -29,6 +29,7 @@ const InitialState = {
     [SIDE]: [],
     [JUNK]: [],
     autoPickId: "",
+    pickNumber: 0,
     deckSize: 40,
     addPicksToSB: false,
 };
@@ -60,7 +61,8 @@ export default handleActions({
     [onNewPack](state, {payload}) {
         return {
             ...state,
-            [PACK]: payload
+            [PACK]: payload.cards,
+            pickNumber: payload.pickNumber
         }
     },
     [onPickedCard](state, {payload}) {
