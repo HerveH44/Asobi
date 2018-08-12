@@ -38,4 +38,5 @@ public class MTGCard {
     private List<String> types;
     private boolean isDoubleFace;
     private long flipMultiverseid;
+    private boolean timeshifted;
 }

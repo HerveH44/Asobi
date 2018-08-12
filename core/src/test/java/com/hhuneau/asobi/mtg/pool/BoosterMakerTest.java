@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 
 import static com.hhuneau.asobi.mtg.game.GameMode.NORMAL;
 import static com.hhuneau.asobi.mtg.sets.card.Rarity.*;
+import static java.util.Collections.emptyList;
 
 public class BoosterMakerTest {
 
@@ -25,7 +26,7 @@ public class BoosterMakerTest {
 
     @Before
     public void setUp() {
-        normalPoolMaker = new NormalPoolMaker();
+        normalPoolMaker = new NormalPoolMaker(emptyList());
         game = Game.of("title", 8, false, NORMAL, GameType.SEALED, createTestsSets(), "authToken", "");
         game.setPlayers(new ArrayList<>(Collections.singletonList(Player.of("userId", "name", false))));
     }

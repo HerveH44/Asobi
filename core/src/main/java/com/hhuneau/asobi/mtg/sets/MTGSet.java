@@ -1,11 +1,13 @@
 package com.hhuneau.asobi.mtg.sets;
 
+import com.hhuneau.asobi.mtg.sets.booster.Slot;
 import com.hhuneau.asobi.mtg.sets.card.MTGCard;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
@@ -21,7 +23,8 @@ public class MTGSet {
     private Date releaseDate;
     private String border;
     private String type;
-
+    @OneToMany(cascade = ALL)
+    private List<Slot> booster;
     @OneToMany(cascade = ALL)
     @JoinColumn(name = "set_id")
     private Set<MTGCard> cards;

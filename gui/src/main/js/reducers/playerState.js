@@ -94,7 +94,7 @@ export default handleActions({
         switch (true) {
             case diff > 0:
                 for (let i = 0; i < diff; i++) {
-                    zone.push({name: cardName, multiverseid: CARDS[cardName], manaCost: 0})
+                    zone.push({name: cardName, multiverseid: CARDS[cardName], manaCost: 0, type: "Land"})
                 }
                 break;
 
@@ -208,7 +208,7 @@ export default handleActions({
                     "G": "Forest",
                 };
                 const land = COLORS_TO_LANDS[color];
-                state[MAIN].push({name: land, multiverseid: CARDS[land], manaCost: 0});
+                state[MAIN].push({name: land, multiverseid: CARDS[land], manaCost: 0, type: "Land"});
 
                 j = (j + 1) % colorsToAdd.length;
             }
@@ -291,7 +291,7 @@ export const getCardsAsArray = (state, zone, sort) => {
             break;
         case "rarity":
             keys =
-                ["Basic", "Common", "Uncommon", "Rare", "Mythic Rare", "Special"]
+                ["Basic Land", "Common", "Uncommon", "Rare", "Mythic Rare", "Special"]
                     .filter(x => keys.indexOf(x) > -1);
             break;
         case "type":
