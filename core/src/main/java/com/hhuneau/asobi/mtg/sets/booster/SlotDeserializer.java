@@ -89,6 +89,18 @@ public class SlotDeserializer extends StdDeserializer<Slot> {
             case "timeshifted rare":
                 slot.getValues().add(TIMESHIFTED_RARE);
                 break;
+            case "foil mythic rare":
+                slot.getValues().add(FOIL_MYTHIC_RARE);
+                break;
+            case "foil rare":
+                slot.getValues().add(FOIL_RARE);
+                break;
+            case "foil uncommon":
+                slot.getValues().add(FOIL_UNCOMMON);
+                break;
+            case "foil common":
+                slot.getValues().add(FOIL_COMMON);
+                break;
             case "uncommon":
                 slot.getValues().add(UNCOMMON);
                 break;

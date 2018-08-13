@@ -21,7 +21,8 @@ import java.util.Map;
 public class MTGJsonDownloader {
     private static final String URI = "http://mtgjson.com/json/AllSets.json";
     private static final Logger LOGGER = LoggerFactory.getLogger(MTGJsonDownloader.class);
-    private static final List<String> allowedTypes = List.of("masterpiece", "expansion", "core");
+    private static final List<String> allowedTypes = List.of("masterpiece", "expansion", "core", "commander", "planechase", "starter", "un");
+    private static final List<String> allowedSets = List.of("EMA", "MMA", "VMA", "CNS", "TPR", "MM2", "CN2", "MM3", "IMA");
 
     private final ObjectMapper mapper;
     private final MTGSetsService setsService;
@@ -56,7 +57,7 @@ public class MTGJsonDownloader {
         final Map<String, MTGSet> sets = mapper.readValue(file, new TypeReference<Map<String, MTGSet>>() {
         });
         sets.forEach((setName, mtgSet) -> {
-            if (!allowedTypes.contains(mtgSet.getType())) {
+            if (!allowedTypes.contains(mtgSet.getType()) && !allowedSets.contains(mtgSet.getCode())) {
                 return;
             }
             try {
