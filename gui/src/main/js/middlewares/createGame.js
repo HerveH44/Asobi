@@ -11,7 +11,10 @@ const createGame = ({getState, dispatch}) => next => action => {
             isPrivate,
             gameType,
             gameMode,
-            sets
+            sets,
+            modernOnly,
+            totalChaos,
+            packsNumber
         },
         gameSettings: {
             authToken,
@@ -45,7 +48,10 @@ const createGame = ({getState, dispatch}) => next => action => {
                     gameMode,
                     seats,
                     isPrivate,
-                    sets: sets[gameType]
+                    sets: sets[gameType],
+                    modernOnly,
+                    totalChaos,
+                    packsNumber
                 }
             });
         case "PICK":

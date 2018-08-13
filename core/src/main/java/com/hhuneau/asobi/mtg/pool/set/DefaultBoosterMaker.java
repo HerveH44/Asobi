@@ -236,6 +236,6 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
 
     protected List<MTGCard> choose(List<MTGCard> list, int occurrences) {
         Collections.shuffle(list);
-        return list.subList(0, occurrences);
+        return list.subList(0, Math.min(occurrences, list.size()));
     }
 }

@@ -49,7 +49,7 @@ public class DefaultGameService implements GameService {
     public CreateGameDTO createGame(CreateGameEvent evt) {
         final List<MTGSet> sets = setService.getSets(evt.sets);
         final String authToken = UUID.randomUUID().toString();
-        final Game game = Game.of(evt.title, evt.seats, evt.isPrivate, evt.gameMode, evt.gameType, sets, authToken, evt.sessionId);
+        final Game game = Game.of(evt.title, evt.seats, evt.isPrivate, evt.gameMode, evt.gameType, sets, authToken, evt.sessionId, evt.modernOnly, evt.totalChaos, evt.packsNumber);
         final Game savedGame = gameRepository.save(game);
         return CreateGameDTO.of(savedGame.getGameId(), savedGame.getAuthToken());
     }
@@ -129,6 +129,11 @@ public class DefaultGameService implements GameService {
 
     @Override
     public void startNewRound(Game game) {
+        if (game.getRound() == game.getPacksNumber()) {
+            finishGame(game);
+            return;
+        }
+
         game.setRound(game.getRound() + 1);
 
         game.getPlayers().forEach(player -> {
@@ -143,7 +148,7 @@ public class DefaultGameService implements GameService {
                 playerState.getWaitingPacks().add(firstPack);
                 firstPack.setPickNumber(1);
 
-                if (game.useTimer) {
+                if (game.isUseTimer()) {
                     playerState.setTimeLeft(TimeProducer.calc(game.getTimer(), firstPack.getPickNumber()));
                 }
 

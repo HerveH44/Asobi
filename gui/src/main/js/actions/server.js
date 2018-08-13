@@ -2,7 +2,7 @@ import {createAction} from 'redux-actions';
 
 export const GAME_ID = createAction("GAME_ID");
 export const PLAYER_ID = createAction("PLAYER_ID");
-export const onReconnect = createAction("PLAYER_STATE");
+export const onReconnect = createAction("RECONNECT");
 export const onNewPack = createAction("PACK");
 export const onPickedCard = createAction("PICKED_CARD");
 export const GAME_STATE = createAction("GAME_STATE");

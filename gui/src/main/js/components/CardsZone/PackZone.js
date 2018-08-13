@@ -6,7 +6,7 @@ import {connect} from "react-redux";
 import {autoPick, pick} from "../../actions/server";
 
 const PackZone = ({cards, pickNumber, round, autoPickId, pick, autoPick, addCardClassNames, addCardTitle}) => (
-    !cards ?
+    !cards.length ?
         <div/> :
         <Grid
             zoneName={"Pack"}

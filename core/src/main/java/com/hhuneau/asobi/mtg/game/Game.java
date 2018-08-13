@@ -33,8 +33,11 @@ public class Game {
     private String authToken;
     private int round;
     private Timer timer;
-    public boolean useTimer;
-    public String hostId;
+    private boolean useTimer;
+    private String hostId;
+    private boolean totalChaos;
+    private boolean modernOnly;
+    private int packsNumber;
 
     @OneToMany(orphanRemoval = true, cascade = ALL)
     @JoinColumn(name = "game_id")
@@ -50,7 +53,10 @@ public class Game {
                           GameType gameType,
                           List<MTGSet> sets,
                           String authToken,
-                          String hostId) {
+                          String hostId,
+                          boolean modernOnly,
+                          boolean totalChaos,
+                          int packsNumber) {
         final Game game = new Game();
         game.setTitle(title);
         game.setSeats(seats);
@@ -60,6 +66,9 @@ public class Game {
         game.setSets(sets);
         game.setAuthToken(authToken);
         game.setHostId(hostId);
+        game.setModernOnly(modernOnly);
+        game.setTotalChaos(totalChaos);
+        game.setPacksNumber(packsNumber);
         return game;
     }
 

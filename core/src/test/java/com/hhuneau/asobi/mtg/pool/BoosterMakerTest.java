@@ -27,7 +27,7 @@ public class BoosterMakerTest {
     @Before
     public void setUp() {
         normalPoolMaker = new NormalPoolMaker(emptyList());
-        game = Game.of("title", 8, false, NORMAL, GameType.SEALED, createTestsSets(), "authToken", "");
+        game = Game.of("title", 8, false, NORMAL, GameType.SEALED, createTestsSets(), "authToken", "", false, false, 0);
         game.setPlayers(new ArrayList<>(Collections.singletonList(Player.of("userId", "name", false))));
     }
 
