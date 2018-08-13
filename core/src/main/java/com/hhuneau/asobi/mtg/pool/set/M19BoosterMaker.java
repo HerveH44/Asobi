@@ -23,7 +23,7 @@ public class M19BoosterMaker extends DefaultBoosterMaker {
     }
 
     @Override
-    List<MTGCard> handleUnexpectedSlotValue(MTGSet set, SlotType slotType, int occurrences) {
+    protected List<MTGCard> handleUnexpectedSlotValue(MTGSet set, SlotType slotType, int occurrences) {
         final CardsGroupedByRarity groupedByRarity = CardsGroupedByRarity.of(set);
         if (slotType.equals(LAND)) {
             if (new Random().nextInt(12) < 5) {
@@ -40,7 +40,7 @@ public class M19BoosterMaker extends DefaultBoosterMaker {
     }
 
     @Override
-    List<MTGCard> handleCommon(CardsGroupedByRarity cardsByRarity, int occurrences) {
+    protected List<MTGCard> handleCommon(CardsGroupedByRarity cardsByRarity, int occurrences) {
         final List<MTGCard> commonsWithoutDualLand = cardsByRarity.get(COMMON).stream()
             .filter(card -> !card.getType().equals("Land"))
             .collect(Collectors.toList());

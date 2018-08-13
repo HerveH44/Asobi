@@ -22,7 +22,7 @@ public class SOIBlockBoosterMaker extends DefaultBoosterMaker {
     }
 
     @Override
-    List<MTGCard> handleUnexpectedSlotValues(MTGSet set, List<SlotType> slotValues, int occurrences) {
+    protected List<MTGCard> handleUnexpectedSlotValues(MTGSet set, List<SlotType> slotValues, int occurrences) {
 
         final CardsGroupedByRarity cardsGroupedByRarity = CardsGroupedByRarity.of(set);
         final List<MTGCard> cards = new ArrayList<>();
@@ -33,13 +33,6 @@ public class SOIBlockBoosterMaker extends DefaultBoosterMaker {
                 cards.addAll(handleSlotType(set, cardsGroupedByRarity, slotType, 1));
             }
 
-        /*
-           [
-                "common",
-                "double faced rare",
-                "double faced mythic rare"
-           ],
-         */
             if (slotValues.size() == 3 &&
                 slotValues.containsAll(List.of(COMMON, DOUBLE_FACED_MYTHIC_RARE, DOUBLE_FACED_RARE))) {
                 if (new Random().nextInt(8) != 0) {

@@ -1,4 +1,4 @@
-package com.hhuneau.asobi.mtg.pool.set;
+package com.hhuneau.asobi.mtg.pool.set.masterpiece;
 
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import org.springframework.stereotype.Component;

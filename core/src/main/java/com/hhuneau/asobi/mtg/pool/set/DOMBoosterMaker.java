@@ -21,7 +21,7 @@ public class DOMBoosterMaker extends DefaultBoosterMaker {
     }
 
     @Override
-    List<MTGCard> postProcessCardList(MTGSet set, List<MTGCard> cardList) {
+    protected List<MTGCard> postProcessCardList(MTGSet set, List<MTGCard> cardList) {
 
         // Booster (cardList) must contain at least one legendary creature
         // in the uncommon or rare slot

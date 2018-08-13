@@ -21,7 +21,7 @@ public class DGMBoosterMaker extends DefaultBoosterMaker {
 
     private final MTGSetsService setsService;
     private MTGSet rtr;
-    private List<MTGCard> shockLands = new ArrayList<>();
+    private final List<MTGCard> shockLands = new ArrayList<>();
 
     public DGMBoosterMaker(MTGSetsService setsService) {
         this.setsService = setsService;
@@ -33,7 +33,7 @@ public class DGMBoosterMaker extends DefaultBoosterMaker {
     }
 
     @Override
-    List<MTGCard> handleUnexpectedSlotValue(MTGSet set, SlotType slotType, int occurrences) {
+    protected List<MTGCard> handleUnexpectedSlotValue(MTGSet set, SlotType slotType, int occurrences) {
         final CardsGroupedByRarity groupedByRarity = CardsGroupedByRarity.of(set);
         if (slotType.equals(LAND)) {
             if (new Random().nextInt(20) == 0) {

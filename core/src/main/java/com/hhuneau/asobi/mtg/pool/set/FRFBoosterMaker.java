@@ -21,7 +21,7 @@ public class FRFBoosterMaker extends DefaultBoosterMaker {
 
     private final MTGSetsService setsService;
     private MTGSet ktk;
-    private List<MTGCard> fetchLands = new ArrayList<>();
+    private final List<MTGCard> fetchLands = new ArrayList<>();
 
     public FRFBoosterMaker(MTGSetsService setsService) {
         this.setsService = setsService;
@@ -33,7 +33,7 @@ public class FRFBoosterMaker extends DefaultBoosterMaker {
     }
 
     @Override
-    List<MTGCard> handleUnexpectedSlotValue(MTGSet set, SlotType slotType, int occurrences) {
+    protected List<MTGCard> handleUnexpectedSlotValue(MTGSet set, SlotType slotType, int occurrences) {
         final CardsGroupedByRarity groupedByRarity = CardsGroupedByRarity.of(set);
         if (slotType.equals(LAND)) {
             if (new Random().nextInt(20) == 0) {

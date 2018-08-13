@@ -1,5 +1,6 @@
-package com.hhuneau.asobi.mtg.pool.set;
+package com.hhuneau.asobi.mtg.pool.set.masterpiece;
 
+import com.hhuneau.asobi.mtg.pool.set.DefaultBoosterMaker;
 import com.hhuneau.asobi.mtg.sets.MTGSet;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import com.hhuneau.asobi.mtg.sets.booster.Slot;
@@ -23,7 +24,7 @@ public abstract class MasterPieceBoosterMaker extends DefaultBoosterMaker {
     }
 
     @Override
-    List<Slot> additionalProcessSlotValues(MTGSet set, List<Slot> filteredList) {
+    protected List<Slot> additionalProcessSlotValues(MTGSet set, List<Slot> filteredList) {
         if (masterPieceSet == null) {
             masterPieceSet = setsService.getSet(getMasterPieceSet()).orElseThrow(() -> new IllegalStateException("masterpiece set not found"));
         }
@@ -48,7 +49,7 @@ public abstract class MasterPieceBoosterMaker extends DefaultBoosterMaker {
     }
 
     @Override
-    List<MTGCard> handleUnexpectedSlotValue(MTGSet set, SlotType slotType, int occurrences) {
+    protected List<MTGCard> handleUnexpectedSlotValue(MTGSet set, SlotType slotType, int occurrences) {
         if (slotType.equals(MASTERPIECE)) {
             final List<MTGCard> cardList = masterPieceSet.getCards().stream()
                 .filter(card -> getMasterPieceList().contains(card.getName().toLowerCase()))

@@ -18,7 +18,7 @@ public class DKABoosterMaker extends DefaultBoosterMaker {
     }
 
     @Override
-    List<Slot> additionalProcessSlotValues(MTGSet set, List<Slot> filteredList) {
+    protected List<Slot> additionalProcessSlotValues(MTGSet set, List<Slot> filteredList) {
         //http://www.mtgsalvation.com/forums/magic-fundamentals/magic-general/327956-innistrad-block-transforming-card-pack-odds?comment=4
         //80 card sheet, 2 mythic, 6 rare (8), 24 uncommon (32), 48 common
         final int randomNumber = new Random().nextInt(80);

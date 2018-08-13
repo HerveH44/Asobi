@@ -18,7 +18,7 @@ public class ISDBoosterMaker extends DefaultBoosterMaker {
     }
 
     @Override
-    List<Slot> additionalProcessSlotValues(MTGSet set, List<Slot> filteredList) {
+    protected List<Slot> additionalProcessSlotValues(MTGSet set, List<Slot> filteredList) {
         //http://www.mtgsalvation.com/forums/magic-fundamentals/magic-general/327956-innistrad-block-transforming-card-pack-odds?comment=4
         //121 card sheet, 1 mythic, 12 rare (13), 42 uncommon (55), 66 common
         final int randomNumber = new Random().nextInt(121);

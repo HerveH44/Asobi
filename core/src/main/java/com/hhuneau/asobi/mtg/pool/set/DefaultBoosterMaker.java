@@ -51,7 +51,7 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
         return postProcessCardList(set, cardList);
     }
 
-    List<MTGCard> handleSlotType(MTGSet set, CardsGroupedByRarity cardsByRarity, SlotType slotType, int occurrences) {
+    protected List<MTGCard> handleSlotType(MTGSet set, CardsGroupedByRarity cardsByRarity, SlotType slotType, int occurrences) {
         switch (slotType) {
             case MYTHIC_RARE:
                 return handleMythicRare(cardsByRarity, occurrences);
@@ -86,7 +86,7 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
         }
     }
 
-    List<MTGCard> handleFoil(MTGSet set, int occurrences) {
+    protected List<MTGCard> handleFoil(MTGSet set, int occurrences) {
         final int rngFoil = new Random().nextInt(6);
         final CardsGroupedByRarity cardsByRarity = CardsGroupedByRarity.of(set);
         if (rngFoil == 0) {
@@ -105,7 +105,7 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
         return choose(cardsByRarity.get(Rarity.COMMON), occurrences);
     }
 
-    List<SlotDTO> preProcessSlotValues(MTGSet set, List<Slot> values) {
+    protected List<SlotDTO> preProcessSlotValues(MTGSet set, List<Slot> values) {
         final List<Slot> filteredList = values.stream()
             .map(slot -> {
                 final Slot newSlot = new Slot();
@@ -133,7 +133,7 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
                     }
                 }
             }
-        } catch (ParseException e) {
+        } catch (ParseException ignored) {
         }
 
         final List<Slot> processedList = additionalProcessSlotValues(set, filteredList);
@@ -149,7 +149,7 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
         return list;
     }
 
-    List<Slot> additionalProcessSlotValues(MTGSet set, List<Slot> filteredList) {
+    protected List<Slot> additionalProcessSlotValues(MTGSet set, List<Slot> filteredList) {
         return filteredList;
     }
 
@@ -157,84 +157,84 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
         return new Random().nextInt(7) == 0;
     }
 
-    List<MTGCard> postProcessCardList(MTGSet set, List<MTGCard> cardList) {
+    protected List<MTGCard> postProcessCardList(MTGSet set, List<MTGCard> cardList) {
         return cardList;
     }
 
-    List<MTGCard> handleUnexpectedSlotValues(MTGSet set, List<SlotType> slotValues, int occurrences) {
+    protected List<MTGCard> handleUnexpectedSlotValues(MTGSet set, List<SlotType> slotValues, int occurrences) {
         return null;
     }
 
-    List<MTGCard> handleChoiceBetweenRareAndMythic(CardsGroupedByRarity cardsByRarity, int occurrences) {
+    protected List<MTGCard> handleChoiceBetweenRareAndMythic(CardsGroupedByRarity cardsByRarity, int occurrences) {
         final Rarity rarity = isMythicCard() ? Rarity.MYTHIC_RARE : Rarity.RARE;
         return choose(cardsByRarity.get(rarity), occurrences);
     }
 
-    List<MTGCard> handleUnexpectedSlotValue(MTGSet set, SlotType slotType, int occurrences) {
+    protected List<MTGCard> handleUnexpectedSlotValue(MTGSet set, SlotType slotType, int occurrences) {
         return null;
     }
 
-    List<MTGCard> handleTimeShiftedUncommon(MTGSet set, int occurrences) {
+    protected List<MTGCard> handleTimeShiftedUncommon(MTGSet set, int occurrences) {
         return choose(set.getCards().stream().filter(card -> card.isTimeshifted() && card.getRarity().equals(Rarity.UNCOMMON)).collect(Collectors.toList()), occurrences);
     }
 
-    List<MTGCard> handleTimeShiftedRare(MTGSet set, int occurrences) {
+    protected List<MTGCard> handleTimeShiftedRare(MTGSet set, int occurrences) {
         return choose(set.getCards().stream().filter(card -> card.isTimeshifted() && card.getRarity().equals(Rarity.RARE)).collect(Collectors.toList()), occurrences);
     }
 
-    List<MTGCard> handleTimeShiftedCommon(MTGSet set, int occurrences) {
+    protected List<MTGCard> handleTimeShiftedCommon(MTGSet set, int occurrences) {
         return choose(set.getCards().stream().filter(card -> card.isTimeshifted() && card.getRarity().equals(Rarity.COMMON)).collect(Collectors.toList()), occurrences);
     }
 
-    List<MTGCard> handleTimeShiftedPurple(MTGSet set, int occurrences) {
+    protected List<MTGCard> handleTimeShiftedPurple(MTGSet set, int occurrences) {
         return choose(set.getCards().stream().filter(MTGCard::isTimeshifted).collect(Collectors.toList()), occurrences);
     }
 
-    List<MTGCard> handleDoubleFacedUncommon(MTGSet set, int occurrences) {
+    protected List<MTGCard> handleDoubleFacedUncommon(MTGSet set, int occurrences) {
         return choose(set.getCards().stream().filter(card -> card.getLayout().equals("double-faced") && card.getRarity().equals(Rarity.UNCOMMON)).collect(Collectors.toList()), occurrences);
     }
 
-    List<MTGCard> handleDoubleFacedRare(MTGSet set, int occurrences) {
+    protected List<MTGCard> handleDoubleFacedRare(MTGSet set, int occurrences) {
         return choose(set.getCards().stream().filter(card -> card.getLayout().equals("double-faced") && card.getRarity().equals(Rarity.RARE)).collect(Collectors.toList()), occurrences);
     }
 
-    List<MTGCard> handleDoubleFacedMythic(MTGSet set, int occurrences) {
+    protected List<MTGCard> handleDoubleFacedMythic(MTGSet set, int occurrences) {
         return choose(set.getCards().stream().filter(card -> card.getLayout().equals("double-faced") && card.getRarity().equals(Rarity.MYTHIC_RARE)).collect(Collectors.toList()), occurrences);
     }
 
-    List<MTGCard> handleDoubleFacedCommon(MTGSet set, int occurrences) {
+    protected List<MTGCard> handleDoubleFacedCommon(MTGSet set, int occurrences) {
         return choose(set.getCards().stream().filter(card -> card.getLayout().equals("double-faced") && card.getRarity().equals(Rarity.COMMON)).collect(Collectors.toList()), occurrences);
     }
 
-    List<MTGCard> handleDoubleFaced(MTGSet set, int occurrences) {
+    protected List<MTGCard> handleDoubleFaced(MTGSet set, int occurrences) {
         return choose(set.getCards().stream().filter(card -> card.getLayout().equals("double-faced")).collect(Collectors.toList()), occurrences);
     }
 
-    List<MTGCard> handleCommon(CardsGroupedByRarity cardsByRarity, int occurrences) {
+    protected List<MTGCard> handleCommon(CardsGroupedByRarity cardsByRarity, int occurrences) {
         return choose(cardsByRarity.get(Rarity.COMMON), occurrences);
     }
 
-    List<MTGCard> handleUncommon(CardsGroupedByRarity cardsByRarity, int occurrences) {
+    protected List<MTGCard> handleUncommon(CardsGroupedByRarity cardsByRarity, int occurrences) {
         return choose(cardsByRarity.get(Rarity.UNCOMMON), occurrences);
     }
 
-    List<MTGCard> handleRare(CardsGroupedByRarity cardsByRarity, int occurrences) {
+    protected List<MTGCard> handleRare(CardsGroupedByRarity cardsByRarity, int occurrences) {
         return choose(cardsByRarity.get(Rarity.RARE), occurrences);
     }
 
-    List<MTGCard> handleMythicRare(CardsGroupedByRarity cardsByRarity, int occurrences) {
+    protected List<MTGCard> handleMythicRare(CardsGroupedByRarity cardsByRarity, int occurrences) {
         return choose(cardsByRarity.get(Rarity.MYTHIC_RARE), occurrences);
     }
 
-    boolean isChoiceBetweenRareAndMythic(List<SlotType> slotValues) {
+    protected boolean isChoiceBetweenRareAndMythic(List<SlotType> slotValues) {
         return slotValues.size() == 2 && slotValues.contains(MYTHIC_RARE) && slotValues.contains(RARE);
     }
 
-    boolean isMythicCard() {
+    protected boolean isMythicCard() {
         return new Random().nextInt(8) == 0;
     }
 
-    List<MTGCard> choose(List<MTGCard> list, int occurrences) {
+    protected List<MTGCard> choose(List<MTGCard> list, int occurrences) {
         Collections.shuffle(list);
         return list.subList(0, occurrences);
     }

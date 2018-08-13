@@ -18,7 +18,7 @@ public class MastersBoosterMaker extends DefaultBoosterMaker {
     }
 
     @Override
-    List<MTGCard> handleUnexpectedSlotValues(MTGSet set, List<SlotType> slotValues, int occurrences) {
+    protected List<MTGCard> handleUnexpectedSlotValues(MTGSet set, List<SlotType> slotValues, int occurrences) {
         if (slotValues.size() == 4 &&
             slotValues.containsAll(List.of(FOIL_MYTHIC_RARE, FOIL_RARE, FOIL_COMMON, FOIL_UNCOMMON))) {
             return handleFoil(set, occurrences);
