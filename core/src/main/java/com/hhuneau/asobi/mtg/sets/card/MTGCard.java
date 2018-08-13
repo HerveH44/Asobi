@@ -39,4 +39,6 @@ public class MTGCard {
     private boolean isDoubleFace;
     private long flipMultiverseid;
     private boolean timeshifted;
+    @ElementCollection
+    private List<String> supertypes;
 }
