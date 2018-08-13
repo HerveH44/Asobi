@@ -19,7 +19,6 @@ import static com.hhuneau.asobi.mtg.sets.card.Rarity.RARE;
 @Component
 public class FRFBoosterMaker extends DefaultBoosterMaker {
 
-
     private final MTGSetsService setsService;
     private MTGSet ktk;
     private List<MTGCard> fetchLands = new ArrayList<>();

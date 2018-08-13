@@ -26,9 +26,9 @@ public class M19BoosterMaker extends DefaultBoosterMaker {
     List<MTGCard> handleUnexpectedSlotValue(MTGSet set, SlotType slotType, int occurrences) {
         final CardsGroupedByRarity groupedByRarity = CardsGroupedByRarity.of(set);
         if (slotType.equals(LAND)) {
-            if(new Random().nextInt(12) < 5) {
+            if (new Random().nextInt(12) < 5) {
                 final List<MTGCard> dualLands = groupedByRarity.get(COMMON).stream()
-                    .filter(card ->card.getType().equals("Land"))
+                    .filter(card -> card.getType().equals("Land"))
                     .collect(Collectors.toList());
 
                 return choose(dualLands, occurrences);

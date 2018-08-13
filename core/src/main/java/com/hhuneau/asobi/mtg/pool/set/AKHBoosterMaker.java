@@ -7,6 +7,7 @@ import java.util.List;
 
 @Component
 public class AKHBoosterMaker extends MasterPieceBoosterMaker {
+
     public AKHBoosterMaker(MTGSetsService setsService) {
         super(setsService);
     }
@@ -23,6 +24,6 @@ public class AKHBoosterMaker extends MasterPieceBoosterMaker {
 
     @Override
     List<String> getMasterPieceList() {
-        return List.of("Austere Command","Aven Mindcensor","Containment Priest","Loyal Retainers","Worship","Wrath of God","Consecrated Sphinx","Counterbalance","Counterspell","Cryptic Command","Daze","Divert","Force of Will","Pact of Negation","Spell Pierce","Stifle","Attrition","Dark Ritual","Diabolic Intent","Entomb","Mind Twist","Aggravated Assault","Chain Lightning","Maelstrom Pulse","Vindicate","Hazoret the Fervent","Kefnet the Mindful","Oketra the True","Bontu the Glorified","Rhonas the Indomitable");
+        return List.of("Austere Command", "Aven Mindcensor", "Containment Priest", "Loyal Retainers", "Worship", "Wrath of God", "Consecrated Sphinx", "Counterbalance", "Counterspell", "Cryptic Command", "Daze", "Divert", "Force of Will", "Pact of Negation", "Spell Pierce", "Stifle", "Attrition", "Dark Ritual", "Diabolic Intent", "Entomb", "Mind Twist", "Aggravated Assault", "Chain Lightning", "Maelstrom Pulse", "Vindicate", "Hazoret the Fervent", "Kefnet the Mindful", "Oketra the True", "Bontu the Glorified", "Rhonas the Indomitable");
     }
 }

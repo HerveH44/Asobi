@@ -44,7 +44,7 @@ public class SOIBlockBoosterMaker extends DefaultBoosterMaker {
                 slotValues.containsAll(List.of(COMMON, DOUBLE_FACED_MYTHIC_RARE, DOUBLE_FACED_RARE))) {
                 if (new Random().nextInt(8) != 0) {
                     cards.addAll(choose(cardsGroupedByRarity.get(Rarity.COMMON), 1));
-                } else if(new Random().nextInt(15) < 3) {
+                } else if (new Random().nextInt(15) < 3) {
                     cards.addAll(handleSlotType(set, cardsGroupedByRarity, DOUBLE_FACED_MYTHIC_RARE, 1));
                 } else {
                     cards.addAll(handleSlotType(set, cardsGroupedByRarity, DOUBLE_FACED_RARE, 1));

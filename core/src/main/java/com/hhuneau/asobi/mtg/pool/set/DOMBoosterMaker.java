@@ -4,6 +4,7 @@ import com.hhuneau.asobi.mtg.sets.CardsGroupedByRarity;
 import com.hhuneau.asobi.mtg.sets.MTGSet;
 import com.hhuneau.asobi.mtg.sets.card.MTGCard;
 import com.hhuneau.asobi.mtg.sets.card.Rarity;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +12,9 @@ import java.util.stream.Collectors;
 
 import static com.hhuneau.asobi.mtg.sets.card.Rarity.*;
 
+@Component
 public class DOMBoosterMaker extends DefaultBoosterMaker {
+
     @Override
     public boolean isInterestedIn(String setCode) {
         return setCode.equals("DOM");

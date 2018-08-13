@@ -5,7 +5,6 @@ import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import com.hhuneau.asobi.mtg.sets.booster.Slot;
 import com.hhuneau.asobi.mtg.sets.booster.SlotType;
 import com.hhuneau.asobi.mtg.sets.card.MTGCard;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Random;
@@ -13,10 +12,8 @@ import java.util.stream.Collectors;
 
 import static com.hhuneau.asobi.mtg.sets.booster.SlotType.COMMON;
 import static com.hhuneau.asobi.mtg.sets.booster.SlotType.MASTERPIECE;
-import static java.util.Collections.emptyList;
 
-@Component
-public class MasterPieceBoosterMaker extends DefaultBoosterMaker {
+public abstract class MasterPieceBoosterMaker extends DefaultBoosterMaker {
 
     private final MTGSetsService setsService;
     private MTGSet masterPieceSet;
@@ -62,11 +59,7 @@ public class MasterPieceBoosterMaker extends DefaultBoosterMaker {
         return null;
     }
 
-    String getMasterPieceSet() {
-        return "";
-    }
+    abstract String getMasterPieceSet();
 
-    List<String> getMasterPieceList() {
-        return emptyList();
-    }
+    abstract List<String> getMasterPieceList();
 }

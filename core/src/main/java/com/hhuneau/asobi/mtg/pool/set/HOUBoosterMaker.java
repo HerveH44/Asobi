@@ -12,7 +12,6 @@ public class HOUBoosterMaker extends MasterPieceBoosterMaker {
         super(setsService);
     }
 
-
     @Override
     public boolean isInterestedIn(String setCode) {
         return setCode.equals("HOU");
@@ -25,6 +24,6 @@ public class HOUBoosterMaker extends MasterPieceBoosterMaker {
 
     @Override
     List<String> getMasterPieceList() {
-        return List.of("Armageddon","Capsize","Forbid","Omniscience","Opposition","Sunder","Threads of Disloyalty","Avatar of Woe","Damnation","Desolation Angel","Diabolic Edict","Doomsday","No Mercy","Slaughter Pact","Thoughtseize","Blood Moon","Boil","Shatterstorm","Through the Breach","Choke","The Locust God","Lord of Extinction","The Scarab God","The Scorpion God");
+        return List.of("Armageddon", "Capsize", "Forbid", "Omniscience", "Opposition", "Sunder", "Threads of Disloyalty", "Avatar of Woe", "Damnation", "Desolation Angel", "Diabolic Edict", "Doomsday", "No Mercy", "Slaughter Pact", "Thoughtseize", "Blood Moon", "Boil", "Shatterstorm", "Through the Breach", "Choke", "The Locust God", "Lord of Extinction", "The Scarab God", "The Scorpion God");
     }
 }

@@ -2,13 +2,16 @@ package com.hhuneau.asobi.mtg.pool.set;
 
 import com.hhuneau.asobi.mtg.sets.MTGSet;
 import com.hhuneau.asobi.mtg.sets.booster.Slot;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Random;
 
 import static com.hhuneau.asobi.mtg.sets.booster.SlotType.*;
 
+@Component
 public class DKABoosterMaker extends DefaultBoosterMaker {
+
     @Override
     public boolean isInterestedIn(String setCode) {
         return setCode.equals("DKA");
