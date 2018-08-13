@@ -40,7 +40,8 @@ const initialState = {
         expansion: [
             {
                 code: "XLN",
-                name: "Ixalan"
+                name: "Ixalan",
+                releaseDate: "2000-01-01"
             }
         ]
     },

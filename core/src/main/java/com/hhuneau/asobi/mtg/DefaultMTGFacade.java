@@ -50,6 +50,7 @@ public class DefaultMTGFacade implements MTGFacade {
     @EventListener
     public void handle(SessionConnectedEvent event) {
         final Map<String, List<SetDTO>> sets = setsService.getSets().stream()
+            .filter(set -> !set.getType().equals("masterpiece"))
             .map(SetDTO::of)
             .collect(Collectors.groupingBy(SetDTO::getType));
         customerService.send(event.sessionId, SetsExportMessage.of(sets));

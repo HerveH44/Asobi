@@ -128,7 +128,9 @@ const Set = ({availableSets, set, onChangeSet}) => (
             .entries(availableSets)
             .map(([label, sets], key) => (
                 <optgroup key={key} label={label}>
-                    {sets.map(({code, name}, index) => {
+                    {sets
+                        .sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime())
+                        .map(({code, name}, index) => {
                         return <option value={code} key={index}>{name}</option>
                     })}
                 </optgroup>
