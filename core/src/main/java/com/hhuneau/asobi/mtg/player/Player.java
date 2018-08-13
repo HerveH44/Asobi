@@ -10,9 +10,6 @@ import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
 
-/*TODO: See if PlayerEvent should be an abstract class and HumanPlayer,
- *    Bot would be implementations or just PlayerEvent and Bot as an subclass
- */
 @Entity
 @Getter
 @Setter

@@ -31,7 +31,7 @@ class GameSettings extends React.Component {
             <Fragment >
                 <div className="tab">
                     {gameModes.map((mode, key) => (
-                        <button key={key} value={mode} className="tablinks" onClick={this.handleChange("gameMode")}>
+                        <button key={key} value={mode} className={`tablinks ${gameMode === mode ? "active" : ""}`} onClick={this.handleChange("gameMode")}>
                             {mode}
                         </button>))}
                 </div>

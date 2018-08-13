@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 import static com.hhuneau.asobi.mtg.game.GameMode.NORMAL;
 
 @Component
-// TODO: Merge with PoolService
 public class NormalPoolMaker implements PoolMaker {
     private final List<SetBoosterMaker> setBoosterMakers;
 
