@@ -15,4 +15,5 @@ public class CreateGameEvent extends Event {
     public GameType gameType;
     public GameMode gameMode;
     public List<String> sets;
+    public String cubeList;
 }

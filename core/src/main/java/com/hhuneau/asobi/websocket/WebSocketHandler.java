@@ -46,7 +46,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         try {
             publisher.publishEvent(evt);
         } catch (Exception e) {
-            customerService.send(getSessionId(session), ErrorMessage.of("An error occured : " + e.getCause()));
+            customerService.send(getSessionId(session), ErrorMessage.of(e.getMessage()));
         }
     }
 

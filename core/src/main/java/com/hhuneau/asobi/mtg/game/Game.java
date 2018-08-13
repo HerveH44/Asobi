@@ -2,6 +2,8 @@ package com.hhuneau.asobi.mtg.game;
 
 import com.hhuneau.asobi.mtg.player.Player;
 import com.hhuneau.asobi.mtg.sets.MTGSet;
+import com.hhuneau.asobi.mtg.sets.card.MTGCard;
+import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,6 +40,9 @@ public class Game {
     private boolean totalChaos;
     private boolean modernOnly;
     private int packsNumber;
+    @ManyToMany
+    @JoinColumn(name = "cards_ids")
+    private List<MTGCard> cubeList;
 
     @OneToMany(orphanRemoval = true, cascade = ALL)
     @JoinColumn(name = "game_id")
@@ -46,29 +51,20 @@ public class Game {
     @JoinColumn(name = "sets_list")
     private List<MTGSet> sets;
 
-    public static Game of(String title,
-                          long seats,
-                          boolean isPrivate,
-                          GameMode gameMode,
-                          GameType gameType,
-                          List<MTGSet> sets,
-                          String authToken,
-                          String hostId,
-                          boolean modernOnly,
-                          boolean totalChaos,
-                          int packsNumber) {
+    public static Game of(CreateGameEvent evt, List<MTGSet> sets, String authToken, List<MTGCard> cubeList) {
         final Game game = new Game();
-        game.setTitle(title);
-        game.setSeats(seats);
-        game.setPrivate(isPrivate);
-        game.setGameMode(gameMode);
-        game.setGameType(gameType);
+        game.setTitle(evt.title);
+        game.setSeats(evt.seats);
+        game.setPrivate(evt.isPrivate);
+        game.setGameMode(evt.gameMode);
+        game.setGameType(evt.gameType);
         game.setSets(sets);
         game.setAuthToken(authToken);
-        game.setHostId(hostId);
-        game.setModernOnly(modernOnly);
-        game.setTotalChaos(totalChaos);
-        game.setPacksNumber(packsNumber);
+        game.setHostId(evt.sessionId);
+        game.setModernOnly(evt.modernOnly);
+        game.setTotalChaos(evt.totalChaos);
+        game.setPacksNumber(evt.packsNumber);
+        game.setCubeList(cubeList);
         return game;
     }
 

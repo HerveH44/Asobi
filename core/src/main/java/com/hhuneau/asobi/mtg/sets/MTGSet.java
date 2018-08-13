@@ -28,5 +28,4 @@ public class MTGSet {
     @OneToMany(cascade = ALL)
     @JoinColumn(name = "set_id")
     private Set<MTGCard> cards;
-
 }

@@ -9,6 +9,7 @@ import com.hhuneau.asobi.mtg.pool.PoolService;
 import com.hhuneau.asobi.mtg.sets.MTGSet;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import com.hhuneau.asobi.mtg.sets.card.MTGCard;
+import com.hhuneau.asobi.mtg.sets.card.MTGCardService;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import com.hhuneau.asobi.websocket.events.game.host.StartGameEvent;
 import com.hhuneau.asobi.websocket.messages.ErrorMessage;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.hhuneau.asobi.mtg.game.GameMode.CUBE;
 import static com.hhuneau.asobi.mtg.game.Status.FINISHED;
 import static com.hhuneau.asobi.mtg.game.Status.STARTED;
 
@@ -31,12 +33,14 @@ public class DefaultGameService implements GameService {
     private final MTGSetsService setService;
     private final PoolService poolService;
     private final CustomerService customerService;
+    private final MTGCardService cardService;
 
-    public DefaultGameService(GameRepository gameRepository, MTGSetsService setService, PoolService poolService, CustomerService customerService) {
+    public DefaultGameService(GameRepository gameRepository, MTGSetsService setService, PoolService poolService, CustomerService customerService, MTGCardService cardService) {
         this.gameRepository = gameRepository;
         this.setService = setService;
         this.poolService = poolService;
         this.customerService = customerService;
+        this.cardService = cardService;
     }
 
     @Override
@@ -47,11 +51,36 @@ public class DefaultGameService implements GameService {
 
     @Override
     public CreateGameDTO createGame(CreateGameEvent evt) {
-        final List<MTGSet> sets = setService.getSets(evt.sets);
         final String authToken = UUID.randomUUID().toString();
-        final Game game = Game.of(evt.title, evt.seats, evt.isPrivate, evt.gameMode, evt.gameType, sets, authToken, evt.sessionId, evt.modernOnly, evt.totalChaos, evt.packsNumber);
-        final Game savedGame = gameRepository.save(game);
-        return CreateGameDTO.of(savedGame.getGameId(), savedGame.getAuthToken());
+        if (evt.gameMode.equals(CUBE)) {
+            final List<String> cardNames = Arrays.stream(evt.cubeList.split("\n")).map(String::toLowerCase).collect(Collectors.toList());
+            final List<MTGCard> cardList = cardService.getCards(cardNames);
+            if (cardList.size() != cardNames.size()) {
+
+                final List<String> foundCardNames = cardList.stream()
+                    .map(card -> card.getName().toLowerCase())
+                    .collect(Collectors.toList());
+
+                final List<String> notFoundCardNames = cardNames.stream()
+                    .filter(cardName -> !foundCardNames.contains(cardName))
+                    .collect(Collectors.toList());
+
+                throw new IllegalStateException(String.format("Following cards were not found in the database : %s", String.join(", ", notFoundCardNames)));
+            }
+
+            // If we can't divide the cards to enough packs
+            if (cardList.size() < (evt.seats * evt.packsNumber * 15)) {
+                throw new IllegalStateException(String.format("Not enough cards to create cube for %s players and %s pack", evt.seats, evt.packsNumber));
+            }
+            final Game game = Game.of(evt, null, authToken, cardList);
+            final Game savedGame = gameRepository.save(game);
+            return CreateGameDTO.of(savedGame.getGameId(), savedGame.getAuthToken());
+        } else {
+            final List<MTGSet> sets = setService.getSets(evt.sets);
+            final Game game = Game.of(evt, sets, authToken, null);
+            final Game savedGame = gameRepository.save(game);
+            return CreateGameDTO.of(savedGame.getGameId(), savedGame.getAuthToken());
+        }
     }
 
     @Override

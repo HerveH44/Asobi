@@ -14,7 +14,8 @@ const createGame = ({getState, dispatch}) => next => action => {
             sets,
             modernOnly,
             totalChaos,
-            packsNumber
+            packsNumber,
+            cubeList
         },
         gameSettings: {
             authToken,
@@ -51,7 +52,8 @@ const createGame = ({getState, dispatch}) => next => action => {
                     sets: sets[gameType],
                     modernOnly,
                     totalChaos,
-                    packsNumber
+                    packsNumber,
+                    cubeList
                 }
             });
         case "PICK":

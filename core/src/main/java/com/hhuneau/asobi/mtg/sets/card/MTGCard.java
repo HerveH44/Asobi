@@ -1,5 +1,7 @@
 package com.hhuneau.asobi.mtg.sets.card;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hhuneau.asobi.mtg.sets.MTGSet;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,4 +43,8 @@ public class MTGCard {
     private boolean timeshifted;
     @ElementCollection
     private List<String> supertypes;
+    @ManyToOne
+    @JoinColumn(name = "set_id")
+    @JsonIgnore
+    private MTGSet set;
 }
