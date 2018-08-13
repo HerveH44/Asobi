@@ -38,38 +38,7 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
                 final int occurrences = slot.getOccurrences();
 
                 if (slotValues.size() == 1) {
-                    switch (slotValues.get(0)) {
-                        case MYTHIC_RARE:
-                            return handleMythicRare(cardsByRarity, occurrences);
-                        case RARE:
-                            return handleRare(cardsByRarity, occurrences);
-                        case UNCOMMON:
-                            return handleUncommon(cardsByRarity, occurrences);
-                        case COMMON:
-                            return handleCommon(cardsByRarity, occurrences);
-                        case DOUBLE_FACED:
-                            return handleDoubleFaced(set, occurrences);
-                        case DOUBLE_FACED_COMMON:
-                            return handleDoubleFacedCommon(set, occurrences);
-                        case DOUBLE_FACED_MYTHIC_RARE:
-                            return handleDoubleFacedMythic(set, occurrences);
-                        case DOUBLE_FACED_RARE:
-                            return handleDoubleFacedRare(set, occurrences);
-                        case DOUBLE_FACED_UNCOMMON:
-                            return handleDoubleFacedUncommon(set, occurrences);
-                        case TIMESHIFTED_PURPLE:
-                            return handleTimeShiftedPurple(set, occurrences);
-                        case TIMESHIFTED_COMMON:
-                            return handleTimeShiftedCommon(set, occurrences);
-                        case TIMESHIFTED_RARE:
-                            return handleTimeShiftedRare(set, occurrences);
-                        case TIMESHIFTED_UNCOMMON:
-                            return handleTimeShiftedUncommon(set, occurrences);
-                        case FOIL:
-                            return handleFoil(set, occurrences);
-                        default:
-                            return handleUnexpectedSlotValue(set, slotValues.get(0), occurrences);
-                    }
+                    return handleSlotType(set, cardsByRarity, slotValues.get(0), occurrences);
                 } else if (isChoiceBetweenRareAndMythic(slotValues)) {
                     return handleChoiceBetweenRareAndMythic(cardsByRarity, occurrences);
                 }
@@ -80,6 +49,41 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
             .collect(Collectors.toList());
 
         return postProcessCardList(set, cardList);
+    }
+
+    List<MTGCard> handleSlotType(MTGSet set, CardsGroupedByRarity cardsByRarity, SlotType slotType, int occurrences) {
+        switch (slotType) {
+            case MYTHIC_RARE:
+                return handleMythicRare(cardsByRarity, occurrences);
+            case RARE:
+                return handleRare(cardsByRarity, occurrences);
+            case UNCOMMON:
+                return handleUncommon(cardsByRarity, occurrences);
+            case COMMON:
+                return handleCommon(cardsByRarity, occurrences);
+            case DOUBLE_FACED:
+                return handleDoubleFaced(set, occurrences);
+            case DOUBLE_FACED_COMMON:
+                return handleDoubleFacedCommon(set, occurrences);
+            case DOUBLE_FACED_MYTHIC_RARE:
+                return handleDoubleFacedMythic(set, occurrences);
+            case DOUBLE_FACED_RARE:
+                return handleDoubleFacedRare(set, occurrences);
+            case DOUBLE_FACED_UNCOMMON:
+                return handleDoubleFacedUncommon(set, occurrences);
+            case TIMESHIFTED_PURPLE:
+                return handleTimeShiftedPurple(set, occurrences);
+            case TIMESHIFTED_COMMON:
+                return handleTimeShiftedCommon(set, occurrences);
+            case TIMESHIFTED_RARE:
+                return handleTimeShiftedRare(set, occurrences);
+            case TIMESHIFTED_UNCOMMON:
+                return handleTimeShiftedUncommon(set, occurrences);
+            case FOIL:
+                return handleFoil(set, occurrences);
+            default:
+                return handleUnexpectedSlotValue(set, slotType, occurrences);
+        }
     }
 
     List<MTGCard> handleFoil(MTGSet set, int occurrences) {
