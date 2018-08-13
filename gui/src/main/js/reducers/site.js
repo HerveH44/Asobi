@@ -28,12 +28,14 @@ export default handleActions({
         }
     },
     [WEBSOCKET_CLOSED](state, {payload}) {
+        console.log(payload);
         return {
             ...state,
             error: "The connection with the server is closed. Please refresh your browser."
         }
     },
     [WEBSOCKET_DISCONNECT](state, {payload}) {
+        console.log(payload);
         return {
             ...state,
             error: "The connection with the server has been interrupted. Please refresh your browser."

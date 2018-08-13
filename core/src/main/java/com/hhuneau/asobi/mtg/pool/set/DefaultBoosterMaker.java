@@ -108,8 +108,10 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
     List<SlotDTO> preProcessSlotValues(MTGSet set, List<Slot> values) {
         final List<Slot> filteredList = values.stream()
             .map(slot -> {
-                slot.getValues().removeIf(filteredSlotTypes::contains);
-                return slot.getValues().isEmpty() ? null : slot;
+                final Slot newSlot = new Slot();
+                newSlot.setValues(slot.getValues());
+                newSlot.getValues().removeIf(filteredSlotTypes::contains);
+                return newSlot.getValues().isEmpty() ? null : newSlot;
             })
             .filter(Objects::nonNull)
             .collect(Collectors.toList());

@@ -5,7 +5,14 @@ import {GAME_ID} from "../actions/server";
 
 const createGame = ({getState, dispatch}) => next => action => {
     const {
-        game,
+        game: {
+            title,
+            seats,
+            isPrivate,
+            gameType,
+            gameMode,
+            sets
+        },
         gameSettings: {
             authToken,
             addBots,
@@ -33,8 +40,12 @@ const createGame = ({getState, dispatch}) => next => action => {
                 type: WEBSOCKET_SEND,
                 payload: {
                     type: "CREATE_GAME",
-                    ...game,
-                    sets: game.sets[game.gameType]
+                    title,
+                    gameType,
+                    gameMode,
+                    seats,
+                    isPrivate,
+                    sets: sets[gameType]
                 }
             });
         case "PICK":
