@@ -134,8 +134,10 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
         } catch (ParseException e) {
         }
 
+        final List<Slot> processedList = additionalProcessSlotValues(set, filteredList);
+
         final List<SlotDTO> list = new ArrayList<>();
-        filteredList.forEach(slot ->
+        processedList.forEach(slot ->
             list.stream()
                 .filter(slotDTO -> slotDTO.getValues().containsAll(slot.getValues()))
                 .findFirst()
@@ -145,12 +147,16 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
         return list;
     }
 
+    List<Slot> additionalProcessSlotValues(MTGSet set, List<Slot> filteredList) {
+        return filteredList;
+    }
+
     private boolean isFoil() {
         return new Random().nextInt(7) == 0;
     }
 
     List<MTGCard> postProcessCardList(MTGSet set, List<MTGCard> cardList) {
-            return cardList;
+        return cardList;
     }
 
     List<MTGCard> handleUnexpectedSlotValues(MTGSet set, List<SlotType> slotValues, int occurrences) {
