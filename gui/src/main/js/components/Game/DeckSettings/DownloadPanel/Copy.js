@@ -1,7 +1,7 @@
 import React from "react";
 import {string, func} from "prop-types";
 import {connect} from "react-redux";
-import {getDeckInTxt} from "../../../reducers/playerState";
+import {getDeckInTxt} from "../../../../reducers/playerState";
 
 const Copy = ({deck,}) => {
 

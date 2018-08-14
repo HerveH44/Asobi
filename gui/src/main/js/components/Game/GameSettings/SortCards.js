@@ -1,7 +1,7 @@
 import React from "react";
 import {string, array, func} from "prop-types";
 import {connect} from "react-redux";
-import {onChangeSort} from "../../actions/game";
+import {onChangeSort} from "../../../actions/game";
 
 const SortCards = ({sort, sortTypes, onChangeSort}) => (
     <div className="settings-sort-cards">

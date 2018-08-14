@@ -1,7 +1,7 @@
 import React from "react";
 import {array, func, string} from "prop-types";
 import Card from "./Card";
-import {Spaced} from "../utils";
+import {Spaced} from "../../utils";
 
 const Grid = ({zoneTitle, zoneSubtitle, cards, addCardTitle= () => {}, addCardClassNames= () => {}, onClickCard }) => (
     <div className='zone'>

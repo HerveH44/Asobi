@@ -1,6 +1,6 @@
 import React from "react";
 import {string, array, object, func} from "prop-types";
-import {CARDS} from "../../reducers/playerState";
+import {CARDS} from "../../../reducers/playerState";
 
 const LandsRow = ({zoneName, cards, onChangeLand}) => (
     <tr>

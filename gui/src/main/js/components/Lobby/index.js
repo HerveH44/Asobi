@@ -1,13 +1,13 @@
 import React from "react";
 import {connect} from 'react-redux';
-import {editGame, CREATE_GAME, EDIT_PACK_NUMBER} from "../reducers/game";
-import {object, func} from "prop-types";
+import {CREATE_GAME, EDIT_PACK_NUMBER, editGame} from "../../reducers/game";
+import {func, object} from "prop-types";
 
-import Header from "../components/Header";
-import JoinPanel from "../components/JoinPanel";
-import NewsPanel from "../components/NewsPanel";
-import Footer from "../components/Footer";
-import CreatePanel from "../components/CreateGamePanel";
+import Header from "./Header/index";
+import JoinPanel from "./JoinPanel/index";
+import NewsPanel from "./NewsPanel/index";
+import Footer from "./Footer/index";
+import CreatePanel from "./CreateGamePanel/index";
 
 const Lobby = ({
     site,

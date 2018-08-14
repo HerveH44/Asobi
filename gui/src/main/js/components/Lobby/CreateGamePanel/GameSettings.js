@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import {func, array, string, object, bool} from 'prop-types';
 import "./style.css"
-import {NORMAL, CUBE, CHAOS} from "../../reducers/game";
-import { Textarea, Checkbox } from '../utils';
+import {NORMAL, CUBE, CHAOS} from "../../../reducers/game";
+import { Textarea, Checkbox } from '../../utils';
 
 class GameSettings extends React.Component {
 

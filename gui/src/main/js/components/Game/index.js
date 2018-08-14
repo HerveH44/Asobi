@@ -1,12 +1,12 @@
-import React, {Component, Fragment} from "react";
+import React, {Component} from "react";
 import {func, string} from "prop-types";
 import {connect} from 'react-redux';
-import {joinGame, leaveGame, startGame, editGameSettings} from "../actions/server"
-import StartPanel from "../components/StartPanel"
-import PlayersPanel from "../components/PlayersPanel"
-import DeckSettings from "../components/DeckSettings"
-import CardsZone from "../components/CardsZone"
-import GameSettings from "../components/GameSettings";
+import {editGameSettings, joinGame, leaveGame, startGame} from "../../actions/server"
+import StartPanel from "./StartPanel/index"
+import PlayersPanel from "./PlayersPanel/index"
+import DeckSettings from "./DeckSettings/index"
+import CardsZone from "./CardsZone/index"
+import GameSettings from "./GameSettings/index";
 
 class Game extends Component {
     componentDidMount() {

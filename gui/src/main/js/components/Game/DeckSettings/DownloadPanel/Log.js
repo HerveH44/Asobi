@@ -1,7 +1,7 @@
 import React from "react";
 import {func, string} from "prop-types";
 import {connect} from "react-redux";
-import {onClickLog} from "../../../actions/game";
+import {onClickLog} from "../../../../actions/game";
 
 const Log = ({gameType, onClickLog}) => (
     /DRAFT/.test(gameType)

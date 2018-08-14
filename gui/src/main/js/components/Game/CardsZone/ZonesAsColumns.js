@@ -1,10 +1,10 @@
 import React, {Component} from "react";
 import {array, func, object, string} from "prop-types";
 import {connect} from "react-redux"
-import {Spaced} from "../utils";
+import {Spaced} from "../../utils";
 import Card from "./Card";
-import {getCardsAsMap, MAIN, SIDE} from "../../reducers/playerState";
-import {onClickZone} from "../../actions/game";
+import {getCardsAsMap, MAIN, SIDE} from "../../../reducers/playerState";
+import {onClickZone} from "../../../actions/game";
 
 class ZonesAsColumns extends Component {
     state = {

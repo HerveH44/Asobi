@@ -9,7 +9,7 @@ import {
 } from "prop-types";
 import range from "lodash/range";
 import GameSettings from "./GameSettings";
-import {Checkbox} from "../utils"
+import {Checkbox} from "../../utils"
 
 class CreatePanel extends React.Component {
     onChangeGameType = ({target : {value: gameType}}) => {

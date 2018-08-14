@@ -1,7 +1,7 @@
 import React from "react";
 import {string, number} from "prop-types";
 
-import {Spaced} from "../utils";
+import {Spaced} from "../../utils";
 
 const Header = ({siteTitle, numUsers, numPlayers, numActiveGames, error}) => (
     <header>

@@ -2,8 +2,8 @@ import React from "react"
 import {array, func, number, object} from "prop-types";
 import LandsRow from "./LandsRow";
 import {connect} from "react-redux";
-import {onChangeDeckSize, onChangeLand, onSuggestLands, onResetLands} from "../../actions/game";
-import {MAIN, SIDE} from "../../reducers/playerState";
+import {onChangeDeckSize, onChangeLand, onSuggestLands, onResetLands} from "../../../actions/game";
+import {MAIN, SIDE} from "../../../reducers/playerState";
 
 const LandsPanel = ({cards, onChangeLand, onResetLands, onSuggestLands, onChangeDeckSize, deckSize}) => (
     <fieldset className='land-controls fieldset'>

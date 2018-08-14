@@ -1,9 +1,9 @@
 import React from "react"
 import {string, array, number, object, func} from "prop-types"
 import Grid from "./Grid";
-import {getCardsAsArray, PACK} from "../../reducers/playerState";
+import {getCardsAsArray, PACK} from "../../../reducers/playerState";
 import {connect} from "react-redux";
-import {autoPick, pick} from "../../actions/server";
+import {autoPick, pick} from "../../../actions/server";
 
 const PackZone = ({cards, pickNumber, round, autoPickId, pick, autoPick, addCardClassNames, addCardTitle}) => (
     !cards.length ?

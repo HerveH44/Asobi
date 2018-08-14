@@ -1,6 +1,6 @@
 import React from 'react'
-import Lobby from "../containers/Lobby";
-import Game from "../containers/Game";
+import Lobby from "./Lobby/index";
+import Game from "./Game";
 import {Route, Switch} from "react-router-dom";
 import {bool} from "prop-types";
 import {ConnectedRouter} from 'react-router-redux';

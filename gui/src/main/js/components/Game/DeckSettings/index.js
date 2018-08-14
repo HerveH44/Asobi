@@ -1,10 +1,10 @@
 import React from "react";
 import {bool, string, array, func} from "prop-types";
 
-import {onChangeLand} from "../../actions/game";
+import {onChangeLand} from "../../../actions/game";
 import {connect} from "react-redux";
 import LandsPanel from "./LandsPanel";
-import DownloadPanel from "./DownloadPanel";
+import DownloadPanel from "./DownloadPanel/index";
 
 const DeckSettings = ({didGameStart}) => (
     didGameStart

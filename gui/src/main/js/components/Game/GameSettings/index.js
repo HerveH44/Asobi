@@ -1,9 +1,9 @@
 import React from "react";
 import {bool, func} from "prop-types";
-import {Checkbox} from "../utils";
+import {Checkbox} from "../../utils";
 import SortCards from "./SortCards"
 import {connect} from "react-redux";
-import {onChangeBeep, onChangeColumnView, onChangePicksToSB, onToggleChat} from "../../actions/game";
+import {onChangeBeep, onChangeColumnView, onChangePicksToSB, onToggleChat} from "../../../actions/game";
 
 const GameSettings = ({onToggleChat, showChat, addPicksToSB, onChangePicksToSB, beep, onChangeBeep, columnView, onChangeColumnView}) => (
     <div className='game-settings'>

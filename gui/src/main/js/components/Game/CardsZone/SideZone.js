@@ -2,8 +2,8 @@ import React from "react";
 import {array, func} from "prop-types";
 import Grid from "./Grid";
 import {connect} from "react-redux";
-import {getCardsAsArray, SIDE} from "../../reducers/playerState";
-import {onClickZone} from "../../actions/game";
+import {getCardsAsArray, SIDE} from "../../../reducers/playerState";
+import {onClickZone} from "../../../actions/game";
 
 const SideZone = ({cards, onClickZone}) => (
     <Grid

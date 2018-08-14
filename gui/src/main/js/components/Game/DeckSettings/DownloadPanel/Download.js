@@ -1,9 +1,9 @@
 import React from "react";
 import {func, string, array} from "prop-types";
 import {connect} from "react-redux";
-import {onChangeFileName, onChangeFileType, onClickDownload} from "../../../actions/game";
-import {Select} from "../../utils";
-import {downloadDeck} from "../../../reducers/playerState";
+import {onChangeFileName, onChangeFileType, onClickDownload} from "../../../../actions/game";
+import {Select} from "../../../utils";
+import {downloadDeck} from "../../../../reducers/playerState";
 
 const Download = ({fileType, onChangeFileType, fileTypes, onClickDownload, fileName, onChangeFileName}) => (
     <div className='connected-container'>

@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {array, object, number, bool, func} from "prop-types";
-import {onSwap, onKick} from "../../actions/game"
-import arrowUp from "../../../resources/media/arrow-up.png"
-import arrowDown from "../../../resources/media/arrow-down.png"
+import {onSwap, onKick} from "../../../actions/game"
+import arrowUp from "../../../../resources/media/arrow-up.png"
+import arrowDown from "../../../../resources/media/arrow-down.png"
 
 import {connect} from "react-redux"
 
