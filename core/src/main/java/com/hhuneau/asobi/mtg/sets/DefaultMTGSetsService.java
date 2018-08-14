@@ -74,4 +74,14 @@ public class DefaultMTGSetsService implements MTGSetsService {
             .map(Optional::get)
             .collect(Collectors.toList());
     }
+
+    @Override
+    public List<String> getModernSetCodes() {
+        return setRepository.findModernSetCodes();
+    }
+
+    @Override
+    public List<String> getTotalChaosSetCodes() {
+        return setRepository.findTotalChaosSetCodes();
+    }
 }

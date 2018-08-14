@@ -12,4 +12,8 @@ public interface MTGSetsService {
     Optional<MTGSet> getSet(String setCode);
 
     List<MTGSet> getSets(List<String> sets);
+
+    List<String> getModernSetCodes();
+
+    List<String> getTotalChaosSetCodes();
 }

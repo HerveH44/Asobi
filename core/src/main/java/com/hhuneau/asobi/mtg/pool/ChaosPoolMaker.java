@@ -23,7 +23,6 @@ public class ChaosPoolMaker implements PoolMaker {
 
     private final MTGSetsService setsService;
     private final List<SetBoosterMaker> setBoosterMakers;
-    private static final Date modernDate = new GregorianCalendar(2003, 7, 27).getTime();
 
     public ChaosPoolMaker(MTGSetsService setsService, List<SetBoosterMaker> setBoosterMakers) {
         this.setsService = setsService;
@@ -32,21 +31,16 @@ public class ChaosPoolMaker implements PoolMaker {
 
     @Override
     public List<Booster> createPools(Game game) {
-
-        final List<MTGSet> setsPool = setsService.getSets()
-            .stream()
-            .filter(set -> set.getType().matches("expansion|core"))
-            .filter(set -> !game.isModernOnly() || set.getReleaseDate().after(modernDate))
-            .collect(Collectors.toList());
+        final List<String> setsCodes = game.isModernOnly() ? setsService.getModernSetCodes() : setsService.getTotalChaosSetCodes();
 
         final List<Booster> boosters = new ArrayList<>();
 
         game.getPlayers().forEach(player -> {
-            Collections.shuffle(setsPool);
+            Collections.shuffle(setsCodes);
             final List<Booster> playerBoosters =
                 !game.isTotalChaos()
-                    ? getPlayerBoosters(game, setsPool, player)
-                    : getTotalChaosPlayerBoosters(game.getPacksNumber(), setsPool, player);
+                    ? getPlayerBoosters(game, setsCodes, player)
+                    : getTotalChaosPlayerBoosters(game.getPacksNumber(), setsCodes, player);
             boosters.addAll(playerBoosters);
             player.setPool(playerBoosters);
         });
@@ -54,46 +48,51 @@ public class ChaosPoolMaker implements PoolMaker {
         return boosters;
     }
 
-    private List<Booster> getTotalChaosPlayerBoosters(int packsNumber, List<MTGSet> setsPool, Player player) {
+    private List<Booster> getTotalChaosPlayerBoosters(int packsNumber, List<String> setsPool, Player player) {
         final List<Booster> totalChaosBoosters = new ArrayList<>();
         for (int i = 0; i < packsNumber; i++) {
             Collections.shuffle(setsPool);
             final List<MTGCard> cards = new ArrayList<>();
 
             //Add one rare
-            Collections.shuffle(setsPool);
-            final CardsGroupedByRarity cardsGroupedByRarity = CardsGroupedByRarity.of(setsPool.get(0));
+            MTGSet set = getRandomSet(setsPool);
+            final CardsGroupedByRarity cardsGroupedByRarity = CardsGroupedByRarity.of(set);
             if (!cardsGroupedByRarity.get(MYTHIC_RARE).isEmpty() && new Random().nextInt(8) == 0) {
-                cards.add(getRandomCard(MYTHIC_RARE, setsPool.get(0)));
+                cards.add(getRandomCard(MYTHIC_RARE, set));
             } else {
-                Collections.shuffle(setsPool);
-                while (CardsGroupedByRarity.of(setsPool.get(0)).get(RARE).isEmpty()) {
-                    Collections.shuffle(setsPool);
+                set = getRandomSet(setsPool);
+                while (CardsGroupedByRarity.of(set).get(RARE).isEmpty()) {
+                    set = getRandomSet(setsPool);
                 }
-                cards.add(getRandomCard(RARE, setsPool.get(0)));
+                cards.add(getRandomCard(RARE, set));
             }
 
             //Add 3 uncommon
             for (int j = 0; j < 3; j++) {
-                Collections.shuffle(setsPool);
-                while (CardsGroupedByRarity.of(setsPool.get(0)).get(UNCOMMON).isEmpty()) {
-                    Collections.shuffle(setsPool);
+                set = getRandomSet(setsPool);
+                while (CardsGroupedByRarity.of(set).get(UNCOMMON).isEmpty()) {
+                    set = getRandomSet(setsPool);
                 }
-                cards.add(getRandomCard(Rarity.UNCOMMON, setsPool.get(0)));
+                cards.add(getRandomCard(Rarity.UNCOMMON, set));
             }
 
             //Add 10 common
             for (int j = 0; j < 10; j++) {
-                Collections.shuffle(setsPool);
-                while (CardsGroupedByRarity.of(setsPool.get(0)).get(COMMON).isEmpty()) {
-                    Collections.shuffle(setsPool);
+                set = getRandomSet(setsPool);
+                while (CardsGroupedByRarity.of(set).get(COMMON).isEmpty()) {
+                    set = getRandomSet(setsPool);
                 }
-                cards.add(getRandomCard(Rarity.COMMON, setsPool.get(0)));
+                cards.add(getRandomCard(Rarity.COMMON, set));
             }
 
             totalChaosBoosters.add(Booster.of(player, null, cards));
         }
         return totalChaosBoosters;
+    }
+
+    private MTGSet getRandomSet(List<String> setsPool) {
+        Collections.shuffle(setsPool);
+        return setsService.getSet(setsPool.get(0)).get();
     }
 
     private MTGCard getRandomCard(Rarity rarity, MTGSet mtgSet) {
@@ -102,11 +101,12 @@ public class ChaosPoolMaker implements PoolMaker {
         return mtgCardList.get(0);
     }
 
-    private List<Booster> getPlayerBoosters(Game game, List<MTGSet> setsPool, Player player) {
+    private List<Booster> getPlayerBoosters(Game game, List<String> setsPool, Player player) {
         return setsPool.subList(0, game.getPacksNumber()).stream()
-            .map(set -> {
+            .map(setCode -> {
+                final MTGSet set = setsService.getSet(setCode).get();
                 final List<MTGCard> cards = setBoosterMakers.stream()
-                    .filter(bMaker -> bMaker.isInterestedIn(set.getCode()))
+                    .filter(bMaker -> bMaker.isInterestedIn(setCode))
                     .findFirst()
                     .orElse(new DefaultBoosterMaker())
                     .make(set);
