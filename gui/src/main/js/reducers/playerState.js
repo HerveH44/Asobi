@@ -6,7 +6,8 @@ import {
     onChangePicksToSB,
     onClickZone,
     onResetLands,
-    onSuggestLands
+    onSuggestLands,
+    onClickCopy
 } from "../actions/game";
 import _ from "../lib/utils";
 
@@ -35,6 +36,18 @@ const InitialState = {
 };
 
 export default handleActions({
+    [onClickCopy](state, {payload}) {
+
+        //Copy deck to clipboard
+        let textField = document.createElement("textarea");
+        textField.value = payload;
+        document.body.appendChild(textField);
+        textField.select();
+        document.execCommand("copy");
+        textField.remove();
+
+        return state;
+    },
     [onClickZone](state, {payload: {zone, card}}) {
         const newZone = zone !== MAIN ? MAIN : SIDE;
 
@@ -66,7 +79,7 @@ export default handleActions({
         }
     },
     [onPickedCard](state, {payload}) {
-        const zone = state.addPicksToSB ? SIDE: MAIN;
+        const zone = state.addPicksToSB ? SIDE : MAIN;
         return {
             ...state,
             autoPickId: "",
@@ -230,7 +243,7 @@ export const getCardsAsMap = (state, zone, sort) => {
     let keys = Object.keys(groups);
     let arr;
 
-    switch(sort) {
+    switch (sort) {
         case "cmc":
             arr = [];
             for (let key in groups)
@@ -280,7 +293,7 @@ export const getCardsAsArray = (state, zone, sort) => {
 
     let keys = Object.keys(groups);
     let arr;
-    switch(sort) {
+    switch (sort) {
         case "cmc":
             arr = [];
             for (let key in groups)

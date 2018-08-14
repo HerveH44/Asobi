@@ -16,3 +16,4 @@ export const onChangeColumnView = createAction("CHANGE_COLUMN_VIEW");
 export const onChangeSort = createAction("CHANGE_SORT");
 export const onClickZone = createAction("CLICK_CARD_ZONE");
 export const hashDeck = createAction("HASH");
+export const onClickCopy = createAction("COPY_DECK_CLIPBOARD");
