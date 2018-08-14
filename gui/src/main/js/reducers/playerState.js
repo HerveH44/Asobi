@@ -320,10 +320,10 @@ export const getDeckInTxt = (state) => {
     });
 
     return Object.entries(main)
-            .map(([name, number]) => name + " " + number)
+            .map(([name, number]) => `${number} ${name}`)
             .join("\n") + "\nSideboard\n" +
         Object.entries(side)
-            .map(([name, number]) => name + " " + number)
+            .map(([name, number]) => `${number} ${name}`)
             .join("\n");
 };
 

@@ -30,7 +30,7 @@ PlayerEntries.propTypes = {
     onKick: func.isRequired
 };
 
-const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, playersStates: {length}, self, didGameStart, isHost, onSwap, onKick}) => {
+const PlayerEntry = ({player: {isBot, name, packs, time, cockHash, mwsHash}, index, playersStates: {length}, self, didGameStart, isHost, onSwap, onKick}) => {
     const opp
         = length % 2 === 0
         ? (self + length / 2) % length
@@ -53,8 +53,8 @@ const PlayerEntry = ({player: {isBot, name, packs, time, hash}, index, playersSt
         <td key={2}>{name}</td>,
         <td key={3}>{packs}</td>,
         <td key={4}>{time}</td>,
-        <td key={5}>{hash && hash.cock}</td>,
-        <td key={6}>{hash && hash.mws}</td>
+        <td key={5}>{cockHash}</td>,
+        <td key={6}>{mwsHash}</td>
     ];
 
     if (isHost) {

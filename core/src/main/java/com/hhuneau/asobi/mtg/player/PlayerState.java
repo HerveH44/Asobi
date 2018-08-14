@@ -35,6 +35,8 @@ public class PlayerState {
     private int timeLeft;
     private int pack;
     private String autoPickId;
+    private String cockHash;
+    private String mwsHash;
 
     public Pack getWaitingPack() {
         if(!hasWaitingPack()) {

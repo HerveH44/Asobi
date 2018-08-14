@@ -5,6 +5,7 @@ import com.hhuneau.asobi.mtg.eventhandler.EventHandler;
 import com.hhuneau.asobi.mtg.game.*;
 import com.hhuneau.asobi.mtg.player.Player;
 import com.hhuneau.asobi.mtg.player.PlayerService;
+import com.hhuneau.asobi.mtg.player.PlayerState;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import com.hhuneau.asobi.mtg.sets.SetDTO;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
@@ -162,15 +163,19 @@ public class DefaultMTGFacade implements MTGFacade {
         public int packs;
         public int time;
         public int seat;
-        public String hash;
+        public String cockHash;
+        public String mwsHash;
 
         public static PartialPlayerStateDTO of(Player player) {
+            final PlayerState playerState = player.getPlayerState();
             final PartialPlayerStateDTO dto = new PartialPlayerStateDTO();
             dto.name = player.getName();
-            dto.packs = player.getPlayerState().getWaitingPacks().size();
-            dto.time = player.getPlayerState().getTimeLeft();
+            dto.packs = playerState.getWaitingPacks().size();
+            dto.time = playerState.getTimeLeft();
             dto.isBot = player.isBot();
             dto.seat = player.getSeat();
+            dto.cockHash = playerState.getCockHash();
+            dto.mwsHash = playerState.getMwsHash();
             return dto;
         }
     }

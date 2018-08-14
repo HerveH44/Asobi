@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.hhuneau.asobi.websocket.events.game.host.KickPlayerEvent;
 import com.hhuneau.asobi.websocket.events.game.host.StartGameEvent;
 import com.hhuneau.asobi.websocket.events.game.host.SwapPlayerEvent;
-import com.hhuneau.asobi.websocket.events.game.player.AutoPickEvent;
-import com.hhuneau.asobi.websocket.events.game.player.JoinGameEvent;
-import com.hhuneau.asobi.websocket.events.game.player.LeaveGameEvent;
-import com.hhuneau.asobi.websocket.events.game.player.PickEvent;
+import com.hhuneau.asobi.websocket.events.game.player.*;
 
 @JsonTypeInfo(visible = true, use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes(value = {
@@ -20,6 +17,7 @@ import com.hhuneau.asobi.websocket.events.game.player.PickEvent;
     @JsonSubTypes.Type(value = AutoPickEvent.class, name = "AUTOPICK"),
     @JsonSubTypes.Type(value = KickPlayerEvent.class, name = "KICK"),
     @JsonSubTypes.Type(value = SwapPlayerEvent.class, name = "SWAP"),
+    @JsonSubTypes.Type(value = HashDeckEvent.class, name = "HASH"),
 })
 public abstract class Event {
     public EventType type;

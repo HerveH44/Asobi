@@ -17,12 +17,10 @@ import static com.hhuneau.asobi.mtg.game.GameType.DRAFT;
 public class DraftStartedEventHandler extends GameStartedEventHandler {
 
     private final GameService gameService;
-    private final PlayerService playerService;
 
     public DraftStartedEventHandler(GameService gameService, PlayerService playerService, CustomerService customerService) {
-        super(customerService);
+        super(customerService, playerService);
         this.gameService = gameService;
-        this.playerService = playerService;
     }
 
     @Override

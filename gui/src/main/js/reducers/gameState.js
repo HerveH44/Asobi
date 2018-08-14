@@ -8,7 +8,8 @@ const InitialState = {
         name: "",
         packs: 0,
         time: 0,
-        hash: ""
+        cockHash: "",
+        mwsHash: ""
     }],
     self: 0,
     isHost: true,

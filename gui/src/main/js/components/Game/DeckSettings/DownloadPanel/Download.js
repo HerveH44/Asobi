@@ -1,13 +1,13 @@
 import React from "react";
 import {func, string, array} from "prop-types";
 import {connect} from "react-redux";
-import {onChangeFileName, onChangeFileType, onClickDownload} from "../../../../actions/game";
+import {hashDeck, onChangeFileName, onChangeFileType, onClickDownload} from "../../../../actions/game";
 import {Select} from "../../../utils";
 import {downloadDeck} from "../../../../reducers/playerState";
 
-const Download = ({fileType, onChangeFileType, fileTypes, onClickDownload, fileName, onChangeFileName}) => (
+const Download = ({fileType, onChangeFileType, fileTypes, onClickDownload, fileName, onChangeFileName, hashDeck}) => (
     <div className='connected-container'>
-        <button className='connected-component' onClick={onClickDownload}>
+        <button className='connected-component' onClick={() => {hashDeck(); onClickDownload();}}>
             Download as
         </button>
         <input
@@ -28,6 +28,7 @@ Download.propTypes = {
     onClickDownload: func.isRequired,
     fileName: string.isRequired,
     onChangeFileName: func.isRequired,
+    hashDeck: func.isRequired,
 };
 
 const mapStateToProps = ({playerState, gameSettings: {fileType, fileTypes, fileName}}) => ({
@@ -36,7 +37,7 @@ const mapStateToProps = ({playerState, gameSettings: {fileType, fileTypes, fileN
 });
 
 const mapDispatchToProps = {
-    onChangeFileType, onChangeFileName
+    onChangeFileType, onChangeFileName, hashDeck
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Download);

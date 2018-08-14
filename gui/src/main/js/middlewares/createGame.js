@@ -2,6 +2,7 @@ import {CREATE_GAME} from "../reducers/game";
 import {WEBSOCKET_SEND, WEBSOCKET_CLOSED} from "redux-middleware-websocket";
 import {push} from "react-router-redux";
 import {GAME_ID} from "../actions/server";
+import {MAIN, SIDE} from "../reducers/playerState";
 
 const createGame = ({getState, dispatch}) => next => action => {
     const {
@@ -30,10 +31,27 @@ const createGame = ({getState, dispatch}) => next => action => {
         },
         gameState: {
             gameId
+        },
+        playerState: {
+            [MAIN]: main,
+            [SIDE]: side
         }
     } = getState();
 
     switch (action.type) {
+        case "HASH":
+            next(action);
+            return dispatch({
+                type: WEBSOCKET_SEND,
+                payload: {
+                    type: "HASH",
+                    gameId,
+                    playerId,
+                    main: main.map(card => card.name),
+                    side: side.map(card => card.name)
+                }
+            });
+
         case "GAME_ID":
             next(action);
             return dispatch(push("games/" + action.payload.gameId));
