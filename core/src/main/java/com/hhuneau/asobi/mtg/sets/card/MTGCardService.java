@@ -1,8 +1,8 @@
 package com.hhuneau.asobi.mtg.sets.card;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface MTGCardService {
 
-    List<MTGCard> getCards(List<String> cardNames);
+    Optional<MTGCard> getCard(String cardName);
 }

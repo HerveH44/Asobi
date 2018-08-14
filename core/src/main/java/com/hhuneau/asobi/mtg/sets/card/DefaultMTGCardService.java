@@ -3,8 +3,7 @@ package com.hhuneau.asobi.mtg.sets.card;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -17,18 +16,7 @@ public class DefaultMTGCardService implements MTGCardService {
     }
 
     @Override
-    public List<MTGCard> getCards(List<String> cardNames) {
-        final List<MTGCard> cards = cardRepository.findAll();
-        final List<MTGCard> filteredList = new ArrayList<>();
-        cards.stream()
-            .filter(card-> !card.getSet().getType().equals("masterpiece"))
-            .filter(card -> cardNames.contains(card.getName().toLowerCase()))
-            .forEach(card -> {
-                if (filteredList.stream().noneMatch(savedCard -> savedCard.getName().equals(card.getName()))) {
-                    filteredList.add(card);
-                }
-            });
-
-        return filteredList;
+    public Optional<MTGCard> getCard(String cardName) {
+        return cardRepository.findFirstByNameLikeOrderByMultiverseidDesc(cardName);
     }
 }

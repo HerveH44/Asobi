@@ -53,18 +53,12 @@ public class DefaultGameService implements GameService {
     public CreateGameDTO createGame(CreateGameEvent evt) {
         final String authToken = UUID.randomUUID().toString();
         if (evt.gameMode.equals(CUBE)) {
-            final List<String> cardNames = Arrays.stream(evt.cubeList.split("\n")).map(String::toLowerCase).collect(Collectors.toList());
-            final List<MTGCard> cardList = cardService.getCards(cardNames);
-            if (cardList.size() != cardNames.size()) {
+            final List<String> cardNames = Arrays.stream(evt.cubeList.split("\n")).collect(Collectors.toList());
+            final List<MTGCard> cardList = new ArrayList<>();
+            final List<String> notFoundCardNames = new ArrayList<>();
+            cardNames.forEach(cardName -> cardService.getCard(cardName).ifPresentOrElse(cardList::add, () -> notFoundCardNames.add(cardName)));
 
-                final List<String> foundCardNames = cardList.stream()
-                    .map(card -> card.getName().toLowerCase())
-                    .collect(Collectors.toList());
-
-                final List<String> notFoundCardNames = cardNames.stream()
-                    .filter(cardName -> !foundCardNames.contains(cardName))
-                    .collect(Collectors.toList());
-
+            if (!notFoundCardNames.isEmpty()) {
                 throw new IllegalStateException(String.format("Following cards were not found in the database : %s", String.join(", ", notFoundCardNames)));
             }
 

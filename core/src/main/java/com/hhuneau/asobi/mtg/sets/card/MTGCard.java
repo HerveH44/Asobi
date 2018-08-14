@@ -11,6 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Table(indexes = {@Index(name = "card_name_index", columnList = "name")})
 public class MTGCard {
     @Id
     private String id;
