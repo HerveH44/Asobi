@@ -11,6 +11,8 @@ import com.hhuneau.asobi.websocket.events.game.host.StartGameEvent;
 import com.hhuneau.asobi.websocket.events.game.host.SwapPlayerEvent;
 import com.hhuneau.asobi.websocket.events.game.player.JoinGameEvent;
 import com.hhuneau.asobi.websocket.events.game.player.LeaveGameEvent;
+import com.hhuneau.asobi.websocket.events.game.player.MessageEvent;
+import com.hhuneau.asobi.websocket.events.game.player.PlayerNameEvent;
 import com.hhuneau.asobi.websocket.messages.ErrorMessage;
 import com.hhuneau.asobi.websocket.messages.PlayerIdMessage;
 
@@ -95,6 +97,16 @@ public abstract class GameCreatedEventHandler implements EventHandler {
         } else {
             customerService.send(evt.sessionId, ErrorMessage.of("operation not permitted"));
         }
+    }
+
+    @Override
+    public void handle(Game game, PlayerNameEvent evt) {
+        gameService.setPlayerName(game, evt);
+    }
+
+    @Override
+    public void handle(Game game, MessageEvent evt) {
+        gameService.addMessage(game, evt);
     }
 
     @Override

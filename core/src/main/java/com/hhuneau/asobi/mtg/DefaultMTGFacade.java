@@ -120,7 +120,6 @@ public class DefaultMTGFacade implements MTGFacade {
     }
 
     public static class GameStateDTO {
-        public List<PartialPlayerStateDTO> playersStates;
         public long gameId;
         public String title;
         public long seats;
@@ -133,6 +132,8 @@ public class DefaultMTGFacade implements MTGFacade {
         public boolean didGameStart;
         public long self;
         public boolean isHost;
+        public List<PartialPlayerStateDTO> playersStates;
+        public List<GameMessageDTO> messages;
 
         public static GameStateDTO of(Game game, Player player) {
             final int index = game.getPlayers().indexOf(player);
@@ -153,6 +154,11 @@ public class DefaultMTGFacade implements MTGFacade {
             gameStateDTO.playersStates = game.getPlayers().stream()
                 .map(PartialPlayerStateDTO::of)
                 .collect(Collectors.toList());
+
+            gameStateDTO.messages = game.getMessages().stream()
+                .map(GameMessageDTO::of)
+                .collect(Collectors.toList());
+
             return gameStateDTO;
         }
     }
@@ -177,6 +183,22 @@ public class DefaultMTGFacade implements MTGFacade {
             dto.cockHash = playerState.getCockHash();
             dto.mwsHash = playerState.getMwsHash();
             return dto;
+        }
+    }
+
+    private static class GameMessageDTO {
+        public long id;
+        public String name;
+        public Date time;
+        public String text;
+
+        public static GameMessageDTO of(GameMessage gameMessage) {
+            final GameMessageDTO message = new GameMessageDTO();
+            message.id = gameMessage.getId();
+            message.name = gameMessage.getName();
+            message.time = gameMessage.getTime();
+            message.text = gameMessage.getMessage();
+            return message;
         }
     }
 }

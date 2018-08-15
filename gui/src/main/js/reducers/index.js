@@ -6,6 +6,7 @@ import gameSettings from "./gameSettings";
 import player from "./player";
 import playerState from "./playerState";
 import websocket from "./websocket";
+import chat from "./chat";
 import {routerReducer as router} from 'react-router-redux';
 import storage from 'redux-persist/lib/storage'
 import {persistReducer} from 'redux-persist'
@@ -24,7 +25,8 @@ const reducers = combineReducers({
     router,
     player,
     playerState,
-    websocket
+    websocket,
+    chat
 });
 
 export default persistReducer(rootPersistConfig, reducers)

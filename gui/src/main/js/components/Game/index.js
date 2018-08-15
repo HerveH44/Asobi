@@ -7,6 +7,7 @@ import PlayersPanel from "./PlayersPanel/index"
 import DeckSettings from "./DeckSettings/index"
 import CardsZone from "./CardsZone/index"
 import GameSettings from "./GameSettings/index";
+import Chat from "./Chat";
 
 class Game extends Component {
     componentDidMount() {
@@ -22,16 +23,19 @@ class Game extends Component {
 
     render() {
         return (
-            <div className='game'>
-                <div className='game-controls'>
-                    <div className='game-status'>
-                        <PlayersPanel/>
-                        <StartPanel/>
+            <div className={"container"}>
+                <div className='game'>
+                    <div className='game-controls'>
+                        <div className='game-status'>
+                            <PlayersPanel/>
+                            <StartPanel/>
+                        </div>
+                        <DeckSettings/>
+                        <GameSettings/>
                     </div>
-                    <DeckSettings/>
-                    <GameSettings/>
+                    <CardsZone/>
                 </div>
-                <CardsZone/>
+                <Chat/>
             </div>
         )
     }

@@ -17,3 +17,6 @@ export const onChangeSort = createAction("CHANGE_SORT");
 export const onClickZone = createAction("CLICK_CARD_ZONE");
 export const hashDeck = createAction("HASH");
 export const onClickCopy = createAction("COPY_DECK_CLIPBOARD");
+export const onKeyDown = createAction("CHAT_PROMPT_KEY_DOWN");
+export const onErrorMessage = createAction("ERROR_MESSAGE");
+export const onGameMessage = createAction("GAME_MESSAGE");

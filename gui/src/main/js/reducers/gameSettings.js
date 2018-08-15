@@ -4,12 +4,12 @@ import {
     onChangeBeep,
     onChangeColumnView,
     onChangeFileName,
-    onChangeFileType, onChangePicksToSB,
+    onChangeFileType,
+    onChangePicksToSB,
     onChangeSort,
     onToggleChat
 } from "../actions/game";
 import beepSound from "../../resources/media/beep.wav"
-import {MAIN, SIDE} from "./playerState";
 
 const InitialState = {
     gameId: null,
@@ -24,7 +24,6 @@ const InitialState = {
     fileTypes: ["cod", "json", "txt"],
     fileType: "txt",
     fileName: "fileName",
-    showChat: true,
     beep: false,
     columnView: false,
     sort: "cmc",
@@ -72,13 +71,6 @@ export default handleActions({
         return {
             ...state,
             fileName: event.target.value,
-        }
-    },
-    [onToggleChat](state, {payload: event}) {
-        event.persist();
-        return {
-            ...state,
-            showChat: event.target.checked,
         }
     },
     [onChangeBeep](state, {payload: event}) {

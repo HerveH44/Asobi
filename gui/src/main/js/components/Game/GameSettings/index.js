@@ -47,8 +47,9 @@ GameSettings.propTypes = {
     onChangeColumnView: func.isRequired
 };
 
-const mapStateToProps = ({gameSettings}) => ({
+const mapStateToProps = ({gameSettings, chat}) => ({
     ...gameSettings,
+    showChat: chat.showChat
 });
 
 const mapDispatchToProps = {

@@ -1,5 +1,5 @@
 import React from 'react'
-import Lobby from "./Lobby/index";
+import Lobby from "./Lobby";
 import Game from "./Game";
 import {Route, Switch} from "react-router-dom";
 import {bool} from "prop-types";

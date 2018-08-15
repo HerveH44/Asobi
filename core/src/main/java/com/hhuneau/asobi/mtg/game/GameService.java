@@ -3,6 +3,8 @@ package com.hhuneau.asobi.mtg.game;
 import com.hhuneau.asobi.mtg.player.Player;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import com.hhuneau.asobi.websocket.events.game.host.StartGameEvent;
+import com.hhuneau.asobi.websocket.events.game.player.MessageEvent;
+import com.hhuneau.asobi.websocket.events.game.player.PlayerNameEvent;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,4 +38,8 @@ public interface GameService {
     void kick(Game game, long kick);
 
     void swap(Game game, List<Long> swap);
+
+    void addMessage(Game game, MessageEvent evt);
+
+    void setPlayerName(Game game, PlayerNameEvent evt);
 }

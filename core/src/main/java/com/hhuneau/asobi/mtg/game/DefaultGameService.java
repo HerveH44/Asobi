@@ -12,6 +12,8 @@ import com.hhuneau.asobi.mtg.sets.card.MTGCard;
 import com.hhuneau.asobi.mtg.sets.card.MTGCardService;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import com.hhuneau.asobi.websocket.events.game.host.StartGameEvent;
+import com.hhuneau.asobi.websocket.events.game.player.MessageEvent;
+import com.hhuneau.asobi.websocket.events.game.player.PlayerNameEvent;
 import com.hhuneau.asobi.websocket.messages.ErrorMessage;
 import com.hhuneau.asobi.websocket.messages.PackMessage;
 import com.hhuneau.asobi.websocket.messages.PickMessage;
@@ -321,6 +323,22 @@ public class DefaultGameService implements GameService {
         game.getPlayers().stream()
             .filter(player -> player.getSeat() == firstSeat || player.getSeat() == secondSeat)
             .forEach(player -> player.setSeat(player.getSeat() == firstSeat ? secondSeat : firstSeat));
+    }
+
+    @Override
+    public void addMessage(Game game, MessageEvent evt) {
+        game.getPlayers().stream()
+            .filter(player -> player.getPlayerId() == evt.playerId)
+            .findFirst()
+            .ifPresent(player -> game.getMessages().add(GameMessage.of(game, player.getName(), new Date(), evt.message)));
+    }
+
+    @Override
+    public void setPlayerName(Game game, PlayerNameEvent evt) {
+        game.getPlayers().stream()
+            .filter(player -> player.getPlayerId() == evt.playerId)
+            .findFirst()
+            .ifPresent(player -> player.setName(evt.name));
     }
 
     private void passPack(Game game, Player nextPlayer) {

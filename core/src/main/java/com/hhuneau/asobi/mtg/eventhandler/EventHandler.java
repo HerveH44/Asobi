@@ -41,6 +41,10 @@ public interface EventHandler {
 
     }
 
+    void handle(Game game, PlayerNameEvent evt);
+
+    void handle(Game game, MessageEvent evt);
+
     boolean isInterested(Game game);
 
     default void handle(Game game, GameEvent evt) {

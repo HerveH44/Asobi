@@ -40,6 +40,7 @@ public class Game {
     private boolean totalChaos;
     private boolean modernOnly;
     private int packsNumber;
+
     @ManyToMany
     @JoinColumn(name = "cards_ids")
     private List<MTGCard> cubeList;
@@ -47,9 +48,13 @@ public class Game {
     @OneToMany(orphanRemoval = true, cascade = ALL)
     @JoinColumn(name = "game_id")
     private List<Player> players;
+
     @ManyToMany
     @JoinColumn(name = "sets_list")
     private List<MTGSet> sets;
+
+    @OneToMany(orphanRemoval = true, mappedBy = "game", cascade = ALL)
+    private List<GameMessage> messages;
 
     public static Game of(CreateGameEvent evt, List<MTGSet> sets, String authToken, List<MTGCard> cubeList) {
         final Game game = new Game();
