@@ -265,7 +265,7 @@ export const getCardsAsMap = (state, zone, sort) => {
             break;
         case "rarity":
             keys =
-                ["Basic", "Common", "Uncommon", "Rare", "Mythic Rare", "Special"]
+                ["Basic Land", "Common", "Uncommon", "Rare", "Mythic Rare", "Special"]
                     .filter(x => keys.indexOf(x) > -1);
             break;
         case "type":

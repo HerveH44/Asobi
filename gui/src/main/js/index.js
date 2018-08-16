@@ -5,13 +5,15 @@ import App from './components/App'
 import createStore from "./state/store"
 import { WEBSOCKET_CONNECT } from "redux-middleware-websocket";
 import { PersistGate } from 'redux-persist/integration/react';
+import SockJS from "sockjs-client";
 import "../resources/css/style.css";
 
 const { store, persistor } = createStore();
 store.dispatch({
     type: WEBSOCKET_CONNECT,
     payload: {
-        url: 'ws://localhost:8080/ws'
+        websocket: SockJS,
+        url: `${location.href}ws`
     }
 });
 
