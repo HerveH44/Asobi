@@ -65,9 +65,10 @@ export default handleActions({
         }
     },
     [onReconnect](state, {payload}) {
+        const zone = state.addPicksToSB ? SIDE : MAIN;
         return {
             ...state,
-            [MAIN]: payload
+            [zone]: payload
         }
 
     },
@@ -98,8 +99,13 @@ export default handleActions({
             autoPickId: payload
         }
     },
-    [leaveGame]() {
-        return InitialState;
+    [leaveGame](state) {
+        return {
+            ...state,
+            [MAIN]: [],
+            [SIDE]: [],
+            [JUNK]: []
+        };
     },
     [onChangeLand](state, {payload: {zoneName, cardName, event}}) {
         event.persist();

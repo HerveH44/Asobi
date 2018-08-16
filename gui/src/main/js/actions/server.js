@@ -1,6 +1,6 @@
 import {createAction} from 'redux-actions';
 
-export const GAME_ID = createAction("GAME_ID");
+export const AUTH_TOKEN = createAction("AUTH_TOKEN");
 export const PLAYER_ID = createAction("PLAYER_ID");
 export const onReconnect = createAction("RECONNECT");
 export const onNewPack = createAction("PACK");

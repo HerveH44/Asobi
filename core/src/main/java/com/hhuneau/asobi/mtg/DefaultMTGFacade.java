@@ -6,13 +6,14 @@ import com.hhuneau.asobi.mtg.game.*;
 import com.hhuneau.asobi.mtg.player.Player;
 import com.hhuneau.asobi.mtg.player.PlayerService;
 import com.hhuneau.asobi.mtg.player.PlayerState;
+import com.hhuneau.asobi.mtg.sets.MTGSet;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import com.hhuneau.asobi.mtg.sets.SetDTO;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import com.hhuneau.asobi.websocket.events.SessionConnectedEvent;
 import com.hhuneau.asobi.websocket.events.SessionDisconnectedEvent;
 import com.hhuneau.asobi.websocket.events.game.GameEvent;
-import com.hhuneau.asobi.websocket.messages.CreatedGameMessage;
+import com.hhuneau.asobi.websocket.messages.AuthTokenMessage;
 import com.hhuneau.asobi.websocket.messages.ErrorMessage;
 import com.hhuneau.asobi.websocket.messages.GameStateMessage;
 import com.hhuneau.asobi.websocket.messages.SetsExportMessage;
@@ -51,7 +52,7 @@ public class DefaultMTGFacade implements MTGFacade {
     @EventListener
     public void handle(SessionConnectedEvent event) {
         final Map<String, List<SetDTO>> sets = setsService.getSets().stream()
-            .filter(set -> !set.getType().equals("masterpiece"))
+            .filter(set -> !List.of("masterpiece", "planechase", "starter", "commander").contains(set.getType()))
             .map(SetDTO::of)
             .collect(Collectors.groupingBy(SetDTO::getType));
         customerService.send(event.sessionId, SetsExportMessage.of(sets));
@@ -68,8 +69,8 @@ public class DefaultMTGFacade implements MTGFacade {
         customerService.find(evt.sessionId)
             .ifPresentOrElse(
                 customer -> {
-                    final CreateGameDTO createGameDTO = gameService.createGame(evt);
-                    customerService.send(evt.sessionId, CreatedGameMessage.of(createGameDTO));
+                    final AuthTokenDTO authTokenDTO = gameService.createGame(evt);
+                    customerService.send(evt.sessionId, AuthTokenMessage.of(authTokenDTO));
                 },
                 () -> LOGGER.error("cannot find session with id {}", evt.sessionId)
             );
@@ -113,7 +114,7 @@ public class DefaultMTGFacade implements MTGFacade {
 
         gameService.getAllCurrentGames().forEach(game -> {
             boolean toBroadcast = gameService.decreaseTimeLeft(game);
-            if(toBroadcast) {
+            if (toBroadcast) {
                 broadcastGameState(game);
             }
         });
@@ -132,6 +133,8 @@ public class DefaultMTGFacade implements MTGFacade {
         public boolean didGameStart;
         public long self;
         public boolean isHost;
+        public List<String> sets;
+        public String packsInfo;
         public List<PartialPlayerStateDTO> playersStates;
         public List<GameMessageDTO> messages;
 
@@ -149,6 +152,8 @@ public class DefaultMTGFacade implements MTGFacade {
             gameStateDTO.status = game.getStatus();
             gameStateDTO.title = game.getTitle();
             gameStateDTO.self = game.getPlayers().get(index).getSeat();
+            gameStateDTO.sets = game.getSets().stream().map(MTGSet::getCode).collect(Collectors.toList());
+            gameStateDTO.packsInfo = getPacksInfo(game);
             gameStateDTO.isHost = game.getHostId().equals(player.getUserId());
             gameStateDTO.didGameStart = game.getStatus().hasStarted();
             gameStateDTO.playersStates = game.getPlayers().stream()
@@ -160,6 +165,19 @@ public class DefaultMTGFacade implements MTGFacade {
                 .collect(Collectors.toList());
 
             return gameStateDTO;
+        }
+
+        private static String getPacksInfo(Game game) {
+            final String prefix = String.format("%s %s - ", game.getGameMode(), game.getGameType());
+            switch (game.getGameMode()) {
+                case NORMAL:
+                    return prefix + String.join("-", game.getSets().stream().map(MTGSet::getCode).collect(Collectors.toList()));
+                case CUBE:
+                    return prefix + game.getCubeList().size() + " cards";
+                case CHAOS:
+                    return prefix + String.format("%s %s", game.isTotalChaos() ? "Total Chaos " : "", game.isModernOnly() ? "Modern sets only" : "");
+            }
+            return prefix;
         }
     }
 

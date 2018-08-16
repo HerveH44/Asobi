@@ -1,7 +1,7 @@
 import {CREATE_GAME} from "../reducers/game";
 import {WEBSOCKET_SEND, WEBSOCKET_CLOSED} from "redux-middleware-websocket";
 import {push} from "react-router-redux";
-import {GAME_ID} from "../actions/server";
+import {AUTH_TOKEN} from "../actions/server";
 import {MAIN, SIDE} from "../reducers/playerState";
 
 const createGame = ({getState, dispatch}) => next => action => {
@@ -18,8 +18,7 @@ const createGame = ({getState, dispatch}) => next => action => {
             packsNumber,
             cubeList
         },
-        gameSettings: {
-            authToken,
+        startPanel: {
             addBots,
             useTimer,
             shufflePlayers,
@@ -30,6 +29,7 @@ const createGame = ({getState, dispatch}) => next => action => {
             name
         },
         gameState: {
+            authToken,
             gameId
         },
         playerState: {
@@ -52,7 +52,7 @@ const createGame = ({getState, dispatch}) => next => action => {
                 }
             });
 
-        case "GAME_ID":
+        case "AUTH_TOKEN":
             next(action);
             return dispatch(push("games/" + action.payload.gameId));
 

@@ -1,5 +1,5 @@
 import {handleActions} from 'redux-actions';
-import {GAME_STATE} from "../actions/server"
+import {GAME_STATE, AUTH_TOKEN} from "../actions/server"
 
 const InitialState = {
     playersStates: [{
@@ -15,6 +15,7 @@ const InitialState = {
     isHost: true,
     didGameStart: false,
     gameId: "",
+    authToken: null,
     title: "",
     seats: 0,
     isPrivate: true,
@@ -23,6 +24,7 @@ const InitialState = {
     status: "",
     createdDate: "",
     round: 0,
+    packsInfo: ""
 };
 
 export default handleActions({
@@ -34,5 +36,12 @@ export default handleActions({
             ...state,
             ...payload
         }
+    },
+    [AUTH_TOKEN](state, {payload}) {
+        return {
+            ...state,
+            ...payload
+        }
     }
+
 }, InitialState);

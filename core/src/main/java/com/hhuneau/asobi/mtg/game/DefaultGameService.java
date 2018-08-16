@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import static com.hhuneau.asobi.mtg.game.GameMode.CUBE;
 import static com.hhuneau.asobi.mtg.game.Status.FINISHED;
 import static com.hhuneau.asobi.mtg.game.Status.STARTED;
+import static java.util.Collections.emptyList;
 
 @Service
 @Transactional
@@ -52,7 +53,7 @@ public class DefaultGameService implements GameService {
     }
 
     @Override
-    public CreateGameDTO createGame(CreateGameEvent evt) {
+    public AuthTokenDTO createGame(CreateGameEvent evt) {
         final String authToken = UUID.randomUUID().toString();
         if (evt.gameMode.equals(CUBE)) {
             final List<String> cardNames = Arrays.stream(evt.cubeList.split("\n")).collect(Collectors.toList());
@@ -68,14 +69,14 @@ public class DefaultGameService implements GameService {
             if (cardList.size() < (evt.seats * evt.packsNumber * 15)) {
                 throw new IllegalStateException(String.format("Not enough cards to create cube for %s players and %s pack", evt.seats, evt.packsNumber));
             }
-            final Game game = Game.of(evt, null, authToken, cardList);
+            final Game game = Game.of(evt, emptyList(), authToken, cardList);
             final Game savedGame = gameRepository.save(game);
-            return CreateGameDTO.of(savedGame.getGameId(), savedGame.getAuthToken());
+            return AuthTokenDTO.of(savedGame.getGameId(), authToken);
         } else {
             final List<MTGSet> sets = setService.getSets(evt.sets);
-            final Game game = Game.of(evt, sets, authToken, null);
+            final Game game = Game.of(evt, sets, authToken, emptyList());
             final Game savedGame = gameRepository.save(game);
-            return CreateGameDTO.of(savedGame.getGameId(), savedGame.getAuthToken());
+            return AuthTokenDTO.of(savedGame.getGameId(), authToken);
         }
     }
 

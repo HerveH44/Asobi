@@ -1,58 +1,51 @@
 import React from "react";
 import {func, string, bool, array} from "prop-types";
-import { Checkbox, Select } from "../../utils";
+import {Checkbox, Select} from "../../utils";
 import {editGameSettings, joinGame, leaveGame, startGame} from "../../../actions/server";
 import {connect} from "react-redux";
+import {onEditStartPanel} from "../../../actions/game";
 
-const StartPanel = ({type, packsInfo, isHost, didGameStart, ...rest}) => (
+const StartPanel = ({gameType, packsInfo, isHost, didGameStart, ...rest}) => (
     <fieldset className='start-controls fieldset'>
         <legend className='legend game-legend'>Game</legend>
         <span>
-        <div>Type: {type}</div>
+        <div>Type: {gameType}</div>
         <div>Infos: {packsInfo}</div>
-        {(isHost && !didGameStart)
-            ? <StartControls type={type} {...rest} />
-            : <div />}
+            {(isHost && !didGameStart)
+                ? <StartControls gameType={gameType} {...rest} />
+                : <div/>}
         </span>
     </fieldset>
 );
 
 StartPanel.propTypes = {
-    type: string.isRequired,
+    gameType: string.isRequired,
     packsInfo: string.isRequired,
     isHost: bool.isRequired,
     didGameStart: bool.isRequired
 };
 
-const StartControls = ({type, startGame, ...rest}) => {
-//   const isDraft = type !== "sealed" && type !== "cube sealed";
-    const isDraft = true;
-
-    return (
+const StartControls = ({startGame, ...rest}) => (
+    <div>
+        <Options {...rest}/>
         <div>
-            {isDraft
-                ? <Options {...rest}/>
-                : <div/>}
-            <div>
-                <button onClick={startGame}>Start game</button>
-            </div>
+            <button onClick={startGame}>Start game</button>
         </div>
-    );
-};
+    </div>
+);
+
 
 StartControls.propTypes = {
-    type: string.isRequired,
-    useTimer: bool.isRequired,
     startGame: func.isRequired
 };
 
-const Options = ({useTimer, timers, timerLength, addBots, shufflePlayers, editGameSettings}) => {
+const Options = ({gameType, useTimer, timers, timerLength, addBots, shufflePlayers, onEditStartPanel}) => {
     const handleChangeChecked = name => (event) => {
-        editGameSettings({[name]: event.target.checked})
+        onEditStartPanel({[name]: event.target.checked});
     };
 
     const handleChange = name => (event) => {
-        editGameSettings({[name]: event.target.value})
+        onEditStartPanel({[name]: event.target.value});
     };
 
     return (
@@ -60,20 +53,25 @@ const Options = ({useTimer, timers, timerLength, addBots, shufflePlayers, editGa
             <Checkbox
                 checked={addBots}
                 onChange={handleChangeChecked('addBots')}
-                text=" bots"
+                text=" Add Bots"
             />
-            <div>
-                <Checkbox
-                    checked={useTimer}
-                    onChange={ handleChangeChecked('useTimer')}
-                    text=" timer: "
-                />
-                <Select
-                    value={timerLength}
-                    opts={timers}
-                    onChange={handleChange("timerLength")}
-                    disabled={!useTimer}/>
-            </div>
+            {gameType === "DRAFT"
+                ? <div>
+
+                    <Checkbox
+                        checked={useTimer}
+                        onChange={handleChangeChecked('useTimer')}
+                        text=" Timer: "
+                    />
+                    <Select
+                        value={timerLength}
+                        opts={timers}
+                        onChange={handleChange("timerLength")}
+                        disabled={!useTimer}/>
+                </div>
+                : <div/>
+            }
+
             <Checkbox
                 checked={shufflePlayers}
                 onChange={handleChangeChecked('shufflePlayers')}
@@ -86,21 +84,22 @@ Options.propTypes = {
     useTimer: bool.isRequired,
     addBots: bool.isRequired,
     shufflePlayers: bool.isRequired,
-    editGameSettings: func.isRequired,
+    onEditStartPanel: func.isRequired,
     timers: array.isRequired,
-    timerLength: string.isRequired
+    timerLength: string.isRequired,
+    gameType: string.isRequired
 };
 
-const mapStateToProps = ({gameState, gameSettings}) => ({
+const mapStateToProps = ({gameState, startPanel}) => ({
     ...gameState,
-    ...gameSettings
+    ...startPanel
 });
 
 const mapDispatchToProps = {
     leaveGame,
     joinGame,
     startGame,
-    editGameSettings
+    onEditStartPanel
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(StartPanel);

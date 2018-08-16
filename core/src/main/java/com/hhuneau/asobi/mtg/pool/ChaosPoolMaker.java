@@ -10,6 +10,8 @@ import com.hhuneau.asobi.mtg.sets.MTGSet;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import com.hhuneau.asobi.mtg.sets.card.MTGCard;
 import com.hhuneau.asobi.mtg.sets.card.Rarity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -21,6 +23,7 @@ import static com.hhuneau.asobi.mtg.sets.card.Rarity.*;
 @Component
 public class ChaosPoolMaker implements PoolMaker {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChaosPoolMaker.class);
     private final MTGSetsService setsService;
     private final List<SetBoosterMaker> setBoosterMakers;
 

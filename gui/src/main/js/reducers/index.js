@@ -5,6 +5,7 @@ import gameState from "./gameState";
 import gameSettings from "./gameSettings";
 import player from "./player";
 import playerState from "./playerState";
+import startPanel from "./startPanel";
 import websocket from "./websocket";
 import chat from "./chat";
 import {routerReducer as router} from 'react-router-redux';
@@ -14,7 +15,7 @@ import {persistReducer} from 'redux-persist'
 const rootPersistConfig = {
     key: 'root',
     storage,
-    whitelist: ['game', 'player', "gameSettings"]
+    whitelist: ['game', 'player', "startPanel"]
 };
 
 const reducers = combineReducers({
@@ -25,6 +26,7 @@ const reducers = combineReducers({
     router,
     player,
     playerState,
+    startPanel,
     websocket,
     chat
 });

@@ -57,7 +57,8 @@ public class MTGJsonDownloader {
         final Map<String, MTGSet> sets = mapper.readValue(file, new TypeReference<Map<String, MTGSet>>() {
         });
         sets.forEach((setName, mtgSet) -> {
-            if (!allowedTypes.contains(mtgSet.getType()) && !allowedSets.contains(mtgSet.getCode())) {
+            if (!allowedTypes.contains(mtgSet.getType()) && !allowedSets.contains(mtgSet.getCode())
+                || mtgSet.getCode().equals("TSB")) {
                 return;
             }
             try {

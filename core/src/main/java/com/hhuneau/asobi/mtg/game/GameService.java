@@ -13,7 +13,7 @@ public interface GameService {
 
     Optional<Game> getGame(long gameId);
 
-    CreateGameDTO createGame(CreateGameEvent evt);
+    AuthTokenDTO createGame(CreateGameEvent evt);
 
     Player addPlayer(Game game, Player player);
 

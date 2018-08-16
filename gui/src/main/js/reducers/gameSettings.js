@@ -1,26 +1,16 @@
 import {handleActions} from 'redux-actions';
-import {editGameSettings, GAME_ID, joinGame, onNewPack} from "../actions/server"
+import {AUTH_TOKEN, editGameSettings, GAME_STATE, joinGame, onNewPack} from "../actions/server"
 import {
     onChangeBeep,
     onChangeColumnView,
     onChangeFileName,
     onChangeFileType,
     onChangePicksToSB,
-    onChangeSort,
-    onToggleChat
+    onChangeSort
 } from "../actions/game";
 import beepSound from "../../resources/media/beep.wav"
 
 const InitialState = {
-    gameId: null,
-    authToken: null,
-    type: "draft",
-    packsInfo: "some packs infos",
-    addBots: true,
-    useTimer: true,
-    shufflePlayers: true,
-    timers: ["Fast", "Moderate", "Slow", "Leisurely"],
-    timerLength: "Moderate",
     fileTypes: ["cod", "json", "txt"],
     fileType: "txt",
     fileName: "fileName",
@@ -44,20 +34,6 @@ export default handleActions({
             ...state,
             ...payload
         };
-    },
-    [joinGame](state, {payload}) {
-        return {
-            ...state,
-            gameId: payload
-        }
-    },
-    [GAME_ID](state, {payload}) {
-        return {
-            ...state,
-            ...payload
-        }
-    },
-    "POOL"(state, {payload}) {
     },
     [onChangeFileType](state, {payload: event}) {
         event.persist();
@@ -101,4 +77,14 @@ export default handleActions({
             addPicksToSB: event.target.checked,
         }
     },
+    [GAME_STATE](state, {payload}) {
+        if(state.fileName === "fileName") {
+            const {gameMode, gameType, createdDate} = payload;
+            state.fileName = `${gameMode}-${gameType}-${new Date(createdDate).toISOString().slice(0, -5).replace(/-/g,"").replace(/:/g,"").replace("T","-")}`
+        }
+
+        return {
+            ...state,
+        }
+    }
 }, InitialState);
