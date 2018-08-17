@@ -1,5 +1,5 @@
 import {handleActions} from 'redux-actions';
-import {AUTH_TOKEN, editGameSettings, GAME_STATE, joinGame, onNewPack} from "../actions/server"
+import {editGameSettings, GAME_STATE, leaveGame, onNewPack} from "../actions/server"
 import {
     onChangeBeep,
     onChangeColumnView,
@@ -23,7 +23,7 @@ const InitialState = {
 
 export default handleActions({
     [onNewPack](state) {
-        if(state.beep) {
+        if (state.beep) {
             const audio = new Audio(beepSound);
             audio.play();
         }
@@ -77,10 +77,16 @@ export default handleActions({
             addPicksToSB: event.target.checked,
         }
     },
+    [leaveGame](state) {
+        state.fileName = "fileName";
+        return {
+            ...state
+        }
+    },
     [GAME_STATE](state, {payload}) {
-        if(state.fileName === "fileName") {
+        if (state.fileName === "fileName") {
             const {gameMode, gameType, createdDate} = payload;
-            state.fileName = `${gameMode}-${gameType}-${new Date(createdDate).toISOString().slice(0, -5).replace(/-/g,"").replace(/:/g,"").replace("T","-")}`
+            state.fileName = `${gameMode}-${gameType}-${new Date(createdDate).toISOString().slice(0, -5).replace(/-/g, "").replace(/:/g, "").replace("T", "-")}`
         }
 
         return {
