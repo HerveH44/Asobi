@@ -48,6 +48,15 @@ const handleCommand = ({dispatch, gameId, playerId, text}) => {
                 });
             }
 
+            dispatch({
+                type: "CHANGE_NAME",
+                payload: {
+                    target: {
+                        value: name
+                    }
+                }
+            });
+
             return dispatch({
                 type: WEBSOCKET_SEND,
                 payload: {

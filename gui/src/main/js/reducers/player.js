@@ -15,7 +15,6 @@ export default handleActions({
         }
     },
     [onChangePlayerName](state, {payload}) {
-        console.log("coucou " + payload.target.value);
         return {
             ...state,
             name: payload.target.value

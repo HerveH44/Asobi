@@ -50,8 +50,7 @@ class Card extends Component {
                  onClick={onClick}
                  title={title}
                  onMouseEnter={onMouseEnter ? onMouseEnter : this.onMouseEnter}
-                 onMouseLeave={onMouseLeave ? onMouseLeave : this.onMouseLeave}
-                    onDoubleClick={() => console.log("double-click")}>
+                 onMouseLeave={onMouseLeave ? onMouseLeave : this.onMouseLeave}>
                 <img src={src}
                      alt={card.name}/>
             </div>
