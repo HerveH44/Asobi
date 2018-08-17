@@ -1,6 +1,7 @@
 package com.hhuneau.asobi.mtg.game;
 
 import com.hhuneau.asobi.customer.CustomerService;
+import com.hhuneau.asobi.mtg.player.Pick;
 import com.hhuneau.asobi.mtg.player.Player;
 import com.hhuneau.asobi.mtg.player.PlayerState;
 import com.hhuneau.asobi.mtg.pool.Booster;
@@ -24,6 +25,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.hhuneau.asobi.mtg.game.GameMode.CUBE;
+import static com.hhuneau.asobi.mtg.game.GameMode.NORMAL;
 import static com.hhuneau.asobi.mtg.game.Status.FINISHED;
 import static com.hhuneau.asobi.mtg.game.Status.STARTED;
 import static java.util.Collections.emptyList;
@@ -72,9 +74,21 @@ public class DefaultGameService implements GameService {
             final Game game = Game.of(evt, emptyList(), authToken, cardList);
             final Game savedGame = gameRepository.save(game);
             return AuthTokenDTO.of(savedGame.getGameId(), authToken);
+        } else if (evt.gameMode.equals(NORMAL)) {
+            final List<MTGSet> setsList = new ArrayList<>();
+            final List<String> notFoundSets = new ArrayList<>();
+            evt.sets.forEach(setCode -> setService.getSet(setCode).ifPresentOrElse(setsList::add, () -> notFoundSets.add(setCode)));
+
+
+            if (!notFoundSets.isEmpty()) {
+                throw new IllegalStateException(String.format("Following sets were not found in the database : %s", String.join(", ", notFoundSets)));
+            }
+
+            final Game game = Game.of(evt, setsList, authToken, emptyList());
+            final Game savedGame = gameRepository.save(game);
+            return AuthTokenDTO.of(savedGame.getGameId(), authToken);
         } else {
-            final List<MTGSet> sets = setService.getSets(evt.sets);
-            final Game game = Game.of(evt, sets, authToken, emptyList());
+            final Game game = Game.of(evt, emptyList(), authToken, emptyList());
             final Game savedGame = gameRepository.save(game);
             return AuthTokenDTO.of(savedGame.getGameId(), authToken);
         }
@@ -234,9 +248,14 @@ public class DefaultGameService implements GameService {
 
         playerState.getWaitingPacks().remove(waitingPack);
         waitingPack.getCards().remove(pickedCard);
+
+        final Pick pick = Pick.of(game, pickedCard, waitingPack);
+        playerState.getPicksLog().add(pick);
+
         waitingPack.setPickNumber(waitingPack.getPickNumber() + 1);
         playerState.getPickedCards().add(pickedCard);
         playerState.setAutoPickId("");
+
 
         final String sessionId = player.getUserId();
         if (sessionId != null && !sessionId.equals("")) {

@@ -38,6 +38,10 @@ public class PlayerState {
     private String cockHash;
     private String mwsHash;
 
+    @OneToMany(cascade = ALL)
+    @JoinColumn(name = "state_id")
+    private List<Pick> picksLog = new ArrayList<>();
+
     public Pack getWaitingPack() {
         if(!hasWaitingPack()) {
             return null;

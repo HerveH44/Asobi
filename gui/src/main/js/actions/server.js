@@ -14,3 +14,4 @@ export const pick = createAction("PICK");
 export const autoPick = createAction("AUTOPICK");
 export const onLobbyStats = createAction("LOBBY_STATS");
 export const onSetPlayerName = createAction("SET_NAME");
+export const onGetDraftLog = createAction("DRAFT_LOG");

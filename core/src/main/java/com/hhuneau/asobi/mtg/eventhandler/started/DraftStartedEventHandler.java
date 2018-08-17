@@ -6,7 +6,9 @@ import com.hhuneau.asobi.mtg.game.GameService;
 import com.hhuneau.asobi.mtg.player.Player;
 import com.hhuneau.asobi.mtg.player.PlayerService;
 import com.hhuneau.asobi.websocket.events.game.player.AutoPickEvent;
+import com.hhuneau.asobi.websocket.events.game.player.DraftLogEvent;
 import com.hhuneau.asobi.websocket.events.game.player.PickEvent;
+import com.hhuneau.asobi.websocket.messages.DraftLogMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,15 @@ public class DraftStartedEventHandler extends GameStartedEventHandler {
             .filter(player -> player.getPlayerId() == evt.playerId)
             .findFirst()
             .ifPresent(player -> autoPick(game, evt, player));
+    }
+
+    @Override
+    public void handle(Game game, DraftLogEvent evt) {
+        game.getPlayers().stream()
+            .filter(player -> player.getPlayerId() == evt.playerId)
+            .findFirst()
+            .ifPresent(player -> customerService.send(player.getUserId(),
+                DraftLogMessage.of(player.getPlayerState().getPicksLog())));
     }
 
     private void autoPick(Game game, AutoPickEvent evt, Player player) {

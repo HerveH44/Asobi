@@ -39,6 +39,16 @@ const createGame = ({getState, dispatch}) => next => action => {
     } = getState();
 
     switch (action.type) {
+        case "CLICK_LOG":
+            next(action);
+            return dispatch({
+                type: WEBSOCKET_SEND,
+                payload: {
+                    type: "DRAFT_LOG",
+                    gameId,
+                    playerId,
+                }
+            });
         case "HASH":
             next(action);
             return dispatch({
@@ -51,6 +61,7 @@ const createGame = ({getState, dispatch}) => next => action => {
                     side: side.map(card => card.name)
                 }
             });
+
 
         case "SET_NAME":
             next(action);

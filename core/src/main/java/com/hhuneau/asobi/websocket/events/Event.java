@@ -20,6 +20,7 @@ import com.hhuneau.asobi.websocket.events.game.player.*;
     @JsonSubTypes.Type(value = HashDeckEvent.class, name = "HASH"),
     @JsonSubTypes.Type(value = PlayerNameEvent.class, name = "SET_NAME"),
     @JsonSubTypes.Type(value = MessageEvent.class, name = "GAME_MESSAGE"),
+    @JsonSubTypes.Type(value = DraftLogEvent.class, name = "DRAFT_LOG"),
 })
 public abstract class Event {
     public EventType type;
