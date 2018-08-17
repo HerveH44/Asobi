@@ -27,15 +27,12 @@ export default handleActions({
             }])
         }
     },
-    [onGameMessage](state, {payload}) {
-        return {
-            ...state,
-            messages: state.messages.concat([payload])
-        }
-    },
     [GAME_STATE](state, {payload}) {
+        const newMessages = state.messages.length !== payload.messages.length;
+
         return {
             ...state,
+            showChat: state.showChat || newMessages,
             messages: payload.messages
         }
     }
