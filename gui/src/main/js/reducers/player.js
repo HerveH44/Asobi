@@ -1,5 +1,6 @@
 import {handleActions} from 'redux-actions';
-import {PLAYER_ID} from "../actions/server"
+import {PLAYER_ID} from "../actions/server";
+import {onChangePlayerName} from "../actions/game"
 
 const InitialState = {
     name: "dr4ft",
@@ -11,6 +12,13 @@ export default handleActions({
         return {
             ...state,
             playerId
+        }
+    },
+    [onChangePlayerName](state, {payload}) {
+        console.log("coucou " + payload.target.value);
+        return {
+            ...state,
+            name: payload.target.value
         }
     }
 }, InitialState);

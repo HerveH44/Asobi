@@ -17,7 +17,7 @@ const JoinPanel = ({roomsInfo}) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {roomsInfo.map(room => <tr key={room}>
+                            {roomsInfo.map((room, key) => <tr key={key}>
                                 <td>{room.title}</td>
                                 <td>{room.type}</td>
                                 <td>{room.packsInfo}</td>

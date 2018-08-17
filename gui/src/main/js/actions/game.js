@@ -21,3 +21,4 @@ export const onKeyDown = createAction("CHAT_PROMPT_KEY_DOWN");
 export const onErrorMessage = createAction("ERROR_MESSAGE");
 export const onGameMessage = createAction("GAME_MESSAGE");
 export const onEditStartPanel = createAction("EDIT_START_PANEL");
+export const onChangePlayerName = createAction("CHANGE_NAME");

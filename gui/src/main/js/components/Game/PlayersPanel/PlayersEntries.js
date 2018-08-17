@@ -1,6 +1,7 @@
 import React, {Component} from "react";
-import {array, object, number, bool, func} from "prop-types";
-import {onSwap, onKick} from "../../../actions/game"
+import {array, object, number, bool, func, string} from "prop-types";
+import {onSwap, onKick, onChangePlayerName} from "../../../actions/game"
+import {onSetName, onSetPlayerName} from "../../../actions/server"
 import arrowUp from "../../../../resources/media/arrow-up.png"
 import arrowDown from "../../../../resources/media/arrow-down.png"
 
@@ -30,7 +31,7 @@ PlayerEntries.propTypes = {
     onKick: func.isRequired
 };
 
-const PlayerEntry = ({player: {isBot, name, packs, time, cockHash, mwsHash}, index, playersStates: {length}, self, didGameStart, isHost, onSwap, onKick}) => {
+const PlayerEntry = ({player: {isBot, name, packs, time, cockHash, mwsHash}, myName, onChangePlayerName, onSetPlayerName, index, playersStates: {length}, self, didGameStart, isHost, onSwap, onKick}) => {
     const opp
         = length % 2 === 0
         ? (self + length / 2) % length
@@ -50,7 +51,14 @@ const PlayerEntry = ({player: {isBot, name, packs, time, cockHash, mwsHash}, ind
     const columns = [
         <td key={0}>{index + 1}</td>,
         <td key={1}>{connectionStatusIndicator}</td>,
-        <td key={2}>{name}</td>,
+        <td key={2}>{index === self
+            ? <input type='text'
+                     size={10}
+                     maxLength={10}
+                     value={myName}
+                     onBlur={onSetPlayerName}
+                     onChange={onChangePlayerName}/>
+            : name}</td>,
         <td key={3}>{packs}</td>,
         <td key={4}>{time}</td>,
         <td key={5}>{cockHash}</td>,
@@ -76,7 +84,7 @@ const PlayerEntry = ({player: {isBot, name, packs, time, cockHash, mwsHash}, ind
                         kick
                     </button>
                 </td>
-                :<td key={9}/>);
+                : <td key={9}/>);
     }
 
     return <tr className={className}>{columns}</tr>;
@@ -90,16 +98,22 @@ PlayerEntry.propTypes = {
     didGameStart: bool.isRequired,
     isHost: bool.isRequired,
     onSwap: func.isRequired,
-    onKick: func.isRequired
+    onKick: func.isRequired,
+    onChangePlayerName: func.isRequired,
+    onSetPlayerName: func.isRequired,
+    myName: string.isRequired
 };
 
-const mapStateToProps = ({gameState}) => ({
-    ...gameState
+const mapStateToProps = ({gameState, player}) => ({
+    ...gameState,
+    myName: player.name
 });
 
 const mapDispatchToProps = {
     onSwap,
-    onKick
+    onKick,
+    onChangePlayerName,
+    onSetPlayerName
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayerEntries)

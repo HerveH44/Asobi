@@ -52,6 +52,18 @@ const createGame = ({getState, dispatch}) => next => action => {
                 }
             });
 
+        case "SET_NAME":
+            next(action);
+            return dispatch({
+                type: WEBSOCKET_SEND,
+                payload: {
+                    type: "SET_NAME",
+                    gameId,
+                    playerId,
+                    name: action.payload.target.value
+                }
+            });
+
         case "AUTH_TOKEN":
             next(action);
             return dispatch(push("games/" + action.payload.gameId));
