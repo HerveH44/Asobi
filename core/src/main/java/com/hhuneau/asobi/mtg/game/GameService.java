@@ -29,8 +29,6 @@ public interface GameService {
 
     void startNewRound(Game game);
 
-    List<Game> getAllCurrentGames();
-
     void pick(Game game, Player player, String cardI);
 
     boolean decreaseTimeLeft(Game game);
@@ -42,4 +40,8 @@ public interface GameService {
     void addMessage(Game game, MessageEvent evt);
 
     void setPlayerName(Game game, PlayerNameEvent evt);
+
+    List<Game> getGamesByStatus(Status status);
+
+    void delete(Game game);
 }

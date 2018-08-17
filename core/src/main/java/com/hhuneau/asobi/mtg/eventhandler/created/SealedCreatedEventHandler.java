@@ -18,6 +18,7 @@ import static com.hhuneau.asobi.mtg.game.GameType.SEALED;
 @Component
 @Transactional
 public class SealedCreatedEventHandler extends GameCreatedEventHandler {
+
     public SealedCreatedEventHandler(GameService gameService, CustomerService customerService, PoolService poolService) {
         super(gameService, customerService, poolService);
     }

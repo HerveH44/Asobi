@@ -16,8 +16,8 @@ import static com.hhuneau.asobi.mtg.game.GameType.DRAFT;
 @Transactional
 public class DraftStartedEventHandler extends GameStartedEventHandler {
 
-    public DraftStartedEventHandler(GameService gameService, PlayerService playerService, CustomerService customerService) {
-        super(customerService, playerService, gameService);
+    protected DraftStartedEventHandler(GameService gameService, CustomerService customerService, PlayerService playerService) {
+        super(gameService, customerService, playerService);
     }
 
     @Override

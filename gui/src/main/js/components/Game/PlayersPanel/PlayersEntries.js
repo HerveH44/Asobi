@@ -12,11 +12,11 @@ class PlayerEntries extends Component {
             this.props.playersStates
                 .sort((a, b) => a.seat - b.seat)
                 .map((p, i) =>
-                <PlayerEntry
-                    key={i}
-                    player={p}
-                    index={i}
-                    {...this.props} />)
+                    <PlayerEntry
+                        key={i}
+                        player={p}
+                        index={i}
+                        {...this.props} />)
         );
     }
 }
@@ -57,29 +57,26 @@ const PlayerEntry = ({player: {isBot, name, packs, time, cockHash, mwsHash}, ind
         <td key={6}>{mwsHash}</td>
     ];
 
-    if (isHost) {
+    if (isHost && !didGameStart) {
         //Move Player Button
-        if (!didGameStart)
-            columns.push(
-                <td key={7}>
-                    <button onClick={() => onSwap([index, index + 1])}>
-                        <img src={arrowUp} width="16px"/>
-                    </button>
-                    <button onClick={() => onSwap([index, index - 1])}>
-                        <img src={arrowDown} width="16px"/>
-                    </button>
-                </td>);
+        columns.push(
+            <td key={7}>
+                <button onClick={() => onSwap([index, index + 1])}>
+                    <img src={arrowUp} width="16px"/>
+                </button>
+                <button onClick={() => onSwap([index, index - 1])}>
+                    <img src={arrowDown} width="16px"/>
+                </button>
+            </td>);
         //Kick Player button
-        if (index !== self && !isBot) {
-            columns.push(
+        columns.push(
+            index !== self && !isBot ?
                 <td key={8}>
                     <button onClick={() => onKick(index)}>
                         kick
                     </button>
-                </td>);
-        } else {
-            columns.push(<td key={9}/>);
-        }
+                </td>
+                :<td key={9}/>);
     }
 
     return <tr className={className}>{columns}</tr>;

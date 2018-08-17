@@ -1,13 +1,14 @@
 import {createAction, handleActions} from 'redux-actions';
 import {WEBSOCKET_CLOSED, WEBSOCKET_DISCONNECT} from "redux-middleware-websocket";
+import {onLobbyStats} from "../actions/server"
 export const editDefault = createAction("EDIT_DEFAULT");
 
 const initialState = {
     siteTitle: "Asobi",
     error: "",
-    numUsers: 0,
-    numPlayers: 0,
-    numActiveGames: 0,
+    users: 0,
+    players: 0,
+    games: 0,
     roomsInfo: [],
     motd: ["test motd"],
     repo: "https://github.com/herveh44/asobi",
@@ -40,5 +41,12 @@ export default handleActions({
             ...state,
             error: "The connection with the server has been interrupted. Please refresh your browser.\n" + payload.event.reason
         }
+    },
+    [onLobbyStats](state, {payload}) {
+        return {
+            ...state,
+            ...payload
+        }
+
     }
 }, initialState);

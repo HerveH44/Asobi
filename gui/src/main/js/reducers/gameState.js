@@ -31,7 +31,6 @@ export default handleActions({
     //TODO: refactor: je veux pas que mes messages arrivent la.
     // Le mieux serait de séparer les infos...
     [GAME_STATE](state, {payload}) {
-
         return {
             ...state,
             ...payload

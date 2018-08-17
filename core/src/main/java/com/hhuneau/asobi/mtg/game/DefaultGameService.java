@@ -217,11 +217,6 @@ public class DefaultGameService implements GameService {
     }
 
     @Override
-    public List<Game> getAllCurrentGames() {
-        return gameRepository.findAllByStatus(STARTED);
-    }
-
-    @Override
     public void pick(Game game, Player player, String cardId) {
         final PlayerState playerState = player.getPlayerState();
 
@@ -340,6 +335,16 @@ public class DefaultGameService implements GameService {
             .filter(player -> player.getPlayerId() == evt.playerId)
             .findFirst()
             .ifPresent(player -> player.setName(evt.name));
+    }
+
+    @Override
+    public List<Game> getGamesByStatus(Status status) {
+        return gameRepository.findAllByStatus(status);
+    }
+
+    @Override
+    public void delete(Game game) {
+        gameRepository.delete(game);
     }
 
     private void passPack(Game game, Player nextPlayer) {

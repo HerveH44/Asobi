@@ -23,7 +23,7 @@ const JoinPanel = ({roomsInfo}) => {
                                 <td>{room.packsInfo}</td>
                                 <td>{room.usedSeats}/{room.totalSeats}</td>
                                 <td>
-                                    <a href={`/${room.id}`} className='join-room-link'>
+                                    <a href={`/games/${room.id}`} className='join-room-link'>
                                         Join room
                                     </a>
                                 </td>

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {func, string} from "prop-types";
 import {connect} from 'react-redux';
-import {editGameSettings, joinGame, leaveGame, startGame} from "../../actions/server"
+import {joinGame, leaveGame} from "../../actions/server"
 import StartPanel from "./StartPanel/index"
 import PlayersPanel from "./PlayersPanel/index"
 import DeckSettings from "./DeckSettings/index"
@@ -11,14 +11,19 @@ import Chat from "./Chat";
 
 class Game extends Component {
     componentDidMount() {
-        const {joinGame, editGameSettings, gameId} = this.props;
-        editGameSettings({gameId});
+        const {joinGame, gameId} = this.props;
         joinGame(gameId);
+        window.addEventListener('beforeunload', this.componentCleanup(this.props));
     }
+
+    componentCleanup = ({leaveGame, gameId}) => () => { // this will hold the cleanup code
+        leaveGame(gameId);
+    };
 
     componentWillUnmount() {
         const {leaveGame, gameId} = this.props;
         leaveGame(gameId);
+        window.removeEventListener('beforeunload', this.componentCleanup(this.props)); // remove the event handler for normal unmountin
     }
 
     render() {
@@ -45,7 +50,6 @@ Game.propTypes = {
     gameId: string.isRequired,
     joinGame: func.isRequired,
     leaveGame: func.isRequired,
-    editGameSettings: func.isRequired
 };
 
 const mapStateToProps = ({}, {match: {params: {gameId}}}) => ({
@@ -55,8 +59,6 @@ const mapStateToProps = ({}, {match: {params: {gameId}}}) => ({
 const mapDispatchToProps = {
     leaveGame,
     joinGame,
-    startGame,
-    editGameSettings
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);

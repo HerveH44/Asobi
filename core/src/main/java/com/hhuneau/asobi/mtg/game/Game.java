@@ -10,6 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.hhuneau.asobi.mtg.game.Status.CREATED;
 import static javax.persistence.CascadeType.ALL;
@@ -75,5 +76,18 @@ public class Game {
 
     public boolean isFull() {
         return players.size() >= seats;
+    }
+
+    public String getPacksInfo() {
+        final String packsInfo = String.format("%s %s - ", getGameMode(), getGameType());
+        switch (getGameMode()) {
+            case NORMAL:
+                return packsInfo + String.join("-", getSets().stream().map(MTGSet::getCode).collect(Collectors.toList()));
+            case CUBE:
+                return packsInfo + getCubeList().size() + " cards";
+            case CHAOS:
+                return packsInfo + String.format("%s %s", isTotalChaos() ? "Total Chaos " : "", isModernOnly() ? "Modern sets only" : "");
+        }
+        return packsInfo;
     }
 }

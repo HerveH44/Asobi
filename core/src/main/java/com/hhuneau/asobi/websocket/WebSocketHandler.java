@@ -54,8 +54,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         final String sessionId = getSessionId(session);
         customerService.remove(sessionId);
-        SessionDisconnectedEvent sessionConnectedEvent = SessionDisconnectedEvent.of(sessionId);
-        publisher.publishEvent(sessionConnectedEvent);
+        SessionDisconnectedEvent sessionDisconnectedEvent = SessionDisconnectedEvent.of(sessionId);
+        publisher.publishEvent(sessionDisconnectedEvent);
     }
 
     private String getSessionId(WebSocketSession session) {

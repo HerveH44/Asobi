@@ -24,10 +24,15 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.hhuneau.asobi.mtg.game.Status.CREATED;
+import static com.hhuneau.asobi.mtg.game.Status.STARTED;
 
 @Component
 @Transactional
@@ -111,13 +116,23 @@ public class DefaultMTGFacade implements MTGFacade {
 
     @Scheduled(fixedRate = 1000)
     public void decreaseTimeLeft() {
-
-        gameService.getAllCurrentGames().forEach(game -> {
+        gameService.getGamesByStatus(STARTED).forEach(game -> {
             boolean toBroadcast = gameService.decreaseTimeLeft(game);
             if (toBroadcast) {
                 broadcastGameState(game);
             }
         });
+    }
+
+    @Scheduled(cron = "0 0/1 * * * *")
+    public void finishStalledGames() {
+        //Stalled games are games created at least 15 minutes ago that didn't start
+        gameService.getGamesByStatus(CREATED).stream()
+            .filter(game -> {
+                final LocalDateTime createdDate = game.getCreatedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                return createdDate.plusMinutes(15).isBefore(LocalDateTime.now());
+            })
+            .forEach(gameService::finishGame);
     }
 
     public static class GameStateDTO {
@@ -153,7 +168,7 @@ public class DefaultMTGFacade implements MTGFacade {
             gameStateDTO.title = game.getTitle();
             gameStateDTO.self = game.getPlayers().get(index).getSeat();
             gameStateDTO.sets = game.getSets().stream().map(MTGSet::getCode).collect(Collectors.toList());
-            gameStateDTO.packsInfo = getPacksInfo(game);
+            gameStateDTO.packsInfo = game.getPacksInfo();
             gameStateDTO.isHost = game.getHostId().equals(player.getUserId());
             gameStateDTO.didGameStart = game.getStatus().hasStarted();
             gameStateDTO.playersStates = game.getPlayers().stream()
@@ -165,19 +180,6 @@ public class DefaultMTGFacade implements MTGFacade {
                 .collect(Collectors.toList());
 
             return gameStateDTO;
-        }
-
-        private static String getPacksInfo(Game game) {
-            final String prefix = String.format("%s %s - ", game.getGameMode(), game.getGameType());
-            switch (game.getGameMode()) {
-                case NORMAL:
-                    return prefix + String.join("-", game.getSets().stream().map(MTGSet::getCode).collect(Collectors.toList()));
-                case CUBE:
-                    return prefix + game.getCubeList().size() + " cards";
-                case CHAOS:
-                    return prefix + String.format("%s %s", game.isTotalChaos() ? "Total Chaos " : "", game.isModernOnly() ? "Modern sets only" : "");
-            }
-            return prefix;
         }
     }
 
@@ -196,7 +198,7 @@ public class DefaultMTGFacade implements MTGFacade {
             dto.name = player.getName();
             dto.packs = playerState.getWaitingPacks().size();
             dto.time = playerState.getTimeLeft();
-            dto.isBot = player.isBot();
+            dto.isBot = player.isBot() || player.getUserId().equals("");
             dto.seat = player.getSeat();
             dto.cockHash = playerState.getCockHash();
             dto.mwsHash = playerState.getMwsHash();

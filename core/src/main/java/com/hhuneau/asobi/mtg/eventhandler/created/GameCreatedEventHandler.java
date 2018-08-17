@@ -1,7 +1,7 @@
 package com.hhuneau.asobi.mtg.eventhandler.created;
 
 import com.hhuneau.asobi.customer.CustomerService;
-import com.hhuneau.asobi.mtg.eventhandler.EventHandler;
+import com.hhuneau.asobi.mtg.eventhandler.GameEventHandler;
 import com.hhuneau.asobi.mtg.game.Game;
 import com.hhuneau.asobi.mtg.game.GameService;
 import com.hhuneau.asobi.mtg.player.Player;
@@ -11,8 +11,6 @@ import com.hhuneau.asobi.websocket.events.game.host.StartGameEvent;
 import com.hhuneau.asobi.websocket.events.game.host.SwapPlayerEvent;
 import com.hhuneau.asobi.websocket.events.game.player.JoinGameEvent;
 import com.hhuneau.asobi.websocket.events.game.player.LeaveGameEvent;
-import com.hhuneau.asobi.websocket.events.game.player.MessageEvent;
-import com.hhuneau.asobi.websocket.events.game.player.PlayerNameEvent;
 import com.hhuneau.asobi.websocket.messages.ErrorMessage;
 import com.hhuneau.asobi.websocket.messages.PlayerIdMessage;
 
@@ -20,23 +18,24 @@ import java.util.function.Consumer;
 
 import static com.hhuneau.asobi.mtg.game.Status.CREATED;
 
-public abstract class GameCreatedEventHandler implements EventHandler {
-    final GameService gameService;
+public abstract class GameCreatedEventHandler extends GameEventHandler {
+
     final CustomerService customerService;
     final PoolService poolService;
 
-    public GameCreatedEventHandler(GameService gameService, CustomerService customerService, PoolService poolService) {
-        this.gameService = gameService;
+    protected GameCreatedEventHandler(GameService gameService, CustomerService customerService, PoolService poolService) {
+        super(gameService);
         this.customerService = customerService;
         this.poolService = poolService;
     }
+
 
     @Override
     public void handle(Game game, JoinGameEvent evt) {
         final String sessionId = evt.sessionId;
         final String name = evt.name;
         game.getPlayers().stream()
-            .filter(player -> player.getUserId().equals(sessionId))
+            .filter(player -> player.getPlayerId() == evt.playerId)
             .findFirst()
             .ifPresentOrElse(
                 changeUserId(game, sessionId),
@@ -58,6 +57,10 @@ public abstract class GameCreatedEventHandler implements EventHandler {
 
     private Consumer<Player> changeUserId(Game game, String sessionId) {
         return player -> {
+            // if the player was the host
+            if (player.getUserId().equals(game.getHostId())) {
+                game.setHostId(sessionId);
+            }
             player.setUserId(sessionId);
             gameService.save(game);
             sendPlayerIdMessage(sessionId, player);
@@ -71,8 +74,10 @@ public abstract class GameCreatedEventHandler implements EventHandler {
 
     @Override
     public void handle(Game game, LeaveGameEvent evt) {
-        if (game.getPlayers().removeIf(player -> player.getPlayerId() == evt.playerId))
+        final boolean isHost = game.getHostId().equals(evt.sessionId);
+        if (!isHost && game.getPlayers().removeIf(player -> player.getPlayerId() == evt.playerId)) {
             gameService.save(game);
+        }
     }
 
     @Override
@@ -97,16 +102,6 @@ public abstract class GameCreatedEventHandler implements EventHandler {
         } else {
             customerService.send(evt.sessionId, ErrorMessage.of("operation not permitted"));
         }
-    }
-
-    @Override
-    public void handle(Game game, PlayerNameEvent evt) {
-        gameService.setPlayerName(game, evt);
-    }
-
-    @Override
-    public void handle(Game game, MessageEvent evt) {
-        gameService.addMessage(game, evt);
     }
 
     @Override

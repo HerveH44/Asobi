@@ -5,14 +5,27 @@ import {Route, Switch} from "react-router-dom";
 import {bool} from "prop-types";
 import {ConnectedRouter} from 'react-router-redux';
 import history from "../state/history";
+import {connect} from "react-redux";
 
-const App = () => (
+const App = ({connecting}) => (
     <ConnectedRouter history={history}>
-        <Switch>
-            <Route path="/games/:gameId" exact component={Game}/>
-            <Route path="/" component={Lobby}/>
-        </Switch>
+        {connecting ?
+            <div>Loading...</div>
+            : <Switch>
+                <Route path="/games/:gameId" exact component={Game}/>
+                <Route path="/" component={Lobby}/>
+            </Switch>}
     </ConnectedRouter>
 );
 
-export default App;
+App.propTypes = {
+    connecting: bool.isRequired
+};
+
+const mapStateToProps = ({websocket}) => ({
+    connecting: websocket.connecting
+});
+
+const mapDispatchToProps = {};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

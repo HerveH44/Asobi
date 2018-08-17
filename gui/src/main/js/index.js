@@ -12,8 +12,7 @@ const { store, persistor } = createStore();
 store.dispatch({
     type: WEBSOCKET_CONNECT,
     payload: {
-        websocket: SockJS,
-        url: `${location.href}ws`
+        url: `ws://localhost:8080/ws`
     }
 });
 

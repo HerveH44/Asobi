@@ -3,24 +3,24 @@ import {string, number} from "prop-types";
 
 import {Spaced} from "../../utils";
 
-const Header = ({siteTitle, numUsers, numPlayers, numActiveGames, error}) => (
+const Header = ({siteTitle, users, players, games, error}) => (
     <header>
         <h1 className="lobby-header">
             {siteTitle}
         </h1>
         <ServerInfo
-                    numUsers={numUsers}
-                    numPlayers={numPlayers}
-                    numActiveGames={numActiveGames}/>
+                    numUsers={users}
+                    numPlayers={players}
+                    numActiveGames={games}/>
         <ApplicationError err={error}/>
     </header>
 );
 
 Header.propTypes = {
     siteTitle: string.isRequired,
-    numUsers: number,
-    numPlayers: number,
-    numActiveGames: number,
+    users: number.isRequired,
+    players: number.isRequired,
+    games: number.isRequired,
     error: string
 };
 
