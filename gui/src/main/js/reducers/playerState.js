@@ -101,7 +101,8 @@ export default handleActions({
     },
     [leaveGame](state) {
         return {
-            ...state,
+            ...InitialState,
+            [PACK]: [],
             [MAIN]: [],
             [SIDE]: [],
             [JUNK]: []
