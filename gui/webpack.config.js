@@ -19,7 +19,10 @@ module.exports = {
         port: 9001,
         contentBase: './built/static',
         proxy: {
-            "/ws": "http://localhost:8080"
+            "/ws": {
+                target: "http://localhost:8080",
+                ws: true,
+            }
         }
     },
     plugins: [
