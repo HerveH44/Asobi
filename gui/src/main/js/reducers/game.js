@@ -24,17 +24,8 @@ const initialState = {
     gameMode: NORMAL,
     gameModes,
     sets: {
-        [DRAFT]: [
-            "XLN", "XLN", "XLN"
-        ],
-        [SEALED]: [
-            "XLN",
-            "XLN",
-            "XLN",
-            "XLN",
-            "XLN",
-            "XLN"
-        ]
+        [DRAFT]: [],
+        [SEALED]: []
     },
     availableSets: {
         expansion: [
@@ -58,20 +49,36 @@ export default handleActions({
         };
     },
     [IMPORT_SETS](state, {payload: availableSets}) {
+
+        const lastExpansion = availableSets["expansion"]
+            .reduce((acc, curValue) => {
+                return !acc ? curValue
+                    : new Date(acc.releaseDate).getTime() > new Date(curValue.releaseDate).getTime()
+                        ? acc : curValue;
+            });
+
+        if (state.sets[DRAFT].length === 0) {
+            state.sets[DRAFT] = new Array(state.packsNumber).fill(lastExpansion.code);
+        }
+
+        if (state.sets[SEALED].length === 0) {
+            state.sets[SEALED] = new Array(state.packsNumber).fill(lastExpansion.code);
+        }
+
         return {
             ...state,
             availableSets
         }
     },
     [EDIT_PACK_NUMBER](state, {payload: {packsNumber}}) {
-        for( let k in state.sets) {
+        for (let k in state.sets) {
             const setsType = state.sets[k];
-            if( setsType.length < packsNumber) {
+            if (setsType.length < packsNumber) {
                 const toAdd = packsNumber - setsType.length;
-                for(let i = 0; i < toAdd; i++) {
+                for (let i = 0; i < toAdd; i++) {
                     setsType.push(setsType.slice(-1)[0]);
                 }
-            } else if( setsType.length > packsNumber) {
+            } else if (setsType.length > packsNumber) {
                 setsType.splice(packsNumber);
             }
         }
