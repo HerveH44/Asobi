@@ -116,7 +116,7 @@ export default handleActions({
         switch (true) {
             case diff > 0:
                 for (let i = 0; i < diff; i++) {
-                    zone.push({name: cardName, multiverseid: CARDS[cardName], manaCost: 0, type: "Land"})
+                    zone.push(makeBasicLand(cardName))
                 }
                 break;
 
@@ -230,7 +230,7 @@ export default handleActions({
                     "G": "Forest",
                 };
                 const land = COLORS_TO_LANDS[color];
-                state[MAIN].push({name: land, multiverseid: CARDS[land], manaCost: 0, type: "Land"});
+                state[MAIN].push(makeBasicLand(land));
 
                 j = (j + 1) % colorsToAdd.length;
             }
@@ -265,7 +265,7 @@ export const getCardsAsMap = (state, zone, sort) => {
             }
             return groups;
 
-        case "color":
+        case "color":makeBasicLand
             keys =
                 ["Colorless", "White", "Blue", "Black", "Red", "Green", "Multicolor"]
                     .filter(x => keys.indexOf(x) > -1);
@@ -390,3 +390,12 @@ const codify = (zone) => {
         .map(([name, number]) => `    <card number="${number}" name="${name}"/>`)
         .join("\n");
 };
+
+const makeBasicLand = (land) => ({
+    name: land,
+    multiverseid: CARDS[land],
+    rarity: "Basic Land",
+    cmc: 0,
+    color: "Colorless",
+    type: "Basic Land"
+});
