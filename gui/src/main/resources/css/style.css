@@ -290,8 +290,6 @@ button:disabled:active {
 .zone img,
 #img,
 .card {
-    height: 340px;
-    width: 240px;
     cursor: pointer;
 }
 
@@ -319,6 +317,20 @@ button:disabled:active {
     margin: 0;
     cursor: pointer;
     padding: 1px;
+    -webkit-transition: all 1s ease; /* Safari and Chrome */
+    -moz-transition: all 1s ease; /* Firefox */
+    -o-transition: all 1s ease; /* IE 9 */
+    -ms-transition: all 1s ease; /* Opera */
+    transition: all 1s ease;
+}
+
+.card:hover {
+    -webkit-transform:scale(1.25); /* Safari and Chrome */
+    -moz-transform:scale(1.25); /* Firefox */
+    -ms-transform:scale(1.25); /* IE 9 */
+    -o-transform:scale(1.25); /* Opera */
+    transform:scale(1.25);
+    z-index: 1;
 }
 
 .card:hover:before,
