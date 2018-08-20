@@ -60,7 +60,7 @@
         <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>reactstrap</artifactId>
-            <version>4.0.1</version>
+            <version>6.0.1</version>
         </dependency>
 
         <dependency>
