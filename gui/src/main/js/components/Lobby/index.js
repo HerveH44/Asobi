@@ -7,7 +7,8 @@ import JoinPanel from "./JoinPanel/index";
 import NewsPanel from "./NewsPanel/index";
 import Footer from "./Footer/index";
 import CreatePanel from "./CreateGamePanel/index";
-import {CREATE_GAME, editPackNumber, editGame} from "../../actions/game";
+import {editPackNumber, editGame} from "../../actions/game";
+import {createGame} from "../../actions/server";
 
 const Lobby = ({
     site,
@@ -35,7 +36,7 @@ Lobby.propTypes = {
 const mapStateToProps = (state) => (state);
 const mapDispatchToProps = {
     editGame,
-    createGame: CREATE_GAME,
+    createGame,
     EDIT_PACK_NUMBER: editPackNumber
 };
 
