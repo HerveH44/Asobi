@@ -1,10 +1,24 @@
-import {CREATE_GAME} from "../reducers/game";
 import {WEBSOCKET_SEND, WEBSOCKET_CLOSED} from "redux-middleware-websocket";
 import {push} from "react-router-redux";
-import {AUTH_TOKEN} from "../actions/server";
+import {
+    onKick,
+    onSwap,
+    onClickLog,
+    AUTH_TOKEN,
+    hashDeck,
+    autoPick,
+    joinGame,
+    leaveGame,
+    onSetPlayerName,
+    pick,
+    startGame,
+    ERROR,
+    createGame
+} from "../actions/server";
 import {MAIN, SIDE} from "../reducers/playerState";
 
-const createGame = ({getState, dispatch}) => next => action => {
+
+export default ({getState, dispatch}) => next => action => {
     const {
         game: {
             title,
@@ -39,7 +53,7 @@ const createGame = ({getState, dispatch}) => next => action => {
     } = getState();
 
     switch (action.type) {
-        case "CLICK_LOG":
+        case onClickLog.toString():
             next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
@@ -49,7 +63,7 @@ const createGame = ({getState, dispatch}) => next => action => {
                     playerId,
                 }
             });
-        case "HASH":
+        case hashDeck.toString():
             next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
@@ -63,7 +77,7 @@ const createGame = ({getState, dispatch}) => next => action => {
             });
 
 
-        case "SET_NAME":
+        case onSetPlayerName.toString():
             next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
@@ -75,11 +89,7 @@ const createGame = ({getState, dispatch}) => next => action => {
                 }
             });
 
-        case "AUTH_TOKEN":
-            next(action);
-            return dispatch(push("games/" + action.payload.gameId));
-
-        case "CREATE_GAME":
+        case createGame.toString():
             next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
@@ -97,7 +107,7 @@ const createGame = ({getState, dispatch}) => next => action => {
                     cubeList
                 }
             });
-        case "PICK":
+        case pick.toString():
             next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
@@ -108,7 +118,7 @@ const createGame = ({getState, dispatch}) => next => action => {
                     cardIndex: action.payload
                 }
             });
-        case "JOIN_GAME":
+        case joinGame.toString():
             next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
@@ -119,7 +129,7 @@ const createGame = ({getState, dispatch}) => next => action => {
                     name
                 }
             });
-        case "LEAVE_GAME":
+        case leaveGame.toString():
             next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
@@ -129,7 +139,7 @@ const createGame = ({getState, dispatch}) => next => action => {
                     playerId
                 }
             });
-        case "START_GAME":
+        case startGame.toString():
             next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
@@ -143,7 +153,7 @@ const createGame = ({getState, dispatch}) => next => action => {
                     timerLength
                 }
             });
-        case "AUTOPICK":
+        case autoPick.toString():
             next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
@@ -155,7 +165,7 @@ const createGame = ({getState, dispatch}) => next => action => {
                 }
             });
 
-        case "KICK":
+        case onKick.toString():
             next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
@@ -167,7 +177,7 @@ const createGame = ({getState, dispatch}) => next => action => {
                 }
             });
 
-        case "SWAP":
+        case onSwap.toString():
             next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
@@ -179,7 +189,16 @@ const createGame = ({getState, dispatch}) => next => action => {
                 }
             });
 
-        case "ERROR":
+        /*
+            TODO: Theses cases should be handled in a separate middleware ?
+            They are linked to the app receiving infos from the server
+         */
+
+        case AUTH_TOKEN:
+            next(action);
+            return dispatch(push("games/" + action.payload.gameId));
+
+        case ERROR:
             next(action);
             return dispatch(push("/"));
 
@@ -192,5 +211,3 @@ const createGame = ({getState, dispatch}) => next => action => {
     }
 
 };
-
-export default createGame;

@@ -1,6 +1,5 @@
 import React from "react";
 import {connect} from 'react-redux';
-import {CREATE_GAME, EDIT_PACK_NUMBER, editGame} from "../../reducers/game";
 import {func, object} from "prop-types";
 
 import Header from "./Header/index";
@@ -8,6 +7,7 @@ import JoinPanel from "./JoinPanel/index";
 import NewsPanel from "./NewsPanel/index";
 import Footer from "./Footer/index";
 import CreatePanel from "./CreateGamePanel/index";
+import {CREATE_GAME, editPackNumber, editGame} from "../../actions/game";
 
 const Lobby = ({
     site,
@@ -36,7 +36,7 @@ const mapStateToProps = (state) => (state);
 const mapDispatchToProps = {
     editGame,
     createGame: CREATE_GAME,
-    EDIT_PACK_NUMBER: EDIT_PACK_NUMBER
+    EDIT_PACK_NUMBER: editPackNumber
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Lobby);

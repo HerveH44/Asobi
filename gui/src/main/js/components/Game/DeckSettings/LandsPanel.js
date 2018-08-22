@@ -1,8 +1,8 @@
 import React from "react"
-import {array, func, number, object} from "prop-types";
+import {func, number, object} from "prop-types";
 import LandsRow from "./LandsRow";
 import {connect} from "react-redux";
-import {onChangeDeckSize, onChangeLand, onSuggestLands, onResetLands} from "../../../actions/game";
+import {changeDeckSize, changeLand, resetLands, suggestLands} from "../../../actions/game";
 import {MAIN, SIDE} from "../../../reducers/playerState";
 
 const LandsPanel = ({cards, onChangeLand, onResetLands, onSuggestLands, onChangeDeckSize, deckSize}) => (
@@ -86,7 +86,7 @@ const mapStateToProps = ({playerState: {Main, Side, deckSize}}) => ({
 });
 
 const mapDispatchToProps = {
-    onChangeLand, onChangeDeckSize, onSuggestLands, onResetLands
+    onChangeLand: changeLand, onChangeDeckSize: changeDeckSize, onSuggestLands: suggestLands, onResetLands: resetLands
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LandsPanel);

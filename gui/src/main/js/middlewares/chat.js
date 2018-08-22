@@ -1,11 +1,11 @@
-import {WEBSOCKET_SEND, WEBSOCKET_CLOSED} from "redux-middleware-websocket";
+import {WEBSOCKET_SEND} from "redux-middleware-websocket";
+import {errorMessage, pressKeyDown} from "../actions/game";
 
 const Chat = ({getState, dispatch}) => next => action => {
 
     const {
         player: {
-            playerId,
-            name
+            playerId
         },
         gameState: {
             gameId
@@ -13,7 +13,7 @@ const Chat = ({getState, dispatch}) => next => action => {
     } = getState();
 
 
-    if (action.type === "CHAT_PROMPT_KEY_DOWN") {
+    if (action.type === pressKeyDown.toString()) {
         next(action);
         if (action.payload.key === "Enter") {
 
@@ -68,7 +68,7 @@ const handleCommand = ({dispatch, gameId, playerId, text}) => {
             });
         default:
             return dispatch({
-                type: "ERROR_MESSAGE",
+                ...errorMessage(),
                 payload: `unsupported command: ${command}`
             });
     }

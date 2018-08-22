@@ -1,5 +1,5 @@
 import {handleActions} from 'redux-actions';
-import {GAME_STATE, AUTH_TOKEN, onGetDraftLog} from "../actions/server"
+import {GAME_STATE, AUTH_TOKEN, DRAFT_LOG} from "../actions/server"
 import _ from "../lib/utils";
 
 const InitialState = {
@@ -44,7 +44,7 @@ export default handleActions({
             ...payload
         }
     },
-    [onGetDraftLog](state, {payload: log}) {
+    [DRAFT_LOG](state, {payload: log}) {
         const {gameId, playersStates, self, sets, gameType} = state;
         const isCube = /CUBE/.test(gameType);
         const date = new Date().toISOString().slice(0, -5).replace(/-/g, "").replace(/:/g, "").replace("T", "_");

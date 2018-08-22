@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {array, object, number, bool, func, string} from "prop-types";
-import {onSwap, onKick, onChangePlayerName} from "../../../actions/game"
-import {onSetName, onSetPlayerName} from "../../../actions/server"
+import {changePlayerName} from "../../../actions/game"
+import {onSwap, onKick, onSetPlayerName} from "../../../actions/server"
 import arrowUp from "../../../../resources/media/arrow-up.png"
 import arrowDown from "../../../../resources/media/arrow-down.png"
 
@@ -112,7 +112,7 @@ const mapStateToProps = ({gameState, player}) => ({
 const mapDispatchToProps = {
     onSwap,
     onKick,
-    onChangePlayerName,
+    onChangePlayerName: changePlayerName,
     onSetPlayerName
 };
 

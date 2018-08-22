@@ -1,6 +1,6 @@
 import {handleActions} from 'redux-actions';
 import {PLAYER_ID} from "../actions/server";
-import {onChangePlayerName} from "../actions/game"
+import {changePlayerName} from "../actions/game"
 
 const InitialState = {
     name: "dr4ft",
@@ -14,7 +14,7 @@ export default handleActions({
             playerId
         }
     },
-    [onChangePlayerName](state, {payload}) {
+    [changePlayerName](state, {payload}) {
         return {
             ...state,
             name: payload.target.value

@@ -1,9 +1,6 @@
-import {createAction, handleActions} from 'redux-actions';
-
-export const editGame = createAction("EDIT_GAME");
-export const EDIT_PACK_NUMBER = createAction("EDIT_PACK_NUMBER");
-export const CREATE_GAME = createAction("CREATE_GAME");
-const IMPORT_SETS = createAction("IMPORT_SETS");
+import {handleActions} from 'redux-actions';
+import {IMPORT_SETS} from "../actions/server";
+import {editGame, editPackNumber} from "../actions/game";
 
 const DRAFT = "DRAFT";
 const SEALED = "SEALED";
@@ -70,7 +67,7 @@ export default handleActions({
             availableSets
         }
     },
-    [EDIT_PACK_NUMBER](state, {payload: {packsNumber}}) {
+    [editPackNumber](state, {payload: {packsNumber}}) {
         for (let k in state.sets) {
             const setsType = state.sets[k];
             if (setsType.length < packsNumber) {
