@@ -6,6 +6,7 @@ import com.hhuneau.asobi.mtg.sets.card.MTGCard;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -19,6 +20,7 @@ import static javax.persistence.EnumType.STRING;
 @Entity
 @Getter
 @Setter
+@ToString(exclude = {"cubeList", "players", "sets", "messages"})
 public class Game {
     @Id
     @GeneratedValue
