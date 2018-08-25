@@ -236,6 +236,13 @@ export default handleActions({
             }
         }
 
+        // Add 5 lands of each color in SIDE
+        Object.keys(CARDS).forEach(land => {
+            for (let i = 0; i < 5; i++) {
+                state[SIDE].push(makeBasicLand(land));
+            }
+        });
+
         return {
             ...state
         }
