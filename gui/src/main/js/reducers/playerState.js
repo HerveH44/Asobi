@@ -99,9 +99,9 @@ export default handleActions({
             autoPickId: payload
         }
     },
-    [leaveGame]() {
+    [leaveGame](state) {
         return {
-            ...InitialState,
+            ...state,
             [PACK]: [],
             [MAIN]: [],
             [SIDE]: [],
