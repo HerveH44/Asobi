@@ -1,7 +1,8 @@
 import React from "react";
 import {func, string, array} from "prop-types";
 import {connect} from "react-redux";
-import {hashDeck, onChangeFileName, onChangeFileType, onClickDownload} from "../../../../actions/game";
+import {changeFileName, changeFileType, onClickDownload} from "../../../../actions/game";
+import {hashDeck} from "../../../../actions/server";
 import {Select} from "../../../utils";
 import {downloadDeck} from "../../../../reducers/playerState";
 
@@ -37,7 +38,7 @@ const mapStateToProps = ({playerState, gameSettings: {fileType, fileTypes, fileN
 });
 
 const mapDispatchToProps = {
-    onChangeFileType, onChangeFileName, hashDeck
+    onChangeFileType: changeFileType, onChangeFileName: changeFileName, hashDeck
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Download);

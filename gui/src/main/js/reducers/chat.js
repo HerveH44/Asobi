@@ -1,5 +1,5 @@
 import {handleActions} from 'redux-actions';
-import {onToggleChat, onErrorMessage, onGameMessage} from "../actions/game";
+import {errorMessage, toggleChat} from "../actions/game";
 import {GAME_STATE} from "../actions/server";
 
 const initialState = {
@@ -9,14 +9,14 @@ const initialState = {
 };
 
 export default handleActions({
-    [onToggleChat](state, {payload: event}) {
+    [toggleChat](state, {payload: event}) {
         event.persist();
         return {
             ...state,
             showChat: event.target.checked,
         }
     },
-    [onErrorMessage](state, {payload}) {
+    [errorMessage](state, {payload}) {
 
         return {
             ...state,

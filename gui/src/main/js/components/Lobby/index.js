@@ -1,7 +1,8 @@
 import React from "react";
 import {connect} from 'react-redux';
 import withStyles from '@material-ui/core/styles/withStyles';
-import {CREATE_GAME, EDIT_PACK_NUMBER, editGame} from "../../reducers/game";
+import {editPackNumber, editGame} from "../../actions/game";
+import {createGame} from "../../actions/server";
 import {func, object} from "prop-types";
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
@@ -19,6 +20,11 @@ import CreatePanel from "./CreateGamePanel/index";
 import CenteredTabs from "./CenteredTabs";
 import SimpleSelect from "./SimpleSelect";
 /*
+const Lobby = ({
+    site,
+    game,
+    ...rest
+}) => (
     <div className="container">
         <div className="lobby">
             <Header {...site}/>
@@ -126,8 +132,8 @@ Lobby.propTypes = {
 const mapStateToProps = (state) => (state);
 const mapDispatchToProps = {
     editGame,
-    createGame: CREATE_GAME,
-    EDIT_PACK_NUMBER: EDIT_PACK_NUMBER
+    createGame,
+    editPackNumber
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Lobby));

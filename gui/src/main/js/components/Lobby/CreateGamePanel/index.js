@@ -12,16 +12,8 @@ import GameSettings from "./GameSettings";
 import {Checkbox} from "../../utils"
 
 class CreatePanel extends React.Component {
-    onChangeGameType = ({target : {value: gameType}}) => {
-        this.props.editGame({gameType});
-    };
-
     handleCheck = name => event => {
         this.props.editGame({[name]: event.target.checked});
-    };
-
-    onChangeTitle = ({ currentTarget: { value: title } }) => {
-        this.props.editGame({title});
     };
 
     onChangeValue = name => event => {

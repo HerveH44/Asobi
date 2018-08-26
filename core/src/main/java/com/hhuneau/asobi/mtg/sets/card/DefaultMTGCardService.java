@@ -17,6 +17,6 @@ public class DefaultMTGCardService implements MTGCardService {
 
     @Override
     public Optional<MTGCard> getCard(String cardName) {
-        return cardRepository.findFirstByNameLikeOrderByMultiverseidDesc(cardName);
+        return cardRepository.findFirstByNameLikeOrderByMultiverseidAsc(cardName);
     }
 }

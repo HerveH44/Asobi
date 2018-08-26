@@ -29,3 +29,5 @@ node
 node_modules
 /nbproject/
 .npm/**
+
+*.log

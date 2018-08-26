@@ -1,9 +1,9 @@
 import React from "react";
-import {func, string, bool, array} from "prop-types";
+import {array, bool, func, string} from "prop-types";
 import {Checkbox, Select} from "../../utils";
-import {editGameSettings, joinGame, leaveGame, startGame} from "../../../actions/server";
+import {joinGame, leaveGame, startGame} from "../../../actions/server";
 import {connect} from "react-redux";
-import {onEditStartPanel} from "../../../actions/game";
+import {editStartPanel} from "../../../actions/game";
 
 const StartPanel = ({gameType, packsInfo, isHost, didGameStart, ...rest}) => (
     <fieldset className='start-controls fieldset'>
@@ -25,9 +25,11 @@ StartPanel.propTypes = {
     didGameStart: bool.isRequired
 };
 
-const StartControls = ({startGame, ...rest}) => (
+const StartControls = ({gameType, startGame, ...rest}) => (
     <div>
-        <Options {...rest}/>
+        {gameType === "DRAFT" ?
+            <Options {...rest}/>
+            : <div/>}
         <div>
             <button onClick={startGame}>Start game</button>
         </div>
@@ -36,6 +38,7 @@ const StartControls = ({startGame, ...rest}) => (
 
 
 StartControls.propTypes = {
+    gameType: string.isRequired,
     startGame: func.isRequired
 };
 
@@ -55,23 +58,16 @@ const Options = ({gameType, useTimer, timers, timerLength, addBots, shufflePlaye
                 onChange={handleChangeChecked('addBots')}
                 text=" Add Bots"
             />
-            {gameType === "DRAFT"
-                ? <div>
-
-                    <Checkbox
-                        checked={useTimer}
-                        onChange={handleChangeChecked('useTimer')}
-                        text=" Timer: "
-                    />
-                    <Select
-                        value={timerLength}
-                        opts={timers}
-                        onChange={handleChange("timerLength")}
-                        disabled={!useTimer}/>
-                </div>
-                : <div/>
-            }
-
+            <Checkbox
+                checked={useTimer}
+                onChange={handleChangeChecked('useTimer')}
+                text=" Timer: "
+            />
+            <Select
+                value={timerLength}
+                opts={timers}
+                onChange={handleChange("timerLength")}
+                disabled={!useTimer}/>
             <Checkbox
                 checked={shufflePlayers}
                 onChange={handleChangeChecked('shufflePlayers')}
@@ -99,7 +95,7 @@ const mapDispatchToProps = {
     leaveGame,
     joinGame,
     startGame,
-    onEditStartPanel
+    onEditStartPanel: editStartPanel
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(StartPanel);

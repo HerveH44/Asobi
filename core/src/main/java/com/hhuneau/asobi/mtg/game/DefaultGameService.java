@@ -18,6 +18,8 @@ import com.hhuneau.asobi.websocket.events.game.player.PlayerNameEvent;
 import com.hhuneau.asobi.websocket.messages.ErrorMessage;
 import com.hhuneau.asobi.websocket.messages.PackMessage;
 import com.hhuneau.asobi.websocket.messages.PickMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,7 @@ import static java.util.Collections.emptyList;
 @Transactional
 public class DefaultGameService implements GameService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultGameService.class);
     private final GameRepository gameRepository;
     private final MTGSetsService setService;
     private final PoolService poolService;
@@ -73,6 +76,7 @@ public class DefaultGameService implements GameService {
             }
             final Game game = Game.of(evt, emptyList(), authToken, cardList);
             final Game savedGame = gameRepository.save(game);
+            LOGGER.info("Game created: {}", savedGame);
             return AuthTokenDTO.of(savedGame.getGameId(), authToken);
         } else if (evt.gameMode.equals(NORMAL)) {
             final List<MTGSet> setsList = new ArrayList<>();
@@ -86,10 +90,12 @@ public class DefaultGameService implements GameService {
 
             final Game game = Game.of(evt, setsList, authToken, emptyList());
             final Game savedGame = gameRepository.save(game);
+            LOGGER.info("Game created: {}", savedGame);
             return AuthTokenDTO.of(savedGame.getGameId(), authToken);
         } else {
             final Game game = Game.of(evt, emptyList(), authToken, emptyList());
             final Game savedGame = gameRepository.save(game);
+            LOGGER.info("Game created: {}", savedGame);
             return AuthTokenDTO.of(savedGame.getGameId(), authToken);
         }
     }
@@ -117,7 +123,7 @@ public class DefaultGameService implements GameService {
                         player.setSeat(i);
                     }
                 }
-
+                LOGGER.info("Game started: {}", game);
                 gameRepository.save(game);
             });
     }

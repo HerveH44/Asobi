@@ -4,7 +4,7 @@ import {connect} from "react-redux"
 import {Spaced} from "../../utils";
 import Card from "./Card";
 import {getCardsAsMap, MAIN, SIDE} from "../../../reducers/playerState";
-import {onClickZone} from "../../../actions/game";
+import {clickCardZone} from "../../../actions/game";
 
 class ZonesAsColumns extends Component {
     state = {
@@ -135,7 +135,7 @@ const mapStateToProps = ({playerState, gameSettings}) => ({
 });
 
 const mapDispatchToProps = {
-    onClickZone
+    onClickZone: clickCardZone
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ZonesAsColumns);

@@ -9,5 +9,6 @@ import java.util.Optional;
 @Repository
 public interface MTGCardRepository extends JpaRepository<MTGCard, String> {
 
-    Optional<MTGCard> findFirstByNameLikeOrderByMultiverseidDesc(String name);
+    // MultiverseidAsc gets the first printed version of the cardName
+    Optional<MTGCard> findFirstByNameLikeOrderByMultiverseidAsc(String name);
 }

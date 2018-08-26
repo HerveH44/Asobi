@@ -1,5 +1,5 @@
 import {handleActions} from 'redux-actions';
-import {onEditStartPanel} from "../actions/game";
+import {editStartPanel} from "../actions/game";
 
 const InitialState = {
     addBots: true,
@@ -10,7 +10,7 @@ const InitialState = {
 };
 
 export default handleActions({
-    [onEditStartPanel](state, {payload}) {
+    [editStartPanel](state, {payload}) {
         return {
             ...state,
             ...payload

@@ -1,13 +1,13 @@
 import {handleActions} from 'redux-actions';
-import {autoPick, leaveGame, onNewPack, onPickedCard, onReconnect, pick} from "../actions/server"
+import {autoPick, leaveGame, PACK_SRV, PICKED_CARD, RECONNECT, pick} from "../actions/server"
 import {
-    onChangeDeckSize,
-    onChangeLand,
-    onChangePicksToSB,
-    onClickZone,
-    onResetLands,
-    onSuggestLands,
-    onClickCopy
+    changeDeckSize,
+    changeLand,
+    changePicksToSB,
+    clickCardZone,
+    resetLands,
+    suggestLands,
+    clickCopyToClipboard
 } from "../actions/game";
 import _ from "../lib/utils";
 
@@ -36,7 +36,7 @@ const InitialState = {
 };
 
 export default handleActions({
-    [onClickCopy](state, {payload}) {
+    [clickCopyToClipboard](state, {payload}) {
 
         //Copy deck to clipboard
         let textField = document.createElement("textarea");
@@ -48,7 +48,7 @@ export default handleActions({
 
         return state;
     },
-    [onClickZone](state, {payload: {zone, card}}) {
+    [clickCardZone](state, {payload: {zone, card}}) {
         const newZone = zone !== MAIN ? MAIN : SIDE;
 
         //Add card to the new Zone
@@ -64,7 +64,7 @@ export default handleActions({
             ...state,
         }
     },
-    [onReconnect](state, {payload}) {
+    [RECONNECT](state, {payload}) {
         const zone = state.addPicksToSB ? SIDE : MAIN;
         return {
             ...state,
@@ -72,14 +72,14 @@ export default handleActions({
         }
 
     },
-    [onNewPack](state, {payload}) {
+    [PACK_SRV](state, {payload}) {
         return {
             ...state,
             [PACK]: payload.cards,
             pickNumber: payload.pickNumber
         }
     },
-    [onPickedCard](state, {payload}) {
+    [PICKED_CARD](state, {payload}) {
         const zone = state.addPicksToSB ? SIDE : MAIN;
         return {
             ...state,
@@ -101,14 +101,14 @@ export default handleActions({
     },
     [leaveGame](state) {
         return {
-            ...InitialState,
+            ...state,
             [PACK]: [],
             [MAIN]: [],
             [SIDE]: [],
             [JUNK]: []
         };
     },
-    [onChangeLand](state, {payload: {zoneName, cardName, event}}) {
+    [changeLand](state, {payload: {zoneName, cardName, event}}) {
         event.persist();
         let zone = state[zoneName];
         const diff = event.target.value - zone.filter(({name}) => name === cardName).length;
@@ -132,21 +132,21 @@ export default handleActions({
             ...state
         }
     },
-    [onResetLands](state) {
+    [resetLands](state) {
         return {
             ...state,
             [MAIN]: state[MAIN].filter(({name}) => !Object.keys(CARDS).includes(name)),
             [SIDE]: state[SIDE].filter(({name}) => !Object.keys(CARDS).includes(name)),
         };
     },
-    [onChangeDeckSize](state, {payload: event}) {
+    [changeDeckSize](state, {payload: event}) {
         event.persist();
         return {
             ...state,
             deckSize: +event.target.value
         }
     },
-    [onChangePicksToSB](state, {payload: event}) {
+    [changePicksToSB](state, {payload: event}) {
         event.persist();
         return {
             ...state,
@@ -155,7 +155,7 @@ export default handleActions({
             [SIDE]: state[MAIN].concat(state[SIDE])
         }
     },
-    [onSuggestLands](state) {
+    [suggestLands](state) {
 
         //Reset Lands
         state[MAIN] = state[MAIN].filter(({name}) => !Object.keys(CARDS).includes(name));
@@ -236,6 +236,13 @@ export default handleActions({
             }
         }
 
+        // Add 5 lands of each color in SIDE
+        Object.keys(CARDS).forEach(land => {
+            for (let i = 0; i < 5; i++) {
+                state[SIDE].push(makeBasicLand(land));
+            }
+        });
+
         return {
             ...state
         }
@@ -265,7 +272,7 @@ export const getCardsAsMap = (state, zone, sort) => {
             }
             return groups;
 
-        case "color":makeBasicLand
+        case "color":
             keys =
                 ["Colorless", "White", "Blue", "Black", "Red", "Green", "Multicolor"]
                     .filter(x => keys.indexOf(x) > -1);

@@ -1,7 +1,5 @@
 import React from "react";
-import {bool, string, array, func} from "prop-types";
-
-import {onChangeLand} from "../../../actions/game";
+import {bool} from "prop-types";
 import {connect} from "react-redux";
 import LandsPanel from "./LandsPanel";
 import DownloadPanel from "./DownloadPanel/index";
@@ -23,7 +21,6 @@ const mapStateToProps = ({gameState}) => ({
     didGameStart: gameState.didGameStart
 });
 const mapDispatchToProps = {
-    onChangeLand
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeckSettings);

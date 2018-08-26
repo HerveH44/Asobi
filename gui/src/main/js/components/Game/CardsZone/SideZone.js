@@ -3,7 +3,7 @@ import {array, func} from "prop-types";
 import Grid from "./Grid";
 import {connect} from "react-redux";
 import {getCardsAsArray, SIDE} from "../../../reducers/playerState";
-import {onClickZone} from "../../../actions/game";
+import {clickCardZone} from "../../../actions/game";
 
 const SideZone = ({cards, onClickZone}) => (
     <Grid
@@ -24,7 +24,7 @@ const mapStateToProps = ({playerState, gameSettings}) => ({
     cards: getCardsAsArray(playerState, SIDE, gameSettings.sort)
 });
 const mapDispatchToProps = {
-    onClickZone
+    onClickZone: clickCardZone
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SideZone);

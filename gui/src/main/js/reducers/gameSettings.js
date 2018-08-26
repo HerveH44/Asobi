@@ -1,12 +1,13 @@
 import {handleActions} from 'redux-actions';
-import {editGameSettings, GAME_STATE, leaveGame, onNewPack} from "../actions/server"
+import {GAME_STATE, leaveGame, PACK_SRV} from "../actions/server"
+import {editGameSettings} from "../actions/game"
 import {
-    onChangeBeep,
-    onChangeColumnView,
-    onChangeFileName,
-    onChangeFileType,
-    onChangePicksToSB,
-    onChangeSort
+    changeBeep,
+    changeColumnView,
+    changeFileName,
+    changeFileType,
+    changePicksToSB,
+    changeSort
 } from "../actions/game";
 import beepSound from "../../resources/media/beep.wav"
 
@@ -22,7 +23,7 @@ const InitialState = {
 };
 
 export default handleActions({
-    [onNewPack](state) {
+    [PACK_SRV](state) {
         if (state.beep) {
             const audio = new Audio(beepSound);
             audio.play();
@@ -35,42 +36,42 @@ export default handleActions({
             ...payload
         };
     },
-    [onChangeFileType](state, {payload: event}) {
+    [changeFileType](state, {payload: event}) {
         event.persist();
         return {
             ...state,
             fileType: event.target.value,
         }
     },
-    [onChangeFileName](state, {payload: event}) {
+    [changeFileName](state, {payload: event}) {
         event.persist();
         return {
             ...state,
             fileName: event.target.value,
         }
     },
-    [onChangeBeep](state, {payload: event}) {
+    [changeBeep](state, {payload: event}) {
         event.persist();
         return {
             ...state,
             beep: event.target.checked,
         }
     },
-    [onChangeColumnView](state, {payload: event}) {
+    [changeColumnView](state, {payload: event}) {
         event.persist();
         return {
             ...state,
             columnView: event.target.checked,
         }
     },
-    [onChangeSort](state, {payload: event}) {
+    [changeSort](state, {payload: event}) {
         event.persist();
         return {
             ...state,
             sort: event.target.value,
         }
     },
-    [onChangePicksToSB](state, {payload: event}) {
+    [changePicksToSB](state, {payload: event}) {
         event.persist();
         return {
             ...state,

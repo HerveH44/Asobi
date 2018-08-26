@@ -1,7 +1,6 @@
-import {createAction, handleActions} from 'redux-actions';
+import {handleActions} from 'redux-actions';
 import {WEBSOCKET_CLOSED, WEBSOCKET_DISCONNECT} from "redux-middleware-websocket";
-import {onLobbyStats} from "../actions/server"
-export const editDefault = createAction("EDIT_DEFAULT");
+import {ERROR, LOBBY_STATS} from "../actions/server"
 
 const initialState = {
     siteTitle: "Asobi",
@@ -16,13 +15,7 @@ const initialState = {
 };
 
 export default handleActions({
-    [editDefault](state, {payload}) {
-        return {
-            ...state,
-            ...payload
-        };
-    },
-    "ERROR"(state, {payload}) {
+    [ERROR](state, {payload}) {
         return {
             ...state,
             error: payload
@@ -42,7 +35,7 @@ export default handleActions({
             error: "The connection with the server has been interrupted. Please refresh your browser.\n" + payload.event.reason
         }
     },
-    [onLobbyStats](state, {payload}) {
+    [LOBBY_STATS](state, {payload}) {
         return {
             ...state,
             ...payload

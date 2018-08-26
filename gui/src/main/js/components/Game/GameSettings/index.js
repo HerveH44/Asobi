@@ -3,7 +3,7 @@ import {bool, func} from "prop-types";
 import {Checkbox} from "../../utils";
 import SortCards from "./SortCards"
 import {connect} from "react-redux";
-import {onChangeBeep, onChangeColumnView, onChangePicksToSB, onToggleChat} from "../../../actions/game";
+import {changeBeep, changeColumnView, changePicksToSB, toggleChat} from "../../../actions/game";
 
 const GameSettings = ({onToggleChat, showChat, addPicksToSB, onChangePicksToSB, beep, onChangeBeep, columnView, onChangeColumnView}) => (
     <div className='game-settings'>
@@ -53,10 +53,10 @@ const mapStateToProps = ({gameSettings, chat}) => ({
 });
 
 const mapDispatchToProps = {
-    onToggleChat,
-    onChangePicksToSB,
-    onChangeBeep,
-    onChangeColumnView
+    onToggleChat: toggleChat,
+    onChangePicksToSB: changePicksToSB,
+    onChangeBeep: changeBeep,
+    onChangeColumnView: changeColumnView
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameSettings);

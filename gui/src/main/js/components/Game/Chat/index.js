@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {array, bool, func, object} from "prop-types";
-import {onKeyDown} from "../../../actions/game";
+import {pressKeyDown} from "../../../actions/game";
 import {connect} from "react-redux";
 import * as ReactDOM from "react-dom";
 
@@ -83,7 +83,7 @@ const mapStateToProps = ({chat}) => ({
 });
 
 const mapDispatchToProps = {
-    onKeyDown
+    onKeyDown: pressKeyDown
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);
