@@ -14,7 +14,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.hhuneau.asobi.mtg.game.Status.CREATED;
@@ -28,8 +30,8 @@ public class LobbyInfos {
     private List<String> customersId = new ArrayList<>();
     private GameService gameService;
 
-    private int players;
-    private int users;
+    private long players;
+    private long users;
     private int games;
     private List<RoomInfo> roomsInfo;
 
@@ -68,9 +70,17 @@ public class LobbyInfos {
         allCurrentGames.addAll(createdGames);
 
         games = allCurrentGames.size();
-        players = allCurrentGames.stream().map(game -> game.getPlayers().size()).reduce(0, (g1, g2) -> g1 + g2);
+        players = allCurrentGames.stream()
+            .map(Game::getPlayers)
+            .filter(Objects::nonNull)
+            .flatMap(Collection::stream)
+            .filter(player -> !player.isBot())
+            .count();
         users = customersId.size() + players;
-        roomsInfo = createdGames.stream().filter(game -> !game.isPrivate()).map(RoomInfo::of).collect(Collectors.toList());
+        roomsInfo = createdGames.stream()
+            .filter(game -> !game.isPrivate())
+            .map(RoomInfo::of)
+            .collect(Collectors.toList());
 
         final LobbyStatsDTO stats = LobbyStatsDTO.of(games, players, users, roomsInfo);
         final LobbyStatsMessage message = LobbyStatsMessage.of(stats);
@@ -78,12 +88,12 @@ public class LobbyInfos {
     }
 
     public static class LobbyStatsDTO {
-        public int players;
-        public int users;
+        public long players;
+        public long users;
         public int games;
         public List<RoomInfo> roomsInfo;
 
-        public static LobbyStatsDTO of(int games, int players, int users, List<RoomInfo> roomsInfo) {
+        public static LobbyStatsDTO of(int games, long players, long users, List<RoomInfo> roomsInfo) {
             final LobbyStatsDTO stats = new LobbyStatsDTO();
             stats.games = games;
             stats.players = players;
