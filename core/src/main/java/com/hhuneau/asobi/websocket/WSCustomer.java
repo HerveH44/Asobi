@@ -29,7 +29,7 @@ public class WSCustomer implements Customer {
                 session.sendMessage(new TextMessage(mapper.writeValueAsString(message)));
             }
         } catch (IOException | IllegalStateException e) {
-            LOGGER.error("Error while sending message", e.getMessage());
+            LOGGER.error("Error while sending message {} {}", e.getMessage(), message);
         }
     }
 

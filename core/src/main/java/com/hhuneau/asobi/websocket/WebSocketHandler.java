@@ -40,19 +40,14 @@ public class WebSocketHandler extends TextWebSocketHandler {
         SessionConnectedEvent sessionConnectedEvent = new SessionConnectedEvent();
         sessionConnectedEvent.sessionId = sessionId;
         LOGGER.info("Session connected {}", session.getRemoteAddress());
-        publisher.publishEvent(sessionConnectedEvent);
+        publishEvent(session, sessionConnectedEvent);
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         final Event evt = mapper.readValue(message.getPayload(), Event.class);
         evt.sessionId = getSessionId(session);
-        try {
-            publisher.publishEvent(evt);
-        } catch (Exception e) {
-            LOGGER.error("Error while processing event {} {}", evt, e);
-            customerService.send(getSessionId(session), ErrorMessage.of(e.getMessage()));
-        }
+        publishEvent(session, evt);
     }
 
     @Override
@@ -60,10 +55,19 @@ public class WebSocketHandler extends TextWebSocketHandler {
         final String sessionId = getSessionId(session);
         customerService.remove(sessionId);
         SessionDisconnectedEvent sessionDisconnectedEvent = SessionDisconnectedEvent.of(sessionId);
-        publisher.publishEvent(sessionDisconnectedEvent);
+        publishEvent(session, sessionDisconnectedEvent);
     }
 
     private String getSessionId(WebSocketSession session) {
         return (String) session.getAttributes().getOrDefault("sessionId", "");
+    }
+
+    private void publishEvent(WebSocketSession session, Event event) {
+        try {
+            publisher.publishEvent(event);
+        } catch (Exception e) {
+            LOGGER.error("Error while processing event {} {}", event, e);
+            customerService.send(getSessionId(session), ErrorMessage.of(e.getMessage()));
+        }
     }
 }
