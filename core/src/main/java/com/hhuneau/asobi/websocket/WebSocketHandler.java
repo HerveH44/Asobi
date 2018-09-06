@@ -46,6 +46,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         final Event evt = mapper.readValue(message.getPayload(), Event.class);
+        LOGGER.info(message.getPayload());
         evt.sessionId = getSessionId(session);
         publishEvent(session, evt);
     }
