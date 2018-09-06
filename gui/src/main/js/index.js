@@ -13,7 +13,7 @@ store.dispatch({
     type: WEBSOCKET_CONNECT,
     payload: {
         websocket: SockJS,
-        url: `${location.href}/ws`
+        url: `${location.origin}/ws`
     }
 });
 
