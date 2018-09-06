@@ -141,28 +141,20 @@ public class DefaultGameService implements GameService {
 
     @Override
     public Player getNextPlayer(Game game, Player player) {
-        final Player[] players = game.getPlayers().toArray(new Player[0]);
-        for (int i = 0; i < players.length; i++) {
-            final Player p = players[i];
+        final List<Player> players = game.getPlayers();
+        final int seat = player.getSeat();
+        final int calculatedIndex = game.getRound() % 2 == 0 ? seat - 1 : seat + 1;
+        int nextPlayerSeat = calculatedIndex % players.size();
 
-            // Get Player index
-            if (p.getPlayerId() == player.getPlayerId()) {
-
-                // Get next player according to round
-                final int round = game.getRound();
-                final int calculatedIndex = round % 2 == 0 ? i + 1 : i - 1;
-                int nextPlayerSeat = calculatedIndex % players.length;
-
-                // If the index is negative, we cycle from end of the list
-                if (nextPlayerSeat < 0) {
-                    nextPlayerSeat += players.length;
-                }
-                return players[nextPlayerSeat];
-            }
+        // If the index is negative, we cycle from end of the list
+        if (nextPlayerSeat < 0) {
+            nextPlayerSeat += players.size();
         }
-
-        //Should never happened...
-        return player;
+        final int finalNextPlayerSeat = nextPlayerSeat;
+        return players.stream()
+            .filter(p -> p.getSeat() == finalNextPlayerSeat)
+            .findFirst()
+            .orElse(player);
     }
 
     @Override
