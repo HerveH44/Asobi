@@ -55,7 +55,7 @@
         "redux": "3.7.2",
         "redux-actions": "2.6.1",
         "redux-middleware-websocket": "0.0.23",
-        "redux-persist": "5.9.1",
+        "redux-persist": "5.10.0",
         "sockjs-client": "^1.1.5",
         "style-loader": "0.21.0",
         "utils": "git://github.com/arxanas/utils.git",
