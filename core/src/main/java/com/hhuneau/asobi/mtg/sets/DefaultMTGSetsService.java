@@ -84,4 +84,9 @@ public class DefaultMTGSetsService implements MTGSetsService {
     public List<String> getTotalChaosSetCodes() {
         return setRepository.findTotalChaosSetCodes();
     }
+
+    @Override
+    public boolean isEmpty() {
+        return setRepository.count() == 0;
+    }
 }

@@ -16,4 +16,6 @@ public interface MTGSetsService {
     List<String> getModernSetCodes();
 
     List<String> getTotalChaosSetCodes();
+
+    boolean isEmpty();
 }

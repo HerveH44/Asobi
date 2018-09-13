@@ -11,6 +11,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -32,7 +34,7 @@ public class MTGJsonDownloader {
         this.setsService = setsService;
     }
 
-    void download() throws IOException {
+    public void download() throws IOException {
         final CloseableHttpClient httpclient = HttpClients.createDefault();
         final HttpGet httpGet = new HttpGet(URI);
         try (CloseableHttpResponse response1 = httpclient.execute(httpGet)) {
@@ -43,7 +45,7 @@ public class MTGJsonDownloader {
         }
     }
 
-    void download(String path) {
+    public void download(String path) {
         final File file = new File(path);
         try {
             importSetsFromFile(file);
@@ -85,6 +87,17 @@ public class MTGJsonDownloader {
 
         outputStream.close();
         return file;
+    }
+
+    @EventListener(ContextRefreshedEvent.class)
+    public void fetchSetsIfDatabaseEmpty() {
+        if (setsService.isEmpty()) {
+            try {
+                download();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 }
