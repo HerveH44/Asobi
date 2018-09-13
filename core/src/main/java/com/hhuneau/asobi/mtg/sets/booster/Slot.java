@@ -1,13 +1,12 @@
 package com.hhuneau.asobi.mtg.sets.booster;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.hhuneau.asobi.ListToStringConverter;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
-
-import static javax.persistence.EnumType.STRING;
 
 @Entity
 @Getter
@@ -19,8 +18,9 @@ public class Slot {
     @GeneratedValue
     private long id;
 
-    @ElementCollection
-    @Enumerated(STRING)
+    @Basic(fetch = FetchType.LAZY)
+    @Convert(converter = ListToStringConverter.class)
+    @Column(columnDefinition = "text")
     private List<SlotType> values;
 
 }

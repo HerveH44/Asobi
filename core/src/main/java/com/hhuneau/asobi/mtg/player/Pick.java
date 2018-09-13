@@ -1,5 +1,6 @@
 package com.hhuneau.asobi.mtg.player;
 
+import com.hhuneau.asobi.ListToStringConverter;
 import com.hhuneau.asobi.mtg.game.Game;
 import com.hhuneau.asobi.mtg.pool.Pack;
 import com.hhuneau.asobi.mtg.sets.card.MTGCard;
@@ -24,7 +25,9 @@ public class Pick {
 
     private String cardPicked;
 
-    @ElementCollection
+    @Basic(fetch = FetchType.LAZY)
+    @Convert(converter = ListToStringConverter.class)
+    @Column(columnDefinition = "text")
     private List<String> cardsPassed;
 
     public static Pick of(Game game, MTGCard pickedCard, Pack pack) {
