@@ -1,7 +1,6 @@
 package com.hhuneau.asobi.mtg.sets.booster;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.hhuneau.asobi.ListToStringConverter;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +18,7 @@ public class Slot {
     private long id;
 
     @Basic(fetch = FetchType.LAZY)
-    @Convert(converter = ListToStringConverter.class)
+    @Convert(converter = ListToSlotConverter.class)
     @Column(columnDefinition = "text")
     private List<SlotType> values;
 
