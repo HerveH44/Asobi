@@ -1,5 +1,6 @@
 package com.hhuneau.asobi.mtg.actions;
 
+import com.hhuneau.asobi.SetsPopulator;
 import com.hhuneau.asobi.customer.CustomerService;
 import com.hhuneau.asobi.mtg.game.Game;
 import com.hhuneau.asobi.mtg.game.GameRepository;
@@ -14,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
@@ -29,6 +31,8 @@ import static com.hhuneau.asobi.websocket.events.EventType.JOIN_GAME;
 @RunWith(SpringRunner.class)
 public class ITActionTest {
 
+    @MockBean
+    private SetsPopulator setsPopulator;
 
     @Autowired
     private CustomerService customerService;

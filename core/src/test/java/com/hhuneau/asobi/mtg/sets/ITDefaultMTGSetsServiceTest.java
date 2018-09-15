@@ -2,6 +2,7 @@ package com.hhuneau.asobi.mtg.sets;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hhuneau.asobi.SetsPopulator;
 import com.hhuneau.asobi.mtg.sets.booster.Slot;
 import com.hhuneau.asobi.mtg.sets.card.MTGCard;
 import com.hhuneau.asobi.mtg.sets.card.MTGCardRepository;
@@ -9,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.util.Assert;
@@ -33,6 +35,9 @@ public class ITDefaultMTGSetsServiceTest {
 
     @Autowired
     private MTGCardRepository cardRepository;
+
+    @MockBean
+    private SetsPopulator setsPopulator;
 
     @Test
     public void canSaveSetWithOneCard() {
@@ -63,9 +68,8 @@ public class ITDefaultMTGSetsServiceTest {
             } catch (Exception e) {
             }
         });
-        Assert.isTrue(!setRepository.findAll().isEmpty(), "setRepository must null be empty");
 
-        final List<Slot> slotList = setRepository.findAll().get(0).getSlotList();
+        final List<Slot> slotList = setRepository.findById("M19").get().getSlotList();
         Assert.isTrue(slotList.contains(List.of(COMMON)), "slotList must not be empty");
     }
 }
