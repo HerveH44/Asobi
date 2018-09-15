@@ -31,7 +31,7 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
     @Override
     public List<MTGCard> make(MTGSet set) {
         final CardsGroupedByRarity cardsByRarity = CardsGroupedByRarity.of(set);
-        final List<SlotDTO> slotList = preProcessSlotValues(set, set.getBooster());
+        final List<SlotDTO> slotList = preProcessSlotValues(set, set.getSlotList());
         final List<MTGCard> cardList = slotList.stream()
             .map(slot -> {
                 final List<SlotType> slotValues = slot.getValues();
@@ -109,9 +109,9 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
         final List<Slot> filteredList = values.stream()
             .map(slot -> {
                 final Slot newSlot = new Slot();
-                newSlot.setValues(slot.getValues());
-                newSlot.getValues().removeIf(filteredSlotTypes::contains);
-                return newSlot.getValues().isEmpty() ? null : newSlot;
+                newSlot.addAll(slot);
+                newSlot.removeIf(filteredSlotTypes::contains);
+                return newSlot.isEmpty() ? null : newSlot;
             })
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
@@ -125,9 +125,9 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
                 boolean foilSet = false;
                 for (int i = 0; i < filteredList.size(); i++) {
                     final Slot slot = filteredList.get(i);
-                    if (!foilSet && slot.getValues().size() == 1 && slot.getValues().contains(COMMON)) {
+                    if (!foilSet && slot.size() == 1 && slot.contains(COMMON)) {
                         final Slot foilSlot = new Slot();
-                        foilSlot.setValues(List.of(FOIL));
+                        foilSlot.addAll(List.of(FOIL));
                         foilSet = true;
                         filteredList.set(i, foilSlot);
                     }
@@ -141,7 +141,7 @@ public class DefaultBoosterMaker implements SetBoosterMaker {
         final List<SlotDTO> list = new ArrayList<>();
         processedList.forEach(slot ->
             list.stream()
-                .filter(slotDTO -> slotDTO.getValues().containsAll(slot.getValues()))
+                .filter(slotDTO -> slotDTO.getValues().containsAll(slot))
                 .findFirst()
                 .ifPresentOrElse(
                     slotDTO -> slotDTO.occurrences = slotDTO.occurrences + 1,

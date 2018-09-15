@@ -5,15 +5,15 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.hhuneau.asobi.mtg.sets.booster.SlotType.*;
 
-public class SlotDeserializer extends StdDeserializer<Slot> {
+public class SlotDeserializer extends StdDeserializer<List<Slot>> {
 
     public SlotDeserializer() {
         this(null);
@@ -25,84 +25,87 @@ public class SlotDeserializer extends StdDeserializer<Slot> {
 
     @Override
     @Transactional
-    public Slot deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+    public List<Slot> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
         throws IOException {
         final JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-        final Slot slot = new Slot();
-        slot.setValues(new ArrayList<>());
-
-        if (node instanceof TextNode) {
-            addValue(slot, node);
-        }
+        final List<Slot> slotList = new ArrayList<>();
 
         if (node instanceof ArrayNode) {
-            node.elements().forEachRemaining(child -> addValue(slot, child));
+            node.elements().forEachRemaining(child -> {
+                final Slot slot = new Slot();
+                if (child instanceof ArrayNode) {
+                    child.elements().forEachRemaining(slotType -> addValue(slot, slotType));
+                } else {
+                    addValue(slot, child);
+                }
+                slotList.add(slot);
+            });
         }
 
-        return slot;
+        return slotList;
     }
 
     private void addValue(Slot slot, JsonNode node) {
         switch (node.asText()) {
             case "checklist":
-                slot.getValues().add(CHECKLIST);
+                slot.add(CHECKLIST);
                 break;
             case "common":
-                slot.getValues().add(COMMON);
+                slot.add(COMMON);
                 break;
             case "double faced":
-                slot.getValues().add(DOUBLE_FACED);
+                slot.add(DOUBLE_FACED);
                 break;
             case "double faced mythic rare":
-                slot.getValues().add(DOUBLE_FACED_MYTHIC_RARE);
+                slot.add(DOUBLE_FACED_MYTHIC_RARE);
                 break;
             case "timeshifted uncommon":
-                slot.getValues().add(TIMESHIFTED_UNCOMMON);
+                slot.add(TIMESHIFTED_UNCOMMON);
                 break;
             case "double faced common":
-                slot.getValues().add(DOUBLE_FACED_COMMON);
+                slot.add(DOUBLE_FACED_COMMON);
                 break;
             case "double faced rare":
-                slot.getValues().add(DOUBLE_FACED_RARE);
+                slot.add(DOUBLE_FACED_RARE);
                 break;
             case "land":
-                slot.getValues().add(LAND);
+                slot.add(LAND);
                 break;
             case "double faced uncommon":
-                slot.getValues().add(DOUBLE_FACED_UNCOMMON);
+                slot.add(DOUBLE_FACED_UNCOMMON);
                 break;
             case "marketing":
-                slot.getValues().add(MARKETING);
+                slot.add(MARKETING);
                 break;
             case "rare":
-                slot.getValues().add(RARE);
+                slot.add(RARE);
                 break;
             case "mythic rare":
-                slot.getValues().add(MYTHIC_RARE);
+                slot.add(MYTHIC_RARE);
                 break;
             case "timeshifted common":
-                slot.getValues().add(TIMESHIFTED_COMMON);
+                slot.add(TIMESHIFTED_COMMON);
                 break;
             case "timeshifted purple":
-                slot.getValues().add(TIMESHIFTED_PURPLE);
+                slot.add(TIMESHIFTED_PURPLE);
                 break;
             case "timeshifted rare":
-                slot.getValues().add(TIMESHIFTED_RARE);
+                slot.add(TIMESHIFTED_RARE);
                 break;
             case "foil mythic rare":
-                slot.getValues().add(FOIL_MYTHIC_RARE);
+                slot.add(FOIL_MYTHIC_RARE);
                 break;
             case "foil rare":
-                slot.getValues().add(FOIL_RARE);
+                slot.add(FOIL_RARE);
                 break;
             case "foil uncommon":
-                slot.getValues().add(FOIL_UNCOMMON);
+                slot.add(FOIL_UNCOMMON);
                 break;
             case "foil common":
-                slot.getValues().add(FOIL_COMMON);
+                slot.add(FOIL_COMMON);
                 break;
             case "uncommon":
-                slot.getValues().add(UNCOMMON);
+                slot.add(UNCOMMON);
                 break;
         }
     }

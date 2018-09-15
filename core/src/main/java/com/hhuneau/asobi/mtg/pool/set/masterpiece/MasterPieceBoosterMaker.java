@@ -34,7 +34,7 @@ public abstract class MasterPieceBoosterMaker extends DefaultBoosterMaker {
             for (int i = 0; i < filteredList.size(); i++) {
                 final Slot slot = filteredList.get(i);
                 if (isCommonSlot(slot)) {
-                    slot.setValues(List.of(MASTERPIECE));
+                    slot.addAll(List.of(MASTERPIECE));
                     filteredList.set(i, slot);
                     return filteredList;
                 }
@@ -45,7 +45,7 @@ public abstract class MasterPieceBoosterMaker extends DefaultBoosterMaker {
     }
 
     private boolean isCommonSlot(Slot slot) {
-        return slot.getValues().size() == 1 && slot.getValues().contains(COMMON);
+        return slot.size() == 1 && slot.contains(COMMON);
     }
 
     @Override

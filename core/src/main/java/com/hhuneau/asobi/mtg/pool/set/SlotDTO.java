@@ -16,7 +16,7 @@ public class SlotDTO {
     public static SlotDTO of(Slot slot) {
         final SlotDTO slotDTO = new SlotDTO();
         slotDTO.occurrences = 1;
-        slotDTO.values = slot.getValues();
+        slotDTO.values = slot;
         return slotDTO;
     }
 }

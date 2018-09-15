@@ -26,13 +26,13 @@ public class DKABoosterMaker extends DefaultBoosterMaker {
             final Slot slot = filteredList.get(i);
             if (isCommonSlot(slot)) {
                 if (randomNumber == 0) {
-                    slot.setValues(List.of(DOUBLE_FACED_MYTHIC_RARE));
+                    slot.addAll(List.of(DOUBLE_FACED_MYTHIC_RARE));
                 } else if (randomNumber < 8) {
-                    slot.setValues(List.of(DOUBLE_FACED_RARE));
+                    slot.addAll(List.of(DOUBLE_FACED_RARE));
                 } else if (randomNumber < 32) {
-                    slot.setValues(List.of(DOUBLE_FACED_UNCOMMON));
+                    slot.addAll(List.of(DOUBLE_FACED_UNCOMMON));
                 } else {
-                    slot.setValues(List.of(DOUBLE_FACED_COMMON));
+                    slot.addAll(List.of(DOUBLE_FACED_COMMON));
                 }
                 filteredList.set(i, slot);
                 return filteredList;
@@ -43,6 +43,6 @@ public class DKABoosterMaker extends DefaultBoosterMaker {
     }
 
     private boolean isCommonSlot(Slot slot) {
-        return slot.getValues().size() == 1 && slot.getValues().contains(COMMON);
+        return slot.size() == 1 && slot.contains(COMMON);
     }
 }
