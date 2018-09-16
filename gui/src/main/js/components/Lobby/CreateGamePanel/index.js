@@ -7,7 +7,6 @@ import {
     bool,
     func
 } from "prop-types";
-import range from "lodash/range";
 import GameSettings from "./GameSettings";
 import {Checkbox} from "../../utils"
 
@@ -72,15 +71,17 @@ class CreatePanel extends React.Component {
                 <div>
                     Number of players:{" "}
                     <select value={seats} onChange={this.onChangeSeats}>
-                    {range(2, 20).map(x =>
-                        <option key={x}>{x}</option>)}
+                    {[...Array(20).keys()]
+                        .map((_, i) => i + 1)
+                        .map(x => <option key={x}>{x}</option>)}
                     </select>
                 </div>
                 <div>
                     Number of packs:{" "}
                     <select value={packsNumber} onChange={this.onChangePacksNumber}>
-                    {range(1, 10).map(x =>
-                        <option key={x}>{x}</option>)}
+                    {[...Array(10).keys()]
+                        .map((_, i) => i + 1)
+                        .map(x => <option key={x}>{x}</option>)}
                     </select>
                 </div>
                 <div>
