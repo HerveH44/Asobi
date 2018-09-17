@@ -61,7 +61,7 @@
         "webpack-visualizer-plugin": "0.1.11"
     },
     "devDependencies": {
-        "css-loader": "0.28.11",
+        "css-loader": "1.0.0",
         "eslint": "5.5.0",
         "eslint-config-google": "0.10.0",
         "eslint-config-prettier": "2.9.0",
