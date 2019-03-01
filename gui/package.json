@@ -55,7 +55,7 @@
         "sockjs-client": "^1.1.5",
         "style-loader": "0.23.0",
         "utils": "git://github.com/arxanas/utils.git",
-        "webpack": "4.19.0",
+        "webpack": "4.29.6",
         "webpack-cli": "3.1.0",
         "webpack-dev-server": "3.1.8",
         "webpack-visualizer-plugin": "0.1.11"
