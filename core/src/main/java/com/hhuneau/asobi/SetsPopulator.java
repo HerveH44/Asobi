@@ -3,11 +3,10 @@ package com.hhuneau.asobi;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@Component
+//@Component
 public class SetsPopulator implements ApplicationListener<ContextRefreshedEvent> {
 
     private final MTGSetsService setsService;

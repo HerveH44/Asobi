@@ -52,6 +52,7 @@ public class MTGCard {
     @Convert(converter = ListToStringConverter.class)
     @Column(columnDefinition = "text")
     private List<String> supertypes;
+    private String url;
 
     @ManyToOne
     @JoinColumn(name = "set_id")

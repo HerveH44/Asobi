@@ -19,7 +19,7 @@ import java.util.Map;
 
 @Component
 public class MTGJsonDownloader {
-    private static final String URI = "http://mtgjson.com/json/AllSets.json";
+    private static final String URI = "https://raw.githubusercontent.com/Cockatrice/Magic-Spoiler/files/AllSets.json";
     private static final Logger LOGGER = LoggerFactory.getLogger(MTGJsonDownloader.class);
     private static final List<String> allowedTypes = List.of("masterpiece", "expansion", "core", "commander", "planechase", "starter", "un");
     private static final List<String> allowedSets = List.of("EMA", "MMA", "VMA", "CNS", "TPR", "MM2", "CN2", "MM3", "IMA");
@@ -61,12 +61,17 @@ public class MTGJsonDownloader {
                 || mtgSet.getCode().equals("TSB")) {
                 return;
             }
+
+            if (setsService.getSet(setName).isPresent()) {
+                return;
+            }
+
             try {
                 LOGGER.info("saving set {}", mtgSet.getCode());
                 setsService.saveSet(mtgSet);
                 LOGGER.info("set {} successfully saved", mtgSet.getCode());
             } catch (Exception e) {
-                LOGGER.error("can't save " + setName + " " + e.getCause());
+                LOGGER.error("can't save " + setName + " " + e);
             }
         });
         LOGGER.info("Finished importing MTGJson sets");

@@ -1,5 +1,5 @@
-import {WEBSOCKET_SEND} from "redux-middleware-websocket";
 import {errorMessage, pressKeyDown} from "../actions/game";
+import {WEBSOCKET_SEND} from "./stomp";
 
 const Chat = ({getState, dispatch}) => next => action => {
 

@@ -1,9 +1,7 @@
 import {applyMiddleware} from 'redux';
-import websocketMiddleware from './websocket';
-import loggerMiddleware from './logger';
-import createGameMiddleware from './createGame';
+import game from './game';
 import router from "./router";
-import websocket from "redux-middleware-websocket";
 import chat from "./chat"
+import stomp from "./stomp";
 
-export default applyMiddleware(/*loggerMiddleware, */chat, createGameMiddleware, websocket, websocketMiddleware, router);
+export default applyMiddleware(chat, game, stomp, router);

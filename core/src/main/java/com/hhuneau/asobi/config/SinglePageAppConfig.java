@@ -1,4 +1,4 @@
-package com.hhuneau.asobi;
+package com.hhuneau.asobi.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;

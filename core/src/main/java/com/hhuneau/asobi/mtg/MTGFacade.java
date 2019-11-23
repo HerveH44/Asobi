@@ -1,17 +1,14 @@
 package com.hhuneau.asobi.mtg;
 
+import com.hhuneau.asobi.mtg.game.AuthTokenDTO;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
-import com.hhuneau.asobi.websocket.events.SessionConnectedEvent;
-import com.hhuneau.asobi.websocket.events.SessionDisconnectedEvent;
 import com.hhuneau.asobi.websocket.events.game.GameEvent;
 
 public interface MTGFacade {
 
-    void handle(SessionConnectedEvent event);
+    void disconnectUser(String sessionId);
 
-    void handle(SessionDisconnectedEvent event);
-
-    void handle(CreateGameEvent event);
+    AuthTokenDTO handle(CreateGameEvent event);
 
     void handle(GameEvent event);
 

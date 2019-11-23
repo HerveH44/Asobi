@@ -7,18 +7,9 @@ import com.hhuneau.asobi.mtg.player.Player;
 import com.hhuneau.asobi.mtg.player.PlayerService;
 import com.hhuneau.asobi.mtg.player.PlayerState;
 import com.hhuneau.asobi.mtg.sets.MTGSet;
-import com.hhuneau.asobi.mtg.sets.MTGSetsService;
-import com.hhuneau.asobi.mtg.sets.SetDTO;
 import com.hhuneau.asobi.websocket.events.CreateGameEvent;
-import com.hhuneau.asobi.websocket.events.SessionConnectedEvent;
-import com.hhuneau.asobi.websocket.events.SessionDisconnectedEvent;
 import com.hhuneau.asobi.websocket.events.game.GameEvent;
-import com.hhuneau.asobi.websocket.messages.AuthTokenMessage;
-import com.hhuneau.asobi.websocket.messages.ErrorMessage;
 import com.hhuneau.asobi.websocket.messages.GameStateMessage;
-import com.hhuneau.asobi.websocket.messages.SetsExportMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -28,7 +19,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.hhuneau.asobi.mtg.game.Status.CREATED;
@@ -38,67 +28,40 @@ import static com.hhuneau.asobi.mtg.game.Status.STARTED;
 @Transactional
 public class DefaultMTGFacade implements MTGFacade {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultMTGFacade.class);
     private final GameService gameService;
-    private final CustomerService customerService;
     private final List<EventHandler> eventHandlers;
-    private final MTGSetsService setsService;
     private final PlayerService playerService;
+    private final CustomerService customerService;
 
-    public DefaultMTGFacade(GameService gameService, CustomerService customerService, List<EventHandler> eventHandlers, MTGSetsService setsService, PlayerService playerService) {
+    public DefaultMTGFacade(GameService gameService, List<EventHandler> eventHandlers,
+                            PlayerService playerService, CustomerService customerService) {
         this.gameService = gameService;
-        this.customerService = customerService;
         this.eventHandlers = eventHandlers;
-        this.setsService = setsService;
         this.playerService = playerService;
+        this.customerService = customerService;
+    }
+
+    @Override
+    public void disconnectUser(String sessionId) {
+        playerService.disconnectPlayersWithSession(sessionId);
     }
 
     @Override
     @EventListener
-    public void handle(SessionConnectedEvent event) {
-        final Map<String, List<SetDTO>> sets = setsService.getSets().stream()
-            .filter(set -> !List.of("masterpiece", "planechase", "starter", "commander").contains(set.getType()))
-            .map(SetDTO::of)
-            .collect(Collectors.groupingBy(SetDTO::getType));
-        customerService.send(event.sessionId, SetsExportMessage.of(sets));
-    }
-
-    @Override
-    public void handle(SessionDisconnectedEvent event) {
-        playerService.disconnectPlayersWithSession(event.sessionId);
-    }
-
-    @Override
-    @EventListener
-    public void handle(CreateGameEvent evt) {
-        customerService.find(evt.sessionId)
-            .ifPresentOrElse(
-                customer -> {
-                    final AuthTokenDTO authTokenDTO = gameService.createGame(evt);
-                    customerService.send(evt.sessionId, AuthTokenMessage.of(authTokenDTO));
-                },
-                () -> LOGGER.error("cannot find session with id {}", evt.sessionId)
-            );
+    public AuthTokenDTO handle(CreateGameEvent evt) {
+        return gameService.createGame(evt);
     }
 
     @Override
     @EventListener
     public void handle(GameEvent evt) {
-        try {
-            gameService.getGame(evt.gameId)
-                .ifPresentOrElse(
-                    (game) -> eventHandlers.stream()
-                        .filter(eventHandler -> eventHandler.isInterested(game))
-                        .forEach(handler -> {
-                            handler.handle(game, evt);
-                            broadcastState(evt.gameId);
-                        }),
-                    () -> customerService.send(evt.sessionId,
-                        ErrorMessage.of(String.format("gameId %s does not exist", evt.gameId)))
-                );
-        } catch (Exception e) {
-            LOGGER.error("error while handling event {} {}", evt, e);
-        }
+        final Game game = gameService.getGame(evt.gameId)
+            .orElseThrow(() -> new GameNotFoundException(String.format("gameId %s does not exist", evt.gameId)));
+
+        eventHandlers.stream()
+            .filter(eventHandler -> eventHandler.isInterested(game))
+            .forEach(handler -> handler.handle(game, evt));
+        broadcastState(evt.gameId);
     }
 
     @Override
@@ -114,6 +77,7 @@ public class DefaultMTGFacade implements MTGFacade {
         });
     }
 
+    //TODO: implement that with a fixed time on server side and client side decreasing it by himself
     @Scheduled(fixedRate = 1000)
     public void decreaseTimeLeft() {
         gameService.getGamesByStatus(STARTED).forEach(game -> {

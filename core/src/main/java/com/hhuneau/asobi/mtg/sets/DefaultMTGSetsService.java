@@ -34,7 +34,7 @@ public class DefaultMTGSetsService implements MTGSetsService {
             set.setCards(cards);
             setRepository.save(set);
         } catch (final Exception e) {
-            LOGGER.info("can't save set {} because {}", set.getCode(), e.getMessage());
+            LOGGER.info("can't save set {} because {}", set.getCode(), e);
         }
     }
 

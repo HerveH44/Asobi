@@ -23,7 +23,8 @@ public class ExtraSetCardFilter implements MTGCardFilter {
         entry("XLN", 279),
         entry("RIX", 196),
         entry("DOM", 269),
-        entry("M19", 280)
+        entry("M19", 280),
+        entry("GRN", 259)
     );
 
     @Override

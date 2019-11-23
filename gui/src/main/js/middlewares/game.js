@@ -1,4 +1,3 @@
-import {WEBSOCKET_SEND, WEBSOCKET_CLOSED} from "redux-middleware-websocket";
 import {push} from "react-router-redux";
 import {
     onKick,
@@ -16,6 +15,7 @@ import {
     createGame
 } from "../actions/server";
 import {MAIN, SIDE} from "../reducers/playerState";
+import {WEBSOCKET_SEND} from "./stomp";
 
 
 export default ({getState, dispatch}) => next => action => {
@@ -76,7 +76,6 @@ export default ({getState, dispatch}) => next => action => {
                 }
             });
 
-
         case onSetPlayerName.toString():
             next(action);
             return dispatch({
@@ -93,6 +92,7 @@ export default ({getState, dispatch}) => next => action => {
             next(action);
             return dispatch({
                 type: WEBSOCKET_SEND,
+                metadata: "/app/game/create",
                 payload: {
                     type: "CREATE_GAME",
                     title,
@@ -199,10 +199,6 @@ export default ({getState, dispatch}) => next => action => {
             return dispatch(push("games/" + action.payload.gameId));
 
         case ERROR:
-            next(action);
-            return dispatch(push("/"));
-
-        case WEBSOCKET_CLOSED:
             next(action);
             return dispatch(push("/"));
 

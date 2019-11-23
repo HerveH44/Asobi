@@ -22,7 +22,7 @@ public class DoubleFaceCardFilter implements MTGCardFilter {
     }
 
     private boolean filter(MTGCard card) {
-        final boolean isNotDoubleFaced = !card.getLayout().matches("double-faced|flip|split");
+        final boolean isNotDoubleFaced = card.getLayout() != null && !card.getLayout().matches("double-faced|flip|split");
         final boolean isNotFlippedSide = card.getNames() == null || card.getNames().isEmpty() ||
             card.getName().equals(card.getNames().get(0)) || !card.getNumber().contains("b");
         return isNotDoubleFaced || isNotFlippedSide;
