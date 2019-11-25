@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hhuneau.asobi.mtg.sets.MTGSet;
 import com.hhuneau.asobi.mtg.sets.MTGSetsService;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.entity.GzipDecompressingEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 @Component
 public class MTGJsonDownloader {
-    private static final String URI = "https://raw.githubusercontent.com/Cockatrice/Magic-Spoiler/files/AllSets.json";
+    private static final String URI = "https://mtgjson.com/files/AllPrintings.json.gz";
     private static final Logger LOGGER = LoggerFactory.getLogger(MTGJsonDownloader.class);
     private static final List<String> allowedTypes = List.of("masterpiece", "expansion", "core", "commander", "planechase", "starter", "un");
     private static final List<String> allowedSets = List.of("EMA", "MMA", "VMA", "CNS", "TPR", "MM2", "CN2", "MM3", "IMA");
@@ -37,7 +38,8 @@ public class MTGJsonDownloader {
         final HttpGet httpGet = new HttpGet(URI);
         try (CloseableHttpResponse response1 = httpclient.execute(httpGet)) {
             final HttpEntity entity1 = response1.getEntity();
-            final InputStream inputStream = entity1.getContent();
+            final var gzipDecompressingEntity = new GzipDecompressingEntity(entity1);
+            final InputStream inputStream = gzipDecompressingEntity.getContent();
             final File file = saveToJsonFile(inputStream);
             importSetsFromFile(file);
         }
