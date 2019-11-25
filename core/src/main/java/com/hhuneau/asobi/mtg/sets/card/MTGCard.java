@@ -2,6 +2,7 @@ package com.hhuneau.asobi.mtg.sets.card;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hhuneau.asobi.ListToStringConverter;
 import com.hhuneau.asobi.mtg.sets.MTGSet;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MTGCard {
     @Id
+    @JsonProperty("uuid")
     private String id;
     private long multiverseid;
     private String name;
